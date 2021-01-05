@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2021 Mirian Margiani
 #
 # Include this file in your main PRO file and add the modules you want to use to
-# the CONFIG variable.
+# the CONFIG variable. Include the file after defining translations.
 #
 # Make sure to disable "RPM provides" in the spec file by adding the following
 # in the "# >> macros" section:

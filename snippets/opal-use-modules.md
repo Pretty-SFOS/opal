@@ -6,6 +6,9 @@ to use to the `CONFIG` variable.
     include(libs/opal-use-modules.pri)
     CONFIG += opal-about
 
+Make sure to place the above lines *below* your app's `TRANSLATIONS` definition.
+Otherwise Opal translations won't be merged with your app's translations.
+
 Copy the required module packages to the path defined in `OPAL_PATH` which must
 be below your app's main qml directory. The default is `qml/opal-modules` and
 should be fine for all projects.
