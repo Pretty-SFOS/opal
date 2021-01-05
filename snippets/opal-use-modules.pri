@@ -29,21 +29,13 @@ OPAL_TR_PATH = libs/opal-translations
 # activate with: CONFIG += opal-about
 opal-about {
     OPAL_TRANSLATIONS += $$files($$absolute_path($$OPAL_TR_PATH, $$_PRO_FILE_PWD_)/opal-about-*.ts)
-    DISTFILES += \
-        $$OPAL_PATH/Opal/About/*.qml \
-        $$OPAL_PATH/Opal/About/qmldir \
-        $$OPAL_PATH/Opal/About/private/*.qml \
-        $$OPAL_PATH/Opal/About/private/qmldir
+    DISTFILES += $$files($$absolute_path($$OPAL_PATH, $$_PRO_FILE_PWD_)/Opal/About, true)
 }
 
 # activate with: CONFIG += opal-tabbar
 opal-tabbar {
     OPAL_TRANSLATIONS += $$files($$absolute_path($$OPAL_TR_PATH, $$_PRO_FILE_PWD_)/opal-tabbar-*.ts)
-    DISTFILES += \
-        $$OPAL_PATH/Opal/TabBar/*.qml \
-        $$OPAL_PATH/Opal/TabBar/qmldir \
-        $$OPAL_PATH/Opal/TabBar/private/*.qml \
-        $$OPAL_PATH/Opal/TabBar/private/qmldir
+    DISTFILES += $$files($$absolute_path($$OPAL_PATH, $$_PRO_FILE_PWD_)/Opal/TabBar, true)
 }
 
 # ------------------------------------------------------------------------------
