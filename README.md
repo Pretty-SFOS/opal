@@ -103,10 +103,10 @@ TBD.
 ## Licenses
 
 All Opal [modules](TBD: wiki link) have their own licensing.
-Please refer to the respective repositories.
+*Please refer to the respective repositories.*
 
-All [snippets](TBD: wiki link) are released in the public domain, unless
-otherwise specified. Please refer to the respective snippet files.
+All [snippets](TBD: wiki link) are released in the public domain, *unless*
+otherwise specified. *Please refer to the respective snippet files.*
 
 All documentation is released under the terms of the
 [GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html).
