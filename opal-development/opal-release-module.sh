@@ -126,3 +126,20 @@ function build_bundle() {
     }
     rm -rf "$package"  # clear build root
 }
+
+function build_doc() {
+    export QT_INSTALL_DOCS="${QT_INSTALL_DOCS:="$("$cQMAKE_BIN" -query QT_INSTALL_DOCS)"}"
+    export QT_VERSION="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
+    export QT_VER="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
+
+    export OPAL_PROJECT="${OPAL_PROJECT:=$cOPAL_PREFIX$cNAME}"
+    export OPAL_PROJECT_STYLED="${OPAL_PROJECT_STYLED:=$cOPAL_PREFIX_STYLED$cNAME_STYLED}"
+    export OPAL_PROJECT_VERSION="${OPAL_PROJECT_VERSION:=$cVERSION}"
+    export OPAL_PROJECT_EXAMPLESDIR="${OPAL_PROJECT_EXAMPLESDIR:=$cEXAMPLES_DIR}"
+    export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
+    export OPAL_DOC_OUTDIR="${OPAL_DOC_OUTDIR:=$cBUILD_DOC_DIR}"
+
+    "$cQDOC_BIN" -I "$cDOC_DIR" "$OPAL_PROJECT.qdocconf" || { echo "error: failed to generate docs"; exit 1; }
+    cd "$cBUILD_DOC_DIR" || { echo "error: failed to enter doc directory"; exit 1; }
+    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { echo "error: failed to generate Qt help pages"; exit 1; }
+}

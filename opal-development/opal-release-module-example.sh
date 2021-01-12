@@ -14,7 +14,9 @@ source ../opal/opal-development/opal-release-module.sh
 # Note: modules requiring extra build steps (Qt plugins) are not yet supported.
 
 # the module's name
-cNAME=opal-mymodule
+cNAME=mymodule
+cNAME_STYLED=MyModule
+cVERSION=0.1.0
 
 # which files and directories to translate
 cTRANSLATE=(Opal)
@@ -30,5 +32,8 @@ function copy_files() {
     cp -r Opal "$QML_BASE/Opal" || return 1
 }
 
-# finally build the bundle
+# build the bundle
 build_bundle
+
+# build documentation
+build_doc
