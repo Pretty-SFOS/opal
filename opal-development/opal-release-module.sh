@@ -10,12 +10,26 @@
 
 shopt -s extglob
 
-cLUPDATE_BIN=${cLUPDATE_BIN:-lupdate-qt5}
-cTR_DIR=translations
+_x="${cTR_DIR:="translations"}"
+_x="${cDOC_DIR:="doc"}"
+_x="${cBUILD_DIR:="build"}"
+_x="${cBUILD_DOC_DIR:="build-doc"}"
+_x="${cEXAMPLES_DIR:="examples"}"
 
-cDEPENDENCIES=("$cLUPDATE_BIN")
+_x="${cQT_SUFFIX:="-qt5"}"
+_x="${cLUPDATE_BIN:="lupdate$cQT_SUFFIX"}"
+_x="${cQDOC_BIN:="qdoc$cQT_SUFFIX"}"
+_x="${cQMAKE_BIN:="qmake$cQT_SUFFIX"}"
+_x="${cQHG_BIN:="qhelpgenerator$cQT_SUFFIX"}"
+
+_x="${cOPAL_PREFIX:="opal-"}"
+_x="${cOPAL_PREFIX_STYLED:="Opal."}"
+
+[[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
+cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN")
 
 function check_dependencies() {
+    [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
     for dep in "${cDEPENDENCIES[@]}"; do
         if ! which "$dep" 2> /dev/null >&2; then
             printf "error: %s is required\n" "$dep"
@@ -76,13 +90,12 @@ function build_bundle() {
 
     # Setup base paths
     local package="$cNAME-$version"
-    local build_parent="build"
-    local build_root="$build_parent/$package"
+    local build_root="$cBUILD_DIR/$package"
     local qml_base="$build_root/qml/opal-modules"
     local tr_base="$build_root/libs/opal-translations/$cNAME"
     # local plugin_base="$build_root/TODO"
 
-    mkdir -p "$build_parent" || { echo "error: failed to create base build directory"; exit 1; }
+    mkdir -p "$cBUILD_DIR" || { echo "error: failed to create base build directory"; exit 1; }
     rm -rf "$build_root" || { echo "error: failed to clear build root"; exit 1; }
     mkdir -p "$build_root" || { echo "error: failed to create build root"; exit 1; }
     mkdir -p "$qml_base" "$tr_base" || { echo "error: failed to prepare build root"; exit 1; }
@@ -106,7 +119,7 @@ function build_bundle() {
     copy_files || { echo "error: failed to prepare sources"; exit 1; }
 
     # Create final package
-    cd "$build_parent"
+    cd "$cBUILD_DIR"
     tar -czvf "$package.tar.gz" "$package" || {
         echo "error: failed to create package"
         exit 2
