@@ -26,6 +26,9 @@ OPAL_TR_PATH = libs/opal-translations
 # ------------------------------------------------------------------------------
 # Available modules - no configuration required
 
+# To be used for setting the import path in main(...).
+DEFINES += OPAL_IMPORT_PATH=\\\"$$OPAL_PATH\\\"
+
 # activate with: CONFIG += opal-about
 opal-about {
     OPAL_TRANSLATIONS += $$files($$absolute_path($$OPAL_TR_PATH, $$_PRO_FILE_PWD_)/opal-about/opal-about-*.ts)
