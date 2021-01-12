@@ -13,7 +13,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [ ] about the module: license, author, etc. (maybe as JSON)
     - [ ] example page(s) to be included in Gallery
     - [ ] module documentation as `qch` file
-- [ ] split snippets for app developers and for Opal development
+- [x] split snippets for app developers and for Opal development
 - [ ] proper versioning
     - [ ] documentation
     - [ ] Semantic Versioning for all modules, snippets, etc.
