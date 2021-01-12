@@ -1,0 +1,75 @@
+#
+# This file is part of Opal and has been released under the Creative Commons
+# Attribution-ShareAlike 4.0 International License.
+# SPDX-License-Identifier: CC-BY-SA-4.0
+# SPDX-FileCopyrightText: 2021 Mirian Margiani
+#
+# See https://github.com/Pretty-SFOS/opal/blob/master/opal-development/opal-qdoc.md
+# for documentation.
+#
+
+# project definition
+# description has to be set by the module
+project = $OPAL_PROJECT_STYLED
+version = $OPAL_PROJECT_VERSION
+
+# include some Qt defaults
+# -- macros for QDoc commands
+include($QT_INSTALL_DOCS/global/macros.qdocconf)
+# -- needed by C++ projects
+include($QT_INSTALL_DOCS/global/qt-cpp-defines.qdocconf)
+# -- compatibility macros
+include($QT_INSTALL_DOCS/global/compat.qdocconf)
+# -- configuration common among QDoc projects
+include($QT_INSTALL_DOCS/global/fileextensions.qdocconf)
+# -- offline HTML template for documentation shipped to Qt Creator
+include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
+
+# assign custom HTML footer to replace Qt's default copyright notice
+HTML.footer = "<div align='center'><hr/>" \
+              "<p><small>$OPAL_PROJECT_STYLED $OPAL_PROJECT_VERSION<br>\n" \
+              "This document may be used under the terms of the " \
+              "<a href='https://spdx.org/licenses/GFDL-1.3-or-later.html'>" \
+              "GNU Free Documentation License version 1.3</a> " \
+              "as published by the Free Software Foundation.</small></p>" \
+              "<p/></div>"
+
+# Qt help system configuration
+qhp.projects = Opal
+
+# output file name below $OPAL_DOC_OUTDIR
+qhp.Opal.file                = $OPAL_PROJECT.qhp
+qhp.Opal.namespace           = $OPAL_PROJECT_STYLED.100
+qhp.Opal.virtualFolder       = $OPAL_PROJECT
+qhp.Opal.indexTitle          = $OPAL_PROJECT_STYLED
+qhp.Opal.indexRoot           =
+
+# additional subprojects can be defined by using the '+=' operator
+# the default subproject is a listing of all QML types the module offers
+qhp.Opal.subprojects         = qmltypes
+
+qhp.Opal.subprojects.qmltypes.title = QML Types
+qhp.Opal.subprojects.qmltypes.indexTitle = $OPAL_PROJECT_STYLED QML Types
+qhp.Opal.subprojects.qmltypes.selectors = qmltype
+qhp.Opal.subprojects.qmltypes.sortPages = true
+
+# The outputdir variable specifies the directory where QDoc will put the
+# generated documentation.
+outputdir   = $OPAL_DOC_OUTDIR
+
+# The headerdirs variable specifies the directories containing the header files
+# associated with the .cpp source files used in the documentation.
+# Header directories must be specified by the module.
+# headerdirs  = Opal
+
+# The sourcedirs variable specifies the directories containing the .cpp or .qdoc
+# files used in the documentation. Additional dirs can be specified.
+sourcedirs  += $OPAL_PROJECT_DOCDIR
+
+# The exampledirs variable specifies the directories containing
+# the source code of the example files. Additional dirs can be specified.
+exampledirs += $OPAL_PROJECT_EXAMPLESDIR
+
+# The imagedirs variable specifies the directories containing the images used in
+# the documentation. Additional dirs can be specified.
+imagedirs   += $OPAL_PROJECT_DOCDIR/images

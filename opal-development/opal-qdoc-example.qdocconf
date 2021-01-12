@@ -1,0 +1,32 @@
+#
+# This file is part of Opal and has been released into the public domain.
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2021 Mirian Margiani
+#
+# See https://github.com/Pretty-SFOS/opal/blob/master/snippets/opal-release-module.md
+# for documentation.
+#
+
+# Include Opal's default configuration file from your project's root directory.
+include(opal-qdoc.qdocconf)
+
+description = Foo bar baz.
+
+# The headerdirs variable specifies the directories containing the header files
+# associated with the .cpp source files used in the documentation.
+headerdirs  = Opal
+
+# The sourcedirs variable specifies the directories containing the .cpp or .qdoc
+# files used in the documentation. Default: $OPAL_PROJECT_DOCDIR
+sourcedirs  += Opal
+
+# The exampledirs variable specifies the directories containing
+# the source code of the example files. Default: $OPAL_PROJECT_EXAMPLESDIR
+# exampledirs += examples
+
+# The imagedirs variable specifies the directories containing the images used in
+# the documentation. Default: $OPAL_PROJECT_DOCDIR/images
+# imagedirs   += ...
+
+# default subprojects: qmltypes
+# qhp.Opal.subprojects         += ...
