@@ -46,7 +46,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [ ] move module example pages to module repos
 - About
     - [ ] documentation
-    - [ ] improve loading time; load licenses asynchronously
+    - [x] improve loading time; load licenses asynchronously
 - TabBar
     - [ ] import to Opal
     - [ ] add example page
