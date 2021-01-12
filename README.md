@@ -27,6 +27,7 @@ Follow these steps to include Opal modules in your project:
 3. Fetch the latest Opal [release bundle](https://github.com/Pretty-SFOS/opal/releases/latest).
 4. Extract [opal-use-modules.pri](snippets/opal-use-modules.pri) to `libs`.
 5. Include the file in your main `pro` file and select which modules to activate.
+   Put these lines below your app's `TRANSLATIONS` definition.
 
         CONFIG += opal-about
         include(libs/opal-use-modules.pri)
@@ -39,8 +40,25 @@ Follow these steps to include Opal modules in your project:
         %define __provides_exclude_from ^%{_datadir}/.*$
         # << macros
 
-9. If Opal everything is setup correctly, you can now use Opal by importing the
-   modules. For the About page component you would have to write in QML:
+9. Register `qml/opal-modules` as QML import path. The code below is fine for
+   new projects. `OPAL_IMPORT_PATH` is defined when including
+   [opal-use-modules.pri](snippets/opal-use-modules.pri).
+
+```CPP
+//// in src/harbour-myproject.cpp:
+int main(int argc, char *argv[])
+{
+    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    QScopedPointer<QQuickView> view(SailfishApp::createView());
+    view->engine()->addImportPath(SailfishApp::pathTo(OPAL_IMPORT_PATH).toString());
+    view->setSource(SailfishApp::pathToMainQml());
+    view->show();
+    return app->exec();
+}
+```
+
+10. If Opal everything is setup correctly, you can now use Opal by importing the
+    modules. For the About page component you would have to write in QML:
 
         import Opal.About 1.0
 
@@ -65,6 +83,9 @@ The wiki can be changed online. To clone its contents, append `.wiki.git` to thi
 repository's URL.
 
 All modules live in their own repositories.
+
+Useful tools for developing Opal can be found in the
+[opal-development](opal-development/) directory.
 
 ### Adding snippets
 

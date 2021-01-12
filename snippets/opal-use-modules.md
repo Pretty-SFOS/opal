@@ -32,4 +32,23 @@ in the `# >> macros` section:
 
     %define __provides_exclude_from ^%{_datadir}/.*$
 
-See [https://harbour.jolla.com/faq#2.6.0] for more information.
+See [https://harbour.jolla.com/faq#2.6.0] for more information regarding Harbour
+rules.
+
+Last but not least, register a new QML import path for Opal modules. This is
+necessary to be able to use `import Opal.Module 1.0` lines in your project.
+The code below is fine for new projects. `OPAL_IMPORT_PATH` is defined when
+including [opal-use-modules.pri](opal-use-modules.pri).
+
+```CPP
+//// in src/harbour-myproject.cpp:
+int main(int argc, char *argv[])
+{
+    QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    QScopedPointer<QQuickView> view(SailfishApp::createView());
+    view->engine()->addImportPath(SailfishApp::pathTo(OPAL_IMPORT_PATH).toString());
+    view->setSource(SailfishApp::pathToMainQml());
+    view->show();
+    return app->exec();
+}
+```
