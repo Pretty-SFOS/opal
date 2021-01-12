@@ -13,6 +13,16 @@
 project = $OPAL_PROJECT_STYLED
 version = $OPAL_PROJECT_VERSION
 
+# TODO: document custom macros
+macro.opalrootlink = "https://github.com/Pretty-SFOS/opal/blob/master/\1"
+macro.opsnip = "\\l {\\opalrootlink {snippets/opal-\1.md}} {opal-\1}"
+macro.opdev = "\\l {\\opalrootlink {opal-development/opal-\1.md}} {opal-\1}"
+macro.opmod = "\\l {https://github.com/Pretty-SFOS/opal-\1} {Opal.\1}"
+
+macro.todo = "\n\n\\b {Todo:} \1"
+macro.required = "\n\n\\b {Important:} this property is required and must be " \
+                 "specified when using this component."
+
 # include some Qt defaults
 # -- macros for QDoc commands
 include($QT_INSTALL_DOCS/global/macros.qdocconf)
