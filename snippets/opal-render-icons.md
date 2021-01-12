@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2021 Mirian Margiani
+SPDX-License-Identifier: GFDL-1.3-or-later
+-->
+
 # Rendering script for SVG icons
 
 The [opal-render-icons.sh] script provides a `render_batch` function for quickly

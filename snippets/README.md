@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2021 Mirian Margiani
+SPDX-License-Identifier: GFDL-1.3-or-later
+-->
+
 # Opal snippets
 
 This directory contains snippets that can be used directly in you applications.

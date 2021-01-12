@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2021 Mirian Margiani
+SPDX-License-Identifier: GFDL-1.3-or-later
+-->
+
 # Use and package Opal modules
 
 Include [opal-use-modules.pri] in your main PRO file and add the modules you want

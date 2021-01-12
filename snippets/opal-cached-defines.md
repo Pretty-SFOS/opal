@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2021 Mirian Margiani
+SPDX-License-Identifier: GFDL-1.3-or-later
+-->
+
 # How to pass build options to QML
 
 Include [opal-cached-defines.pri] in your PRO file after defining all options
