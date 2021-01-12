@@ -103,12 +103,9 @@ Useful tools for developing Opal can be found in the
 4. Create one or more example pages for the new module in the gallery application
    in the directory [`qml/module-pages`](https://github.com/Pretty-SFOS/opal-gallery/blob/master/qml/module-pages/)
 
-*Note:* use `qsTr("String")` for translating until we find a way to make apps
-actually load translations from custom contexts.
-
-> Make sure to use `qsTranslate("Opal.<Module>", "String")` instead of
-> `qsTr("String")` for all translations. Otherwise merged translations would
-> clutter a user's app translation files.
+Make sure to use `qsTranslate("Opal.<Module>", "string")` instead of
+`qsTr("string")` for all translations. Otherwise merged translations would
+clutter a user's app translation files.
 
 ### Adding plugins
 
