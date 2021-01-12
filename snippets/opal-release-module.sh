@@ -44,7 +44,7 @@ PACKAGE="$NAME-$VERSION"
 BUILD_PARENT="build"
 BUILD_ROOT="$BUILD_PARENT/$PACKAGE"
 QML_BASE="$BUILD_ROOT/qml/opal-modules"
-TR_BASE="$BUILD_ROOT/libs/opal-translations"
+TR_BASE="$BUILD_ROOT/libs/opal-translations/$NAME"
 # PLUGIN_BASE="$BUILD_ROOT/TODO"
 
 mkdir -p "$BUILD_PARENT" || { echo "error: failed to create base build directory"; exit 1; }
