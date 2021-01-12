@@ -24,6 +24,9 @@ for i in raw/*.svg; do scour "$i" > "${i#raw/}"; done
 
 ## How to use the script
 
+You can use the [opal-render-icons-example.sh] script to quickly get you
+started.
+
 The [opal-render-icons.sh] script has to be "sourced" from your own rendering
 script, where you define what will be rendered.
 
@@ -33,7 +36,8 @@ cFORCE=false  # set this to 'true' to always re-render all items
 ```
 
 Items will be rendered in batches. Call `render_batch` after defining a batch,
-then define the next one, and so on.
+then define the next one, and so on. All config values (except for `cFORCE`)
+will be reset after rendering a batch. Call `render_batch keep` to keep them.
 
 ```bash
 # the current batch's name for logging
@@ -47,9 +51,14 @@ cNAME="complex images"
 # Note that all items of a batch must have the same number of fields. Either
 # all items are custom or all items share the same properties. (See below.)
 #
+# Fields are interpreted the same way they would if specified globally.
+# See cRESOLUTIONS and cTARGETS for details. Fields can hold multiple values
+# separated by a vertical bar ('|').
+#
+# For example:
 # cITEMS=(simple-icon) -- use resolutions from cRESOLUTIONS
-# cITEMS=(simple-icon@100) -- render at 100x100, with cRESOLUTIONS=(F1)
-# cITEMS=(simple-icon@100x200) -- render at 100x200, with cRESOLUTIONS=(F1)
+# cITEMS=(tiny@1|10+big-) -- render at 1x1 and 10x10, with cRESOLUTIONS=(F1)
+# and so on
 cITEMS=(complex/big-one@211x1020@../qml/images/complex/big
         complex/big-one@5x11@../qml/images/complex/small
         simple/icon@100@../qml/images
@@ -60,18 +69,34 @@ cITEMS=(complex/big-one@211x1020@../qml/images/complex/big
 # current batch will be rendered, or it can hold a field number.
 # Use 'F1' to indicate that items should be rendered at the resolution specified
 # in field 1, e.g. 'item-name@RESOLUTION'. (You can just as well use 'F2'...)
+#
+# Format: X[xY][+prefix[+suffix]]
+# Width (X) and height (Y) can be specified separately, else the rendered image
+# is square (width x width). You can optionally define a prefix and/or a suffix.
+# These will be added to the final filename.
+#
+# Suffix/prefix values are needed when rendering multiple resolutions of the
+# same icon to the same target location. Files would otherwise be overwritten.
+#
+# (100x200) -- render at 100x200
+# (1x2 1x4 5) -- render at 1x2, 1x4, and 5x5
+# (1+small- 2) -- render at 1x1 (prefix: "small-") and 2x2 (no prefix)
+# (3x1++-wide) -- render at 3x1 with suffix "-wide"
 cRESOLUTIONS=(F1)
 
 # the target paths where rendered items will be placed
-# The values are interpreted the same way as cRESOLUTIONS.
+# The values are interpreted the same way as cRESOLUTIONS, except .
 #
 # Any occurrence of 'RESX' and 'RESY' will be replaced by the corresponding
 # resolution. You can use '../icons/RESXxRESY' to render items to
 # sub-directories depending on their resolution.
 cTARGETS=(F2)
 
+# optional: main suffix and prefix to be used before and after any suffix
+# defined with resolutions.
+cSUFFIX=-main-suffix
+cPREFIX=main-prefix-
+
 # finally: render the batch
 render_batch
 ```
-
-You can use the [opal-render-icons-example.sh] script to quickly get you started.

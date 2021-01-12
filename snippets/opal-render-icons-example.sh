@@ -21,7 +21,7 @@ render_batch
 
 cNAME="status icons"
 cITEMS=(status/{icon-todo,icon-ignored,icon-done}@112
-        status/{icon-todo,icon-ignored,icon-done}-small@24
+        status/{icon-todo,icon-ignored,icon-done}@24++-small
         harbour-myapp@256
 )
 cRESOLUTIONS=(F1)

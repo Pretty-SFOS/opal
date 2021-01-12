@@ -33,18 +33,35 @@ function do_render_single() { # 1: input, 2: width, 3: height, 4: output
     inkscape -o "$4" -w "$2" -h "$3" "$1" && pngcrush -ow "$4"
 }
 
-function split_at_sign() { # 1: string with values separated by '@'
+function split_at_sign() { # 1: string with values separated by @, |, +
     unset OPAL_SPLIT_RES
-    mapfile -d $'\0' -t OPAL_SPLIT_RES < <(printf "%s" "$@" | sed 's/\\@/__AT_REPLACED__/g;' | tr '@' '\0' | sed 's/__AT_REPLACED__/@/g')
+
+    if [[ -n "$2" ]]; then
+        if [[ "$2" =~ ^[@|+]$ ]]; then
+            split="$2"
+        else
+            printf "error: invalid split character '%s'" "$2"
+            exit 255
+        fi
+    else
+        split="@"
+    fi
+
+    mapfile -d $'\0' -t OPAL_SPLIT_RES < <(printf "%s" "$@" | sed "s/\\$split/__SIGN_REPLACED__/g;" |\
+                                           tr "$split" '\0' | sed "s/__SIGN_REPLACED__/$split/g")
 }
 
-function render_batch() { # no arguments required, all info has to be set as variables
+function render_batch() { # 1: keep or unset config after rendering?
+    # no arguments required, all info has to be set as variables
+    keep_config="$1"  # 'keep' or empty
+
     printf "rendering %s...\n" "$cNAME"
     local use_res use_loc source target
 
     for item in "${cITEMS[@]}"; do
-        split_at_sign "$item"
-        source="${OPAL_SPLIT_RES[0]}.$cFILE_SUFFIX"
+        split_at_sign "$item" "@"
+        item_split=("${OPAL_SPLIT_RES[@]}")
+        source="${item_split[0]}.$cFILE_SUFFIX"
 
         if [[ ! -f "$source" ]]; then
             printf "error: source item '%s' not found\n" "$source"
@@ -52,20 +69,24 @@ function render_batch() { # no arguments required, all info has to be set as var
         fi
 
         if [[ "$cRESOLUTIONS" == ${cFIELD_INDICATOR}* ]]; then
-            mapfile -d $'\0' -t use_res < <(printf "%s" "${OPAL_SPLIT_RES[${cRESOLUTIONS#$cFIELD_INDICATOR}]}" | tr '|' '\0')
+            split_at_sign "${item_split[${cRESOLUTIONS#$cFIELD_INDICATOR}]}" "|"  # format: res[|res[|...]]
+            use_res=("${OPAL_SPLIT_RES[@]}")
         else
             use_res=("${cRESOLUTIONS[@]}")
         fi
 
         if [[ "$cTARGETS" == ${cFIELD_INDICATOR}* ]]; then
-            mapfile -d $'\0' -t use_loc < <(printf "%s" "${OPAL_SPLIT_RES[${cTARGETS#$cFIELD_INDICATOR}]}" | tr '|' '\0')
+            split_at_sign "${item_split[${cTARGETS#$cFIELD_INDICATOR}]}" "|"  # format: loc[|loc[|...]]
+            use_loc=("${OPAL_SPLIT_RES[@]}")
         else
             use_loc=("${cTARGETS[@]}")
         fi
 
         for res in "${use_res[@]}"; do
-            local res_x="$res"
-            local res_y="$res"
+            split_at_sign "$res" "+"  # format: X[xY][+prefix[+suffix]]
+            res_split=("${OPAL_SPLIT_RES[@]}")
+            local res_x="${res_split[0]}"
+            local res_y="${res_split[0]}"
 
             if [[ "$res" == *x* ]]; then
                 res_x="${res%%x*}"
@@ -90,7 +111,10 @@ function render_batch() { # no arguments required, all info has to be set as var
                     continue
                 }
 
-                target="$(printf "%s" "$loc/$(basename "$source")" | sed "s/\.$cFILE_SUFFIX$/.png/I")"
+                # target = <target location/<main prefix><prefix><basename><suffix><main suffix>.png
+                local prefix="${res_split[1]}"
+                local suffix="${res_split[2]}"
+                target="$(printf "%s" "$loc/$cPREFIX$prefix$(basename "$source")" | sed "s/\.$cFILE_SUFFIX$//I")$suffix$cSUFFIX.png"
                 if [[ "$source" -nt "$target" ]] || [[ "$cFORCE" == true ]]; then
                     do_render_single "$source" "$res_x" "$res_y" "$target" || {
                         printf "error: failed to render '%s' at %sx%s\n" "$source" "$res_x" "$res_y"
@@ -103,4 +127,9 @@ function render_batch() { # no arguments required, all info has to be set as var
             done
         done
     done
+
+    if [[ "$keep_config" != "keep" ]]; then
+        unset cNAME cITEMS cRESOLUTIONS cTARGETS cSUFFIX cPREFIX
+        # cFORCE is always preserved
+    fi
 }
