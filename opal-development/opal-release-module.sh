@@ -74,6 +74,57 @@ function read_metadata() {
     cMETADATA["fullNameStyled"]="$cOPAL_PREFIX_STYLED$cNAME_STYLED"
 }
 
+function parse_arguments() { # @: all shell arguments given to release-module.sh
+    function _show_help() {
+        echo "\
+** $0 **
+
+Create Opal module release bundles.
+
+Usage: $0 [-b OUTNAME] [-h] [-V]
+
+Arguments:
+    -b, --bundle OUTNAME - write bundle to \"$cBUILD_DIR/\$OUTNAME.tar.gz\" instead of
+                           using an automatically generated name
+    -c, --config KEY     - get value of metadata field KEY
+    -h, --help           - show this help and exit
+    -V, --version        - show version and license information
+"
+    }
+
+    function _version() {
+        printf "opal-release-module.sh\nCopyright (c) 2018-2021 Mirian Margiani -- CC-BY-SA-4.0\n"
+        printf "version %s\n" "$c__OPAL_RELEASE_MODULE_VERSION__"
+        read_metadata quiet
+        printf "\nFOR MODULE: %s (%s), version %s\n" \
+            "${cMETADATA[fullName]}" "${cMETADATA[fullNameStyled]}" "$cVERSION"
+    }
+
+    while (( $# > 0 )); do
+        case "$1" in
+            --help|-h) _show_help; exit 0;;
+            --version|-V) _version; exit 0;;
+            --bundle|-b) shift && [[ -z "$1" ]] && echo "error: OUTNAME is missing" && exit 9
+                declare -g -x cCUSTOM_BUNDLE_NAME="$1"
+            ;;
+            --config|-c)
+                shift && read_metadata quiet
+                if [[ -n "$1" ]]; then
+                    [[ -n "${cMETADATA["$1"]}" ]] && printf "%s\n" "${cMETADATA["$1"]}" || exit 1
+                else
+                    for i in "${!cMETADATA[@]}"; do
+                        printf "%s\n" "$i: ${cMETADATA["$i"]}"
+                    done
+                fi
+                exit 0
+            ;;
+            -*) printf "unknown option: %s\n" "$1";;
+            *) shift; continue;;
+        esac
+        shift
+    done
+}
+
 function setup_translations() {
     local back_dir="$(pwd)"
     read_metadata
