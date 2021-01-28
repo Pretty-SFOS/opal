@@ -9,17 +9,19 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 - [x] package translations with modules
 - [x] merge module translations with app translations
-- [ ] bundle module metadata in module repos
-    - [ ] about the module: license, author, etc. (maybe as JSON)
-    - [ ] example page(s) to be included in Gallery
-    - [ ] module documentation as `qch` file
+- [x] bundle module metadata in module repos
+    - [x] about the module: license, author, etc. (maybe as JSON)
+    - [x] example page(s) to be included in Gallery
+    - [x] module documentation as `qch` file (built in `release-module.sh`)
 - [x] split snippets for app developers and for Opal development
 - [ ] proper versioning
     - [ ] documentation
-    - [ ] Semantic Versioning for all modules, snippets, etc.
+    - [x] Semantic Versioning for all modules...
+    - [ ] ...snippets
+    - [ ] ...resources etc.
 - [ ] documentation
     - [ ] properly document the documentation process
-    - [ ] use `qdoc` or `doxygen`
+    - [x] use `qdoc` or `doxygen`
         Problem: QtCreator auto-completes documentation comments only in C++
         files. It is tedious to write doc comments manually in QML files.
 
@@ -31,23 +33,26 @@ SPDX-License-Identifier: GFDL-1.3-or-later
         - https://doc.qt.io/qt-5/qtwritingstyle-qml.html
         - https://retifrav.github.io/blog/2017/05/24/documenting-qt-project-with-qdoc/
         - https://doc.qt.io/qtcreator/creator-help.html#adding-external-documentation
+    - [x] solution: we use `qdoc`, it is not that tedious after all and has good
+          integration in QtCreator
 
 ## Modules
 
 - Snippets
     - [ ] implement fetching module sources in `opal-use-modules.pri`
-    - [ ] remove `opal-fetch-modules.pri` stub
+    - [x] remove `opal-fetch-modules.pri` stub
 - Gallery
     - [x] general clean up
     - [x] update to use latest About module
     - [x] make 'about this module' page more accessible
     - [x] improve translations
     - [x] update readme
-    - [ ] automatically fetch latest modules
-    - [ ] move module example pages to module repos
+    - [x] automatically fetch latest modules
+    - [x] move module example pages to module repos
 - About
-    - [ ] documentation
+    - [x] basic documentation
     - [x] improve loading time; load licenses asynchronously
+    - [ ] in-depth, detailed documentation
     - [ ] allow multiple buttons per section
     - [ ] default button for translations, next to / below source code
     - [ ] default button(s) and translations for donations
@@ -66,3 +71,15 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [ ] add example page
     - [ ] clean up and unify API
     - [ ] documentation
+
+## Resources
+
+- extra icons
+    - [ ] add metadata
+    - [ ] add example page
+    - [ ] include in gallery app
+    - [ ] develop simple and user friendly way to include custom resources
+          without having to use QRC files
+          - [ ] how to package?
+          - [ ] add support in release-module.sh
+          - [ ] add documentation
