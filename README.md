@@ -121,11 +121,12 @@ Useful tools for developing Opal can be found in the
 
 1. Create a new repository named `opal-<...>`
 2. Create the same structure as in [`opal-about`](https://github.com/Pretty-SFOS/opal-about) (changing the relevant parts)
-3. Write an entry for the new module in
-    - the gallery application: [`qml/harbour-opal.qml`](https://github.com/Pretty-SFOS/opal-gallery/blob/master/qml/harbour-opal.qml)
-    - the wiki: [list of modules](TBD)
-4. Create one or more example pages for the new module in the gallery application
-   in the directory [`qml/module-pages`](https://github.com/Pretty-SFOS/opal-gallery/blob/master/qml/module-pages/)
+3. Update module metadata in `doc/module.opal`
+4. Write an entry in the wiki: [list of modules](TBD)
+5. Create one or more example pages for the new module. The main page must be
+   `doc/gallery.qml`. Extra pages can be added as `doc/gallery/*.qml`. See
+   the [module metadata file](https://github.com/Pretty-SFOS/opal-about/blob/main/doc/module.opal)
+   for details.
 
 Make sure to use `qsTranslate("Opal.<Module>", "string")` instead of
 `qsTr("string")` for all translations. Otherwise merged translations would

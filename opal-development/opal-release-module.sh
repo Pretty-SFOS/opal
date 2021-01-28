@@ -8,6 +8,8 @@
 # See https://github.com/Pretty-SFOS/opal/blob/master/opal-development/opal-release-module.md
 # for documentation.
 
+c__OPAL_RELEASE_MODULE_VERSION__="0.1.0"
+
 shopt -s extglob
 
 _x="${cTR_DIR:="translations"}"
@@ -15,6 +17,7 @@ _x="${cDOC_DIR:="doc"}"
 _x="${cBUILD_DIR:="build"}"
 _x="${cBUILD_DOC_DIR:="build-doc"}"
 _x="${cEXAMPLES_DIR:="examples"}"
+_x="${cMETADATA_FILE:="$cDOC_DIR/module.opal"}"
 
 _x="${cQT_SUFFIX:="-qt5"}"
 _x="${cLUPDATE_BIN:="lupdate$cQT_SUFFIX"}"
@@ -42,11 +45,38 @@ function check_dependencies() {
 # If the user changes cDEPENDENCIES later, they can re-run this command.
 check_dependencies
 
-function setup_translations() {
-    if [[ -z "$cNAME" ]]; then
-        echo "error: no module name provided"
-        exit 3
+function read_metadata() {
+    [[ "$1" == quiet ]] && local quiet=true
+    declare -g -x -A cMETADATA
+
+    if [[ ! -f "$cMETADATA_FILE" ]]; then
+        echo "error: module metadata file not found at '$cMETADATA_FILE'"
+        exit 8
     fi
+
+    function _read_value() {
+        grep -qoe "^$1: " "$cMETADATA_FILE" || { echo "error: metadata field '$1' not defined"; exit 8; }
+        declare -g -x "$2"="$(grep -e "^$1: " "$cMETADATA_FILE" | sed "s/^$1: //")"
+        [[ -z "${!2}" ]] && { echo "error: metadata field '$1' is empty"; exit 8; }
+        [[ "$quiet" != true ]] && echo "$1: ${!2}"
+        cMETADATA["$1"]="${!2}"
+    }
+
+    _read_value "name" "cNAME"
+    _read_value "nameStyled" "cNAME_STYLED"
+    _read_value "version" "cVERSION"
+    _read_value "description" "cDESCRIPTION"
+    _read_value "author" "cAUTHOR"
+    _read_value "mainLicenseSpdx" "cLICENSE"
+    _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES"
+
+    cMETADATA["fullName"]="$cOPAL_PREFIX$cNAME"
+    cMETADATA["fullNameStyled"]="$cOPAL_PREFIX_STYLED$cNAME_STYLED"
+}
+
+function setup_translations() {
+    local back_dir="$(pwd)"
+    read_metadata
 
     local do_translate=true
     if (( "${#cTRANSLATE[@]}" == 0 )); then
@@ -56,14 +86,15 @@ function setup_translations() {
 
     mkdir -p "$cTR_DIR" || { echo "error: failed to prepare translations directory"; exit 1; }
     "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/$cNAME.ts"
-    exit $?
+    success="$?"
+
+    cd "$back_dir"
+    exit "$success"
 }
 
 function build_bundle() {
-    if [[ -z "$cNAME" ]]; then
-        echo "error: no module name provided"
-        exit 2
-    fi
+    local back_dir="$(pwd)"
+    read_metadata
 
     if ! type copy_files &>/dev/null; then
         echo "error: copy_files function not defined"
@@ -76,29 +107,41 @@ function build_bundle() {
         do_translate=false
     fi
 
-    # Prepare version number from git tag, using current date and current commit
-    # as fallback values
-    local version
-    if ! git describe --tags 2>/dev/null >/dev/null; then
-        version="v$(date +%F)"
-        if git rev-parse --short HEAD --verify 2>/dev/null >/dev/null; then
-            version="$version-$(git rev-parse --short HEAD --verify)"
-        fi
-    else
-        version="v$(git describe --tags | sed 's/^v//g')"
+    if [[ -z "$cBUILD_DIR" ]]; then
+        echo "error: no build directory specified"
+        exit 4
+    fi
+
+    # # Prepare version number from git tag, using current date and current commit
+    # # as fallback values
+    # local version
+    # if ! git describe --tags 2>/dev/null >/dev/null; then
+    #     version="v$(date +%F)"
+    #     if git rev-parse --short HEAD --verify 2>/dev/null >/dev/null; then
+    #         version="$version-$(git rev-parse --short HEAD --verify)"
+    #     fi
+    # else
+    #     version="v$(git describe --tags | sed 's/^v//g')"
+    # fi
+
+    local version="$cVERSION"
+    local commit=""
+    if git rev-parse --short HEAD --verify 2>/dev/null >/dev/null; then
+        commit="$(git rev-parse --short HEAD --verify)"
     fi
 
     # Setup base paths
-    local package="$cNAME-$version"
-    local build_root="$cBUILD_DIR/$package"
+    local build_root_name="${cMETADATA[fullName]}"
+    local build_root="$cBUILD_DIR/$build_root_name"
     local qml_base="$build_root/qml/opal-modules"
-    local tr_base="$build_root/libs/opal-translations/$cNAME"
+    local tr_base="$build_root/libs/opal-translations/${cMETADATA[fullName]}"
+    local meta_base="$build_root/libs"
     # local plugin_base="$build_root/TODO"
 
     mkdir -p "$cBUILD_DIR" || { echo "error: failed to create base build directory"; exit 1; }
     rm -rf "$build_root" || { echo "error: failed to clear build root"; exit 1; }
     mkdir -p "$build_root" || { echo "error: failed to create build root"; exit 1; }
-    mkdir -p "$qml_base" "$tr_base" || { echo "error: failed to prepare build root"; exit 1; }
+    mkdir -p "$meta_base" "$qml_base" "$tr_base" || { echo "error: failed to prepare build root"; exit 1; }
     # mkdir -p "$plugin_base" || { echo "error: failed to prepare plugin base directory"; exit 1; }
 
     if [[ "$do_translate" == true ]]; then
@@ -118,22 +161,43 @@ function build_bundle() {
     fi
     copy_files || { echo "error: failed to prepare sources"; exit 1; }
 
+    # Write metadata file
+    local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
+    printf "%s\n" "# Store this file to keep track of packaged module versions." \
+                  "# It is not necessary to include this in your app's final RPM package." \
+        > "$metadata_file"
+    printf "%s: %s\n" \
+           "module" "${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})" \
+           "version" "$cVERSION${commit:+" (git:$commit)"}" \
+           "description" "$cDESCRIPTION" \
+           "author" "$cAUTHOR" \
+           "license" "$cLICENSE" \
+           "sources" "https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
+        >> "$metadata_file"
+
     # Create final package
     cd "$cBUILD_DIR"
-    tar -czvf "$package.tar.gz" "$package" || {
+    local package="${cMETADATA[fullName]}-$version${commit:+"-$commit"}"
+    local bundle_name="${cCUSTOM_BUNDLE_NAME:-"$package"}.tar.gz"
+    tar -czvf "$bundle_name" "$build_root_name" || {
         echo "error: failed to create package"
         exit 2
     }
-    rm -rf "$package"  # clear build root
+    rm -rf "$build_root_name"  # clear build root
+
+    cd "$back_dir"
 }
 
 function build_doc() {
+    local back_dir="$(pwd)"
+    read_metadata
+
     export QT_INSTALL_DOCS="${QT_INSTALL_DOCS:="$("$cQMAKE_BIN" -query QT_INSTALL_DOCS)"}"
     export QT_VERSION="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
     export QT_VER="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
 
-    export OPAL_PROJECT="${OPAL_PROJECT:=$cOPAL_PREFIX$cNAME}"
-    export OPAL_PROJECT_STYLED="${OPAL_PROJECT_STYLED:=$cOPAL_PREFIX_STYLED$cNAME_STYLED}"
+    export OPAL_PROJECT="${OPAL_PROJECT:=${cMETADATA[fullName]}}"
+    export OPAL_PROJECT_STYLED="${OPAL_PROJECT_STYLED:=${cMETADATA[fullNameStyled]}}"
     export OPAL_PROJECT_VERSION="${OPAL_PROJECT_VERSION:=$cVERSION}"
     export OPAL_PROJECT_EXAMPLESDIR="${OPAL_PROJECT_EXAMPLESDIR:=$cEXAMPLES_DIR}"
     export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
@@ -142,4 +206,6 @@ function build_doc() {
     "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" "$OPAL_PROJECT.qdocconf" || { echo "error: failed to generate docs"; exit 1; }
     cd "$cBUILD_DOC_DIR" || { echo "error: failed to enter doc directory"; exit 1; }
     "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { echo "error: failed to generate Qt help pages"; exit 1; }
+
+    cd "$back_dir"
 }

@@ -11,12 +11,8 @@
 source ../opal/opal-development/opal-release-module.sh
 
 # Copy and edit this template file for new Opal modules.
+# Module metadata will be read from doc/module.opal.
 # Note: modules requiring extra build steps (Qt plugins) are not yet supported.
-
-# the module's name
-cNAME=mymodule
-cNAME_STYLED=MyModule
-cVERSION=0.1.0
 
 # which files and directories to translate
 cTRANSLATE=(Opal)
