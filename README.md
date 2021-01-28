@@ -15,6 +15,30 @@ If you want to create new applications using Opal, follow the steps below.
 Opal is a library for developers. As an end-user you should not have to do anything.
 
 
+## Project status
+
+> **Opal is not yet ready for production.**
+
+That being said, some modules and snippets are already in a usable state.
+
+- the [gallery app](https://github.com/Pretty-SFOS/opal-gallery) can be built and used
+- [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable and versatile
+  but some features are still planned which may change the interface. Refer to
+  the [to-do list](TODO.md) for details. No vital features are missing.
+- all snippets needed for including modules in an app are ready (cf. "Using Opal")
+- [render-icons.sh](snippets/opal-render-icons.md) is ready and stable
+
+Notably still missing:
+
+- [snippets](snippets) are not yet properly versioned
+- [the wiki](TBD) does not yet exist
+- resources modules (i.e. extra icons etc.) are not yet properly supported
+- plugins (i.e. modules with parts written in C++) are not yet supported
+- [Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar) is not yet imported and
+  still lives in [the old repository](https://github.com/ichthyosaurus/sf-docked-tab-bar)
+- code documentation should be hosted online somewhere
+
+
 ## Using Opal
 
 Please refer to [the wiki](TBD) for snippets, recipes, and other documentation.
