@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: CC-BY-SA-4.0
 # SPDX-FileCopyrightText: 2018-2021 Mirian Margiani
 #
-# See https://github.com/Pretty-SFOS/opal/blob/master/snippets/opal-render-icons.md
+# See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-render-icons.md
 # for documentation.
 
 shopt -s extglob

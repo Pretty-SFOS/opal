@@ -10,7 +10,7 @@
 # in the "# >> macros" section:
 #       %define __provides_exclude_from ^%{_datadir}/.*$
 #
-# See https://github.com/Pretty-SFOS/opal/blob/master/snippets/opal-use-modules.md
+# See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-use-modules.md
 # for up-to-date documentation.
 #
 

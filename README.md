@@ -94,7 +94,7 @@ See [this page](snippets/opal-use-modules.md) for more information.
 
 ## Modules
 
-You can find [a list of modules](https://github.com/Pretty-SFOS/opal-gallery/blob/master/qml/harbour-opal.qml)
+You can find [a list of modules](https://github.com/Pretty-SFOS/opal-gallery/blob/main/qml/harbour-opal.qml)
 in the Wiki.
 
 You can also browse the [snippets directory](snippets/) or install the

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: CC0-1.0
 # SPDX-FileCopyrightText: 2021 Mirian Margiani
 #
-# See https://github.com/Pretty-SFOS/opal/blob/master/opal-development/opal-release-module.md
+# See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-release-module.md
 # for documentation.
 
 # Run this script from the module's root directory.

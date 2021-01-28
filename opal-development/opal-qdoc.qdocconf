@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: CC-BY-SA-4.0
 # SPDX-FileCopyrightText: 2021 Mirian Margiani
 #
-# See https://github.com/Pretty-SFOS/opal/blob/master/opal-development/opal-qdoc.md
+# See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-qdoc.md
 # for documentation.
 #
 
@@ -14,7 +14,7 @@ project = $OPAL_PROJECT_STYLED
 version = $OPAL_PROJECT_VERSION
 
 # TODO: document custom macros
-macro.opalrootlink = "https://github.com/Pretty-SFOS/opal/blob/master/\1"
+macro.opalrootlink = "https://github.com/Pretty-SFOS/opal/blob/main/\1"
 macro.opsnip = "\\l {\\opalrootlink {snippets/opal-\1.md}} {opal-\1}"
 macro.opdev = "\\l {\\opalrootlink {opal-development/opal-\1.md}} {opal-\1}"
 macro.opmod = "\\l {https://github.com/Pretty-SFOS/opal-\1} {Opal.\1}"
