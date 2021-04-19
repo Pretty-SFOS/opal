@@ -29,6 +29,7 @@ function check_dependencies() {
 check_dependencies
 
 function do_render_single() { # 1: input, 2: width, 3: height, 4: output
+    printf "rendering %s to %s at %sx%s" "$1" "$4" "$2" "$3"
     # replace '-o' by '-z -e' for inkscape < 1.0
     inkscape -o "$4" -w "$2" -h "$3" "$1" && pngcrush -ow "$4"
 }
