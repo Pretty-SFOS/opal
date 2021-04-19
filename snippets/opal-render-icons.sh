@@ -48,7 +48,7 @@ function split_at_sign() { # 1: string with values separated by @, |, +
         split="@"
     fi
 
-    mapfile -d $'\0' -t OPAL_SPLIT_RES < <(printf "%s" "$@" | sed "s/\\$split/__SIGN_REPLACED__/g;" |\
+    mapfile -d $'\0' -t OPAL_SPLIT_RES < <(printf "%s" "$@" | sed "s/\\\\$split/__SIGN_REPLACED__/g;" |\
                                            tr "$split" '\0' | sed "s/__SIGN_REPLACED__/$split/g")
 }
 
