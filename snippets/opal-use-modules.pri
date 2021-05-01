@@ -10,6 +10,9 @@
 # in the "# >> macros" section:
 #       %define __provides_exclude_from ^%{_datadir}/.*$
 #
+# And add the import path in C++:
+#       view->engine()->addImportPath(SailfishApp::pathTo(OPAL_IMPORT_PATH).toString());
+#
 # See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-use-modules.md
 # for up-to-date documentation.
 #
