@@ -53,14 +53,14 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [x] basic documentation
     - [x] improve loading time; load licenses asynchronously
     - [ ] in-depth, detailed documentation
-    - [ ] allow multiple buttons per section
-    - [ ] default button for translations, next to / below source code
-    - [ ] default button(s) and translations for donations
-        - [ ] defaults for different providers?
-    - [ ] decouple main license and third-party licenses
-        - [ ] automatically add app name to main license (as component name)
-    - [ ] automatically include third-party attributions in contributors page
-        - [ ] make them clickable and open the resp. license
+    - [x] allow multiple buttons per section
+    - [x] default button for translations, next to / below source code
+    - [x] default button(s) and translations for donations
+        - [x] defaults for different providers?
+    - [x] decouple main license and third-party licenses
+        - [x] automatically add app name to main license (as component name)
+    - [x] automatically include third-party attributions in contributors page
+        - [x] make them clickable and open the resp. license
 - TabBar
     - [ ] import to Opal
     - [ ] add example page
