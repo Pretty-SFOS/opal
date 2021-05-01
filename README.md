@@ -21,10 +21,9 @@ Opal is a library for developers. As an end-user you should not have to do anyth
 
 That being said, some modules and snippets are already in a usable state.
 
-- the [gallery app](https://github.com/Pretty-SFOS/opal-gallery) can be built and used
+- the [gallery app](https://github.com/Pretty-SFOS/opal-gallery) is ready and stable
 - [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable and versatile
-  but some features are still planned which may change the interface. Refer to
-  the [to-do list](TODO.md) for details. No vital features are missing.
+  but documentation is incomplete and partly outdated.
 - all snippets needed for including modules in an app are ready (cf. "Using Opal")
 - [render-icons.sh](snippets/opal-render-icons.md) is ready and stable
 
@@ -65,8 +64,9 @@ Follow these steps to include Opal modules in your project:
         # << macros
 
 9. Register `qml/opal-modules` as QML import path. The code below is fine for
-   new projects. `OPAL_IMPORT_PATH` is defined when including
-   [opal-use-modules.pri](snippets/opal-use-modules.pri).
+   new projects. `OPAL_IMPORT_PATH` is defined by including
+   [opal-use-modules.pri](snippets/opal-use-modules.pri) in your `pro` file
+   (see above).
 
 ```CPP
 //// in src/harbour-myproject.cpp:
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 }
 ```
 
-10. If Opal everything is setup correctly, you can now use Opal by importing the
+10. If everything is setup correctly, you can now use Opal by importing the
     modules. For the About page component you would have to write in QML:
 
         import Opal.About 1.0
