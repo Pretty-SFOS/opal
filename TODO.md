@@ -17,7 +17,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 - [ ] proper versioning
     - [ ] documentation
     - [x] Semantic Versioning for all modules...
-    - [ ] ...snippets
+    - [x] ...snippets
     - [ ] ...resources etc.
 - [ ] documentation
     - [ ] properly document the documentation process
@@ -50,9 +50,11 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [x] automatically fetch latest modules
     - [x] move module example pages to module repos
 - About
+    - [ ] in-depth, detailed documentation
+    - [ ] support multiple maintainers, authors
+    - [ ] differentiate between current maintainers and authors, and add relevant contrib sections automatically
     - [x] basic documentation
     - [x] improve loading time; load licenses asynchronously
-    - [ ] in-depth, detailed documentation
     - [x] allow multiple buttons per section
     - [x] default button for translations, next to / below source code
     - [x] default button(s) and translations for donations
