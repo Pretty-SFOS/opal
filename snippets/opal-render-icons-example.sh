@@ -6,11 +6,13 @@
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-render-icons.md
 # for documentation.
+#
+# @@@ keep this line: based on template v0.2.0
+#
 c__FOR_RENDER_LIB__="0.2.0"
 
 # Run this script from the same directory where your icon sources are located,
 # e.g. <app>/icon-src.
-
 source ../libs/opal-render-icons.sh
 cFORCE=false
 

@@ -6,6 +6,8 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-release-module.md
 # for documentation.
 #
+# @@@ keep this line: based on template v0.1.0
+#
 
 # Include Opal's default configuration file from your project's root directory.
 include(opal-qdoc.qdocconf)

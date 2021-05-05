@@ -16,6 +16,8 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-use-modules.md
 # for up-to-date documentation.
 #
+# @@@ FILE VERSION 0.1.0
+#
 
 # Copy module packages to OPAL_PATH. The path must be below your app's main QML
 # directory. Specify the path relative to your project root.

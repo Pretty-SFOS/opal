@@ -7,6 +7,8 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-qdoc.md
 # for documentation.
 #
+# @@@ FILE VERSION 0.1.0
+#
 
 # project definition
 # description has to be set by the module
