@@ -308,7 +308,7 @@ function build_doc() {
     export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
     export OPAL_DOC_OUTDIR="${OPAL_DOC_OUTDIR:=$cBUILD_DOC_DIR}"
 
-    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" "$OPAL_PROJECT.qdocconf" || { echo "error: failed to generate docs"; exit 1; }
+    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$cDOC_DIR/$OPAL_PROJECT.qdocconf" || { echo "error: failed to generate docs"; exit 1; }
     cd "$cBUILD_DOC_DIR" || { echo "error: failed to enter doc directory"; exit 1; }
     "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { echo "error: failed to generate Qt help pages"; exit 1; }
 
