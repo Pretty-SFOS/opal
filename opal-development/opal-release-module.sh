@@ -91,11 +91,11 @@ function verify_version() {
 }
 
 # make sure script and library are compatible
-verify_version
+verify_version >/dev/stderr
 
 # check dependencies immediately after loading the script
 # If the user changes cDEPENDENCIES later, they can re-run this command.
-check_dependencies
+check_dependencies >/dev/stderr
 
 function read_metadata() {
     [[ "$1" == quiet ]] && local quiet=true
