@@ -7,6 +7,6 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 This directory contains snippets that are needed for developing Opal.
 
-Each snippet file has corresponding documentation file with the same name.
+Each snippet file has a corresponding documentation file with the same name.
 
 Please refer to [the wiki](TBD) for additional documentation.
