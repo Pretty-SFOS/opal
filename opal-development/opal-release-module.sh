@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.2.0"
+c__OPAL_RELEASE_MODULE_VERSION__="0.3.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -118,7 +118,9 @@ function read_metadata() {
     _read_value "nameStyled" "cNAME_STYLED"
     _read_value "version" "cVERSION"
     _read_value "description" "cDESCRIPTION"
-    _read_value "author" "cAUTHOR"
+    _read_value "authors" "cAUTHORS"
+    _read_value "maintainers" "cMAINTAINERS"
+    _read_value "attribution" "cATTRIBUTION"
     _read_value "mainLicenseSpdx" "cLICENSE"
     _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES"
 
@@ -268,14 +270,15 @@ function build_bundle() {
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
     printf "%s\n" "# Store this file to keep track of packaged module versions." \
                   "# It is not necessary to include this in your app's final RPM package." \
-                  "# SPDX-FileCopyrightText: ${cMETADATA[fullNameStyled]} contributors" \
+                  "# SPDX-FileCopyrightText: $cATTRIBUTION" \
                   "# SPDX-License-Identifier: $cLICENSE" "" \
         > "$metadata_file"
     printf "%s: %s\n" \
            "module" "${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})" \
            "version" "$cVERSION${commit:+" (git:$commit)"}" \
            "description" "$cDESCRIPTION" \
-           "author" "$cAUTHOR" \
+           "maintainers" "$cMAINTAINERS" \
+           "attribution" "$cATTRIBUTION" \
            "license" "$cLICENSE" \
            "sources" "https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
         >> "$metadata_file"
