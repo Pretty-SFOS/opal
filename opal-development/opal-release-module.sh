@@ -268,6 +268,8 @@ function build_bundle() {
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
     printf "%s\n" "# Store this file to keep track of packaged module versions." \
                   "# It is not necessary to include this in your app's final RPM package." \
+                  "# SPDX-FileCopyrightText: ${cMETADATA[fullNameStyled]} contributors" \
+                  "# SPDX-License-Identifier: $cLICENSE" "" \
         > "$metadata_file"
     printf "%s: %s\n" \
            "module" "${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})" \
