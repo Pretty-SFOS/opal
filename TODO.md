@@ -15,7 +15,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [x] module documentation as `qch` file (built in `release-module.sh`)
 - [x] split snippets for app developers and for Opal development
 - [ ] proper versioning
-    - [ ] documentation
+    - [x] ~~documentation~~
     - [x] Semantic Versioning for all modules...
     - [x] ...snippets
     - [ ] ...resources etc.
@@ -50,9 +50,10 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [x] automatically fetch latest modules
     - [x] move module example pages to module repos
 - About
-    - [ ] in-depth, detailed documentation
-    - [ ] support multiple maintainers, authors
-    - [ ] differentiate between current maintainers and authors, and add relevant contrib sections automatically
+    - [x] in-depth, detailed documentation
+    - [x] support multiple maintainers, authors
+    - [x] ~~differentiate between current maintainers and authors~~
+    - [x] add authors/maintainers contrib section automatically
     - [x] basic documentation
     - [x] improve loading time; load licenses asynchronously
     - [x] allow multiple buttons per section
