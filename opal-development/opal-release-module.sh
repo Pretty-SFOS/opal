@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.5.1"
+c__OPAL_RELEASE_MODULE_VERSION__="0.5.2"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -32,10 +32,21 @@ _x="${cQHG_BIN:="qhelpgenerator$cQT_SUFFIX"}"
 _x="${cOPAL_PREFIX:="opal-"}"
 _x="${cOPAL_PREFIX_STYLED:="Opal."}"
 
-cSTRIP_COMMENTS_SED="$(dirname "$0")/strip_comments.sed"
+# adapted from: https://theunixshell.blogspot.com/2012/12/delete-all-comments-from-c-source-file.html
+cSTRIP_COMMENTS_PERL="$(
+cat << "EOF"
+$/ = undef;
+$_ = <>;
+# only for multi-line comments:
+# s#/\*[^*]*\*+([^/*][^*]*\*+)*/|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $2 ? $2 : ""#gse;
+# adapted for single-line comments, excluding '//@':
+s#/[ ]*\*[^*]*\*+([^/*][^*]*\*+)*/|(//@.*?\n)|[ ]*//.*?(\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $4 ? $4 : (defined $3 ? $3 : (defined $2 ? $2 : ""))#gse;
+print;
+EOF
+)"
 
 [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
-cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN")
+cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "perl")
 
 function check_dependencies() {
     [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
@@ -45,10 +56,6 @@ function check_dependencies() {
             exit 1
         fi
     done
-
-    if [[ ! -f "$cSTRIP_COMMENTS_SED" ]]; then
-        printf "error: $(basename "$cSTRIP_COMMENTS_SED") must live next to $(basename "$0")"
-    fi
 }
 
 function log() {
@@ -320,7 +327,7 @@ function build_bundle() {
     mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
 
     for i in "${files_to_strip[@]}"; do
-        sed -nf "$cSTRIP_COMMENTS_SED" "$i" | sed 's/[ ]*$//g' > "$temp"
+        perl <(cat <<<"$cSTRIP_COMMENTS_PERL") "$i" | sed 's/[ ]*$//g' > "$temp"
         if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
             log "warning: no copyright info in '$i' after stripping comments"
             log "         make sure to mark all required comments with '//@'"
