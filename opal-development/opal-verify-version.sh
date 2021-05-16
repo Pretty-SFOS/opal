@@ -26,9 +26,9 @@ function verify_version() {
         exit 1
     fi
 
-    if [[ ! "${!user_version_var}" =~ ^[0-9]+.[0-9]+.[0-9]+ ]]; then
-        # SemVer actually allows different forms of suffices...
-        printf -- "error: variable $user_version_var='%s' does not contain a valid version number\n" "${!user_version_var}"
+    if [[ ! "${!user_version_var}" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]] && [[ ! "${!user_version_var}" =~ ^[0-9]+.[0-9]+.[0-9]+[-+] ]]; then
+        # we don't verify pre-release versions and build metadata (i.e. everything after "-" or "+")
+        log "error: variable $user_version_var='${!user_version_var}' does not contain a valid version number"
         exit 1
     fi
 
