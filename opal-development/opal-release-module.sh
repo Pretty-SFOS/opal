@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.4.0"
+c__OPAL_RELEASE_MODULE_VERSION__="0.5.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -202,6 +202,37 @@ function setup_translations() {
     exit "$success"
 }
 
+function build_qdoc() { # 1: to=/path/to/output/dir
+    # If $1 is to=/path/to/output/dir, the generated help file will be copied
+    # to the given directory.
+
+    local back_dir="$(pwd)"
+    read_metadata
+
+    export QT_INSTALL_DOCS="${QT_INSTALL_DOCS:="$("$cQMAKE_BIN" -query QT_INSTALL_DOCS)"}"
+    export QT_VERSION="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
+    export QT_VER="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
+
+    export OPAL_PROJECT="${OPAL_PROJECT:=${cMETADATA[fullName]}}"
+    export OPAL_PROJECT_STYLED="${OPAL_PROJECT_STYLED:=${cMETADATA[fullNameStyled]}}"
+    export OPAL_PROJECT_VERSION="${OPAL_PROJECT_VERSION:=$cVERSION}"
+    export OPAL_PROJECT_EXAMPLESDIR="${OPAL_PROJECT_EXAMPLESDIR:=$cEXAMPLES_DIR}"
+    export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
+    export OPAL_DOC_OUTDIR="${OPAL_DOC_OUTDIR:=$cBUILD_DOC_DIR}"
+
+    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$cDOC_DIR/$OPAL_PROJECT.qdocconf" || { log "error: failed to generate docs"; exit 1; }
+    cd "$cBUILD_DOC_DIR" || { log "error: failed to enter doc directory"; exit 1; }
+    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { log "error: failed to generate Qt help pages"; exit 1; }
+
+    cd "$back_dir"
+
+    if [[ "$1" == "to="* ]]; then
+        local copy_to="${1#to=}"
+        mkdir -p "$copy_to" || { log "error: failed to prepare output directory"; exit 1; }
+        cp "$cBUILD_DOC_DIR/$OPAL_PROJECT.qch" "$copy_to" || { log "error: failed to copy generated docs"; exit 1; }
+    fi
+}
+
 function build_bundle() {
     local back_dir="$(pwd)"
     read_metadata
@@ -245,13 +276,14 @@ function build_bundle() {
     local build_root="$cBUILD_DIR/$build_root_name"
     local qml_base="$build_root/qml/opal-modules"
     local tr_base="$build_root/libs/opal-translations/${cMETADATA[fullName]}"
+    local doc_base="$build_root/libs/opal-docs"
     local meta_base="$build_root/libs"
     # local plugin_base="$build_root/TODO"
 
     mkdir -p "$cBUILD_DIR" || { log "error: failed to create base build directory"; exit 1; }
     rm -rf "$build_root" || { log "error: failed to clear build root"; exit 1; }
     mkdir -p "$build_root" || { log "error: failed to create build root"; exit 1; }
-    mkdir -p "$meta_base" "$qml_base" "$tr_base" || { log "error: failed to prepare build root"; exit 1; }
+    mkdir -p "$meta_base" "$qml_base" "$tr_base" "$doc_base" || { log "error: failed to prepare build root"; exit 1; }
     # mkdir -p "$plugin_base" || { log "error: failed to prepare plugin base directory"; exit 1; }
 
     if [[ "$do_translate" == true ]]; then
@@ -264,6 +296,7 @@ function build_bundle() {
     # Make build paths available for copy_files()
     BUILD_ROOT="$build_root"
     QML_BASE="$qml_base"
+    DOC_BASE="$doc_base"
 
     # Import distribution files
     if [[ "$do_translate" == true ]]; then
@@ -297,28 +330,6 @@ function build_bundle() {
         exit 2
     }
     rm -rf "$build_root_name"  # clear build root
-
-    cd "$back_dir"
-}
-
-function build_doc() {
-    local back_dir="$(pwd)"
-    read_metadata
-
-    export QT_INSTALL_DOCS="${QT_INSTALL_DOCS:="$("$cQMAKE_BIN" -query QT_INSTALL_DOCS)"}"
-    export QT_VERSION="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
-    export QT_VER="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
-
-    export OPAL_PROJECT="${OPAL_PROJECT:=${cMETADATA[fullName]}}"
-    export OPAL_PROJECT_STYLED="${OPAL_PROJECT_STYLED:=${cMETADATA[fullNameStyled]}}"
-    export OPAL_PROJECT_VERSION="${OPAL_PROJECT_VERSION:=$cVERSION}"
-    export OPAL_PROJECT_EXAMPLESDIR="${OPAL_PROJECT_EXAMPLESDIR:=$cEXAMPLES_DIR}"
-    export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
-    export OPAL_DOC_OUTDIR="${OPAL_DOC_OUTDIR:=$cBUILD_DOC_DIR}"
-
-    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$cDOC_DIR/$OPAL_PROJECT.qdocconf" || { log "error: failed to generate docs"; exit 1; }
-    cd "$cBUILD_DOC_DIR" || { log "error: failed to enter doc directory"; exit 1; }
-    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { log "error: failed to generate Qt help pages"; exit 1; }
 
     cd "$back_dir"
 }

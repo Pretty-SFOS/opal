@@ -7,9 +7,9 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-release-module.md
 # for documentation.
 #
-# @@@ keep this line: based on template v0.4.0
+# @@@ keep this line: based on template v0.5.0
 #
-c__FOR_RELEASE_LIB__="0.4.0"
+c__FOR_RELEASE_LIB__="0.5.0"
 
 # Run this script from the module's root directory.
 source ../opal/opal-development/opal-release-module.sh
@@ -28,13 +28,11 @@ cTRANSLATE=(Opal)
 # Edit the copy_files() function if any additional copy steps are necessary.
 # By default, the main Opal directory will be copied with all contents. It might
 # be necessary to exclude certain files that are not meant for distribution.
-# Use BUILD_ROOT and QML_BASE (below BUILD_ROOT) to define target paths.
+# Use BUILD_ROOT, QML_BASE, and DOC_BASE (below BUILD_ROOT) to define target paths.
 function copy_files() {
+    build_qdoc to="$DOC_BASE"
     cp -r Opal "$QML_BASE/Opal" || return 1
 }
 
 # build the bundle
 build_bundle
-
-# build documentation
-build_doc
