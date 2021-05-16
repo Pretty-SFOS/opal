@@ -39,10 +39,14 @@ function check_dependencies() {
     [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
     for dep in "${cDEPENDENCIES[@]}"; do
         if ! which "$dep" 2> /dev/null >&2; then
-            printf "error: %s is required\n" "$dep"
+            printf "error: %s is required\n" "$dep" >&2
             exit 1
         fi
     done
+}
+
+function log() {
+    IFS=' ' printf -- "%s\n" "$*" >&2
 }
 
 function verify_version() {
@@ -102,14 +106,14 @@ function read_metadata() {
     declare -g -x -A cMETADATA
 
     if [[ ! -f "$cMETADATA_FILE" ]]; then
-        echo "error: module metadata file not found at '$cMETADATA_FILE'"
+        log "error: module metadata file not found at '$cMETADATA_FILE'"
         exit 8
     fi
 
     function _read_value() {
-        grep -qoe "^$1: " "$cMETADATA_FILE" || { echo "error: metadata field '$1' not defined"; exit 8; }
+        grep -qoe "^$1: " "$cMETADATA_FILE" || { log "error: metadata field '$1' not defined"; exit 8; }
         declare -g -x "$2"="$(grep -e "^$1: " "$cMETADATA_FILE" | sed "s/^$1: //")"
-        [[ -z "${!2}" ]] && { echo "error: metadata field '$1' is empty"; exit 8; }
+        [[ -z "${!2}" ]] && { log "error: metadata field '$1' is empty"; exit 8; }
         [[ "$quiet" != true ]] && echo "$1: ${!2}"
         cMETADATA["$1"]="${!2}"
     }
@@ -158,7 +162,7 @@ Arguments:
         case "$1" in
             --help|-h) _show_help; exit 0;;
             --version|-V) _version; exit 0;;
-            --bundle|-b) shift && [[ -z "$1" ]] && echo "error: OUTNAME is missing" && exit 9
+            --bundle|-b) shift && [[ -z "$1" ]] && log "error: OUTNAME is missing" && exit 9
                 declare -g -x cCUSTOM_BUNDLE_NAME="$1"
             ;;
             --config|-c)
@@ -185,11 +189,11 @@ function setup_translations() {
 
     local do_translate=true
     if (( "${#cTRANSLATE[@]}" == 0 )); then
-        echo "error: no translations defined"
+        log "error: no translations defined"
         exit 4
     fi
 
-    mkdir -p "$cTR_DIR" || { echo "error: failed to prepare translations directory"; exit 1; }
+    mkdir -p "$cTR_DIR" || { log "error: failed to prepare translations directory"; exit 1; }
     "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/$cNAME.ts"
     success="$?"
 
@@ -202,18 +206,18 @@ function build_bundle() {
     read_metadata
 
     if ! type copy_files &>/dev/null; then
-        echo "error: copy_files function not defined"
+        log "error: copy_files function not defined"
         exit 255
     fi
 
     local do_translate=true
     if (( "${#cTRANSLATE[@]}" == 0 )); then
-        echo "note: no translations defined"
+        log "note: no translations defined"
         do_translate=false
     fi
 
     if [[ -z "$cBUILD_DIR" ]]; then
-        echo "error: no build directory specified"
+        log "error: no build directory specified"
         exit 4
     fi
 
@@ -243,16 +247,16 @@ function build_bundle() {
     local meta_base="$build_root/libs"
     # local plugin_base="$build_root/TODO"
 
-    mkdir -p "$cBUILD_DIR" || { echo "error: failed to create base build directory"; exit 1; }
-    rm -rf "$build_root" || { echo "error: failed to clear build root"; exit 1; }
-    mkdir -p "$build_root" || { echo "error: failed to create build root"; exit 1; }
-    mkdir -p "$meta_base" "$qml_base" "$tr_base" || { echo "error: failed to prepare build root"; exit 1; }
-    # mkdir -p "$plugin_base" || { echo "error: failed to prepare plugin base directory"; exit 1; }
+    mkdir -p "$cBUILD_DIR" || { log "error: failed to create base build directory"; exit 1; }
+    rm -rf "$build_root" || { log "error: failed to clear build root"; exit 1; }
+    mkdir -p "$build_root" || { log "error: failed to create build root"; exit 1; }
+    mkdir -p "$meta_base" "$qml_base" "$tr_base" || { log "error: failed to prepare build root"; exit 1; }
+    # mkdir -p "$plugin_base" || { log "error: failed to prepare plugin base directory"; exit 1; }
 
     if [[ "$do_translate" == true ]]; then
         # Update translation catalogs
         "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/"*.ts || {
-            echo "error: failed to update translations"; exit 3
+            log "error: failed to update translations"; exit 3
         }
     fi
 
@@ -262,9 +266,9 @@ function build_bundle() {
 
     # Import distribution files
     if [[ "$do_translate" == true ]]; then
-        cp "$cTR_DIR/"*.ts "$tr_base" || { echo "error: failed to prepare translations"; exit 1; }
+        cp "$cTR_DIR/"*.ts "$tr_base" || { log "error: failed to prepare translations"; exit 1; }
     fi
-    copy_files || { echo "error: failed to prepare sources"; exit 1; }
+    copy_files || { log "error: failed to prepare sources"; exit 1; }
 
     # Write metadata file
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
@@ -288,7 +292,7 @@ function build_bundle() {
     local package="${cMETADATA[fullName]}-$version${commit:+"-$commit"}"
     local bundle_name="${cCUSTOM_BUNDLE_NAME:-"$package"}.tar.gz"
     tar -czvf "$bundle_name" "$build_root_name" || {
-        echo "error: failed to create package"
+        log "error: failed to create package"
         exit 2
     }
     rm -rf "$build_root_name"  # clear build root
@@ -311,9 +315,9 @@ function build_doc() {
     export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
     export OPAL_DOC_OUTDIR="${OPAL_DOC_OUTDIR:=$cBUILD_DOC_DIR}"
 
-    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$cDOC_DIR/$OPAL_PROJECT.qdocconf" || { echo "error: failed to generate docs"; exit 1; }
-    cd "$cBUILD_DOC_DIR" || { echo "error: failed to enter doc directory"; exit 1; }
-    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { echo "error: failed to generate Qt help pages"; exit 1; }
+    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$cDOC_DIR/$OPAL_PROJECT.qdocconf" || { log "error: failed to generate docs"; exit 1; }
+    cd "$cBUILD_DOC_DIR" || { log "error: failed to enter doc directory"; exit 1; }
+    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { log "error: failed to generate Qt help pages"; exit 1; }
 
     cd "$back_dir"
 }
