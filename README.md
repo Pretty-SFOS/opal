@@ -22,14 +22,12 @@ Opal is a library for developers. As an end-user you should not have to do anyth
 That being said, some modules and snippets are already in a usable state.
 
 - the [gallery app](https://github.com/Pretty-SFOS/opal-gallery) is ready and stable
-- [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable and versatile
-  but documentation is incomplete and partly outdated.
+- [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable, documented but not yet well tested
 - all snippets needed for including modules in an app are ready (cf. "Using Opal")
 - [render-icons.sh](snippets/opal-render-icons.md) is ready and stable
 
 Notably still missing:
 
-- [snippets](snippets) are not yet properly versioned
 - [the wiki](TBD) does not yet exist
 - resources modules (i.e. extra icons etc.) are not yet properly supported
 - plugins (i.e. modules with parts written in C++) are not yet supported
@@ -45,25 +43,24 @@ You can find a list of contents [here](TBD).
 
 Follow these steps to include Opal modules in your project:
 
-1. Create a directory named `libs` in your project root.
-2. Create a directory named `opal-modules` in your main QML directory.
-3. Fetch the latest Opal [release bundle](https://github.com/Pretty-SFOS/opal/releases/latest).
-4. Extract [opal-use-modules.pri](snippets/opal-use-modules.pri) to `libs`.
-5. Include the file in your main `pro` file and select which modules to activate.
+1. Fetch the latest Opal [release bundle](https://github.com/Pretty-SFOS/opal/releases/latest).
+2. Extract [opal-use-modules.pri](snippets/opal-use-modules.pri) to `<project>/libs`.
+3. Include the file in your main `pro` file and select which modules to activate.
    Put these lines below your app's `TRANSLATIONS` definition.
 
         CONFIG += opal-about
         include(libs/opal-use-modules.pri)
 
-6. Fetch the required module bundles and extract the QML sources to `qml/opal-modules`.
-7. Extract the ready-made translations to `libs/opal-translations`.
-8. Configure your `spec` file to be Harbour-compatible:
+4. Fetch the module bundles you want to use and extract the `libs` and `qml` folders
+   in your project root. (For example, ready-made translations should end up in
+   `harbour-my-app/libs/opal-translations/`.)
+6. Configure your `spec` file to be Harbour-compatible:
 
         # >> macros
         %define __provides_exclude_from ^%{_datadir}/.*$
         # << macros
 
-9. Register `qml/opal-modules` as QML import path. The code below is fine for
+7. Register `qml/opal-modules` as QML import path. The code below is fine for
    new projects. `OPAL_IMPORT_PATH` is defined by including
    [opal-use-modules.pri](snippets/opal-use-modules.pri) in your `pro` file
    (see above).
