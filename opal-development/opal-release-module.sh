@@ -32,6 +32,8 @@ _x="${cQHG_BIN:="qhelpgenerator$cQT_SUFFIX"}"
 _x="${cOPAL_PREFIX:="opal-"}"
 _x="${cOPAL_PREFIX_STYLED:="Opal."}"
 
+cSTRIP_COMMENTS_SED="$(dirname "$0")/strip_comments.sed"
+
 [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
 cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN")
 
@@ -43,6 +45,10 @@ function check_dependencies() {
             exit 1
         fi
     done
+
+    if [[ ! -f "$cSTRIP_COMMENTS_SED" ]]; then
+        printf "error: $(basename "$cSTRIP_COMMENTS_SED") must live next to $(basename "$0")"
+    fi
 }
 
 function log() {
@@ -305,6 +311,26 @@ function build_bundle() {
         cp "$cTR_DIR/"*.ts "$tr_base" || { log "error: failed to prepare translations"; exit 1; }
     fi
     copy_files || { log "error: failed to prepare sources"; exit 1; }
+
+    unset BUILD_ROOT QML_BASE DOC_BASE
+
+    # Strip comments from dist files
+    shopt -s nullglob extglob
+    local temp="$(mktemp)"
+    mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
+
+    for i in "${files_to_strip[@]}"; do
+        sed -nf "$cSTRIP_COMMENTS_SED" "$i" | sed 's/[ ]*$//g' > "$temp"
+        if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
+            log "warning: no copyright info in '$i' after stripping comments"
+            log "         make sure to mark all required comments with '//@'"
+        else
+            mv "$temp" "$i"
+        fi
+    done
+
+    rm -f "$temp"
+    shopt -u nullglob extglob
 
     # Write metadata file
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
