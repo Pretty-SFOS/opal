@@ -7,6 +7,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 ## General
 
+- [ ] use `qml/modules` instead of `qml/opal-modules` as default modules path
 - [x] package translations with modules
 - [x] merge module translations with app translations
 - [x] bundle module metadata in module repos
@@ -39,8 +40,11 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 ## Modules
 
 - Snippets
-    - [ ] implement fetching module sources in `opal-use-modules.pri`
+    - [x] ~~implement fetching module sources in `opal-use-modules.pri`~~
     - [x] remove `opal-fetch-modules.pri` stub
+    - [x] implement script to merge translations
+    - [ ] remove `opal-use-modules.pri`
+    - [ ] document `opal-merge-translations.sh`
 - Gallery
     - [x] general clean up
     - [x] update to use latest About module

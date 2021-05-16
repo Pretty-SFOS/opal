@@ -44,26 +44,36 @@ You can find a list of contents [here](TBD).
 Follow these steps to include Opal modules in your project:
 
 1. Fetch the latest Opal [release bundle](https://github.com/Pretty-SFOS/opal/releases/latest).
-2. Extract [opal-use-modules.pri](snippets/opal-use-modules.pri) to `<project>/libs`.
-3. Include the file in your main `pro` file and select which modules to activate.
-   Put these lines below your app's `TRANSLATIONS` definition.
-
-        CONFIG += opal-about
-        include(libs/opal-use-modules.pri)
-
-4. Fetch the module bundles you want to use and extract the `libs` and `qml` folders
+2. Extract [opal-merge-translations.sh](snippets/opal-merge-translations.sh) to `<project>/libs`.
+3. Fetch the module bundles you want to use and extract the `libs` and `qml` folders
    in your project root. (For example, ready-made translations should end up in
    `harbour-my-app/libs/opal-translations/`.)
-6. Configure your `spec` file to be Harbour-compatible:
+4. You can now use the modules. For the About page component you would have to write
+   in QML (e.g. at `qml/pages/AboutPage.qml`):
+
+        import "../modules/Opal/About"
+
+5. Configure your `spec` file to be Harbour-compatible:
 
         # >> macros
         %define __provides_exclude_from ^%{_datadir}/.*$
         # << macros
 
-7. Register `qml/opal-modules` as QML import path. The code below is fine for
-   new projects. `OPAL_IMPORT_PATH` is defined by including
-   [opal-use-modules.pri](snippets/opal-use-modules.pri) in your `pro` file
-   (see above).
+6. Add some less important files to your `gitignore` file:
+
+        libs/opal-translations
+        libs/opal-docs
+
+7. Merge shipped translations with your local translations by running
+
+        cd libs
+        ./opal-merge-translations ../translations
+
+**Optional:** if you want to be able to import modules using the dot-notation
+
+7. Register `qml/modules` as QML import path. The code below is fine for
+   new projects. This is not necessary for QML-only projects using QML-only
+   modules.
 
 ```CPP
 //// in src/harbour-myproject.cpp:
@@ -71,7 +81,7 @@ int main(int argc, char *argv[])
 {
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());
-    view->engine()->addImportPath(SailfishApp::pathTo(OPAL_IMPORT_PATH).toString());
+    view->engine()->addImportPath(SailfishApp::pathTo("qml/modules").toString());
     view->setSource(SailfishApp::pathToMainQml());
     view->show();
     return app->exec();
@@ -83,11 +93,10 @@ int main(int argc, char *argv[])
 
         import Opal.About 1.0
 
-After the initial setup you can easily add additional modules by adding them to
-the `CONFIG` variable and then simply extracting QML sources and translations
-to the respective directories.
 
-See [this page](snippets/opal-use-modules.md) for more information.
+After the initial setup you can easily add additional modules by simply
+extracting QML sources, docs, and translations to the respective directories.
+
 
 ## Modules
 
