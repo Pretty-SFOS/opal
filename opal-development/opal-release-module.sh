@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.5.0"
+c__OPAL_RELEASE_MODULE_VERSION__="0.5.1"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -302,9 +302,9 @@ function build_bundle() {
     fi
 
     # Make build paths available for copy_files()
-    BUILD_ROOT="$build_root"
-    QML_BASE="$qml_base"
-    DOC_BASE="$doc_base"
+    local BUILD_ROOT="$build_root"
+    local QML_BASE="$qml_base"
+    local DOC_BASE="$doc_base"
 
     # Import distribution files
     if [[ "$do_translate" == true ]]; then
