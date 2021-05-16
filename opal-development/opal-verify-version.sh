@@ -16,7 +16,7 @@ function log() {
 }
 
 function verify_version() {
-    # @@@ shared function version: 1.0.0
+    # @@@ shared function version: 1.1.0
     local user_version_var="c__FOR_XXXXX_LIB__"
     local opal_version_var="c__OPAL_XXXXX_VERSION__"
 
