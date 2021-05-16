@@ -20,6 +20,8 @@ parse_arguments "$@"
 # Note: modules requiring extra build steps (Qt plugins) are not yet supported.
 
 # which files and directories to translate
+# Note: translations are built from the original sources, independent of the
+# files marked for distribution in copy_files.
 cTRANSLATE=(Opal)
 
 # un-comment the following line to initially setup translations

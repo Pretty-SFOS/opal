@@ -286,6 +286,8 @@ function build_bundle() {
     mkdir -p "$meta_base" "$qml_base" "$tr_base" "$doc_base" || { log "error: failed to prepare build root"; exit 1; }
     # mkdir -p "$plugin_base" || { log "error: failed to prepare plugin base directory"; exit 1; }
 
+    # Translations must be built from the *original* sources and not from the
+    # files prepared in copy_files!
     if [[ "$do_translate" == true ]]; then
         # Update translation catalogs
         "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/"*.ts || {
