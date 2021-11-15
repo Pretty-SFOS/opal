@@ -53,23 +53,31 @@ Follow these steps to include Opal modules in your project:
 
         import "../modules/Opal/About"
 
-5. Configure your `spec` file to be Harbour-compatible:
+5. Configure your `spec` file to be Harbour-compatible (cf. [https://harbour.jolla.com/faq#2.6.0]):
 
         # >> macros
         %define __provides_exclude_from ^%{_datadir}/.*$
         # << macros
 
-6. Add some less important files to your `gitignore` file:
-
-        libs/opal-translations
-        libs/opal-docs
-
-7. Merge shipped translations with your local translations by running
+6. Merge shipped translations with your local translations by running
 
         cd libs
         ./opal-merge-translations ../translations
 
-**Optional:** if you want to be able to import modules using the dot-notation
+7. Add docs and translations to `.gitignore`. They have been merged with your
+   main translations.
+
+        libs/opal-translations
+        libs/opal-docs
+
+After the initial setup you can easily add additional modules by simply
+extracting QML sources, docs, and translations to the respective directories.
+
+
+### Dot-notation
+
+Additional steps are required to be able to import modules using the
+dot-notation.
 
 7. Register `qml/modules` as QML import path. The code below is fine for
    new projects. This is not necessary for QML-only projects using QML-only
@@ -88,14 +96,18 @@ int main(int argc, char *argv[])
 }
 ```
 
-10. If everything is setup correctly, you can now use Opal by importing the
+8. If everything is setup correctly, you can now use Opal by importing the
     modules. For the About page component you would have to write in QML:
 
         import Opal.About 1.0
 
 
-After the initial setup you can easily add additional modules by simply
-extracting QML sources, docs, and translations to the respective directories.
+### Qt Creator
+
+If auto-completion does not work, try adding `qml/modules` to the IDE's module
+search path.
+
+    QML_IMPORT_PATH += qml/modules
 
 
 ## Modules
