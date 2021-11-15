@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.5.2"
+c__OPAL_RELEASE_MODULE_VERSION__="0.6.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -287,7 +287,7 @@ function build_bundle() {
     # Setup base paths
     local build_root_name="${cMETADATA[fullName]}"
     local build_root="$cBUILD_DIR/$build_root_name"
-    local qml_base="$build_root/qml/opal-modules"
+    local qml_base="$build_root/qml/modules"
     local tr_base="$build_root/libs/opal-translations/${cMETADATA[fullName]}"
     local doc_base="$build_root/libs/opal-docs"
     local meta_base="$build_root/libs"
