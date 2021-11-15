@@ -73,11 +73,11 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [ ] add example page
     - [ ] try to remove all reliance on internal/undocumented Silica features (`__silica...`)
     - [ ] documentation
-- ErrorFeedback
-    - [ ] import to Opal
-    - [ ] add example page
-    - [ ] clean up and unify API
-    - [ ] documentation
+- ~~ErrorFeedback~~
+    - [ ] ~~import to Opal~~
+    - [ ] ~~add example page~~
+    - [ ] ~~clean up and unify API~~
+    - [ ] ~~documentation~~
 
 ## Resources
 
