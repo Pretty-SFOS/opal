@@ -7,7 +7,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 ## General
 
-- [ ] use `qml/modules` instead of `qml/opal-modules` as default modules path
+- [x] use `qml/modules` instead of `qml/opal-modules` as default modules path
 - [x] package translations with modules
 - [x] merge module translations with app translations
 - [x] bundle module metadata in module repos
