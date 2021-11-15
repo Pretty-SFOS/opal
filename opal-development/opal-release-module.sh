@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.6.0"
+c__OPAL_RELEASE_MODULE_VERSION__="0.6.1"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -342,10 +342,19 @@ function build_bundle() {
     # Write metadata file
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
     printf "%s\n" "# Store this file to keep track of packaged module versions." \
-                  "# It is not necessary to include this in your app's final RPM package." \
+                  "# It is not necessary to ship this in your app's final RPM package." \
                   "# SPDX-FileCopyrightText: $cATTRIBUTION" \
                   "# SPDX-License-Identifier: $cLICENSE" "" \
         > "$metadata_file"
+    printf "%s\n" "# Attribution using Opal.About:" \
+                  "#    Attribution {" \
+                  "#        name: \"${cMETADATA[fullNameStyled]}\"" \
+                  "#        entries: \"$cATTRIBUTION\"" \
+                  "#        licenses: License { spdxId: \"$cLICENSE\"}" \
+                  "#        sources: \"https://github.com/Pretty-SFOS/${cMETADATA[fullName]}\"" \
+                  "#        homepage: \"https://github.com/Pretty-SFOS/opal\"" \
+                  "#    }" "" \
+        >> "$metadata_file"
     printf "%s: %s\n" \
            "module" "${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})" \
            "version" "$cVERSION${commit:+" (git:$commit)"}" \
