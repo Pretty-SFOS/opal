@@ -43,7 +43,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [x] ~~implement fetching module sources in `opal-use-modules.pri`~~
     - [x] remove `opal-fetch-modules.pri` stub
     - [x] implement script to merge translations
-    - [ ] remove `opal-use-modules.pri`
+    - [x] remove `opal-use-modules.pri`
     - [ ] document `opal-merge-translations.sh`
 - Gallery
     - [x] general clean up
