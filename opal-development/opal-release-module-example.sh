@@ -9,7 +9,7 @@
 #
 # @@@ keep this line: based on template v0.6.0
 #
-c__FOR_RELEASE_LIB__="0.6.1"
+c__FOR_RELEASE_LIB__="0.6.2"
 
 # Run this script from the module's root directory.
 source ../opal/opal-development/opal-release-module.sh

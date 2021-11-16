@@ -5,9 +5,9 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 # Rendering script for SVG icons
 
-The [opal-render-icons.sh] script provides a `render_batch` function for quickly
-rendering any kind of SVG icons to PNG. The rendered files can then be included
-in your distribution.
+The [opal-render-icons.sh](opal-render-icons.sh) script provides a
+`render_batch` function for quickly rendering any kind of SVG icons to PNG. The
+rendered files can then be included in your distribution.
 
 This is very useful during iterative development, when you have to re-render
 graphics many times until they look the right way *on the device*.
@@ -29,11 +29,11 @@ for i in raw/*.svg; do scour "$i" > "${i#raw/}"; done
 
 ## How to use the script
 
-You can use the [opal-render-icons-example.sh] script to quickly get you
-started.
+You can use the [opal-render-icons-example.sh](opal-render-icons-example.sh)
+script to quickly get you started.
 
-The [opal-render-icons.sh] script has to be "sourced" from your own rendering
-script, where you define what will be rendered.
+The [opal-render-icons.sh](opal-render-icons.sh) script has to be "sourced" from
+your own rendering script, where you define what will be rendered.
 
 ```bash
 source opal-render-icons.sh

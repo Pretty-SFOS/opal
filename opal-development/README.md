@@ -9,4 +9,4 @@ This directory contains snippets that are needed for developing Opal.
 
 Each snippet file has a corresponding documentation file with the same name.
 
-Please refer to [the wiki](TBD) for additional documentation.
+Please refer to the [main documentation](../README.md) for details.

@@ -5,7 +5,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 # Verify script and library version compatibility
 
-The [opal-verify-version.sh] script is a shared function for verifying that a
+The [opal-verify-version.sh](opal-verify-version.sh) script is a shared function for verifying that a
 (template) script is compatible with the available Opal library script it builds
 on. The function can be copied to new library scripts.
 

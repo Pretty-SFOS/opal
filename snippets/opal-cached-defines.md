@@ -5,7 +5,7 @@ SPDX-License-Identifier: GFDL-1.3-or-later
 
 # How to pass build options to QML
 
-Include [opal-cached-defines.pri] in your PRO file after defining all options
+Include [opal-cached-defines.pri] in your `harbour-<app>.pro` file after defining all options
 you want to pass through. Include `requires_defines.h` (generated) in all C++
 files that require these options. When any values change, the relevant files
 will be rebuilt.

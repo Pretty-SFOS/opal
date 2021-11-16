@@ -9,7 +9,7 @@ Opal is a collection of pretty QML components for SailfishOS, building on top
 of Sailfish's Silica components. It provides ready-made components, examples,
 snippets, recipes, and resources for building more sailfishy Sailfish apps.
 
-This repository contains documentation and [the wiki](TBD).
+This repository contains documentation, snippets, and development tools.
 
 If you want to create new applications using Opal, follow the steps below.
 Opal is a library for developers. As an end-user you should not have to do anything.
@@ -17,33 +17,57 @@ Opal is a library for developers. As an end-user you should not have to do anyth
 
 ## Project status
 
-> **Opal is not yet ready for production.**
-
-That being said, some modules and snippets are already in a usable state.
+*Opal is ready for production.* That being said, Opal is not yet very mature and
+the ecosystem still has to grow.
 
 - the [gallery app](https://github.com/Pretty-SFOS/opal-gallery) is ready and stable
-- [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable, documented but not yet well tested
-- all snippets needed for including modules in an app are ready (cf. "Using Opal")
+- [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable and fully documented
+- all snippets needed for including modules in an app are ready (see below)
 - [render-icons.sh](snippets/opal-render-icons.md) is ready and stable
 
 Notably still missing:
 
-- [the wiki](TBD) does not yet exist
 - resources modules (i.e. extra icons etc.) are not yet properly supported
 - plugins (i.e. modules with parts written in C++) are not yet supported
-- [Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar) is not yet imported and
-  still lives in [the old repository](https://github.com/ichthyosaurus/sf-docked-tab-bar)
-- code documentation should be hosted online somewhere
+- [Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar) is not yet imported
+  and still lives in [its old repository](https://github.com/ichthyosaurus/sf-docked-tab-bar)
+- there is no Wiki yet
+- code documentation should be hosted online
+
+
+## Contents
+
+You can also browse the [snippets directory](snippets/) or install the
+[gallery application](https://github.com/Pretty-SFOS/opal-gallery).
+
+### Snippets
+
+- [cached-defines.pri](snippets/opal-cached-defines.md): A helper and recipe for passing build options from YAML to QML.
+- [merge-translations.sh](snippets/opal-merge-translations.md): A script for merging Opal translations into your app's `ts` files.
+- [render-icons.sh](snippets/opal-render-icons.md): A script for rendering and optimizing SVG icons during iterative development.
+
+All snippets are released in the public domain, *unless*
+otherwise specified. *Please refer to the respective snippet files.*
+
+### Modules
+
+- [Opal.About](https://github.com/Pretty-SFOS/opal-about): A simple and flexible "About" page supporting license info, contributors, donations, etc.
+- [Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar): An app-wide tab bar using icons with optional texts, and improved support for landscape layouts.
+  Not yet properly integrated and still lives in [its old repository](https://github.com/ichthyosaurus/sf-docked-tab-bar).
+
+All Opal modules have their own licensing.
+*Please refer to the respective repositories.*
+
+### Development tools
+
+TBD.
 
 
 ## Using Opal
 
-Please refer to [the wiki](TBD) for snippets, recipes, and other documentation.
-You can find a list of contents [here](TBD).
-
 Follow these steps to include Opal modules in your project:
 
-1. Fetch the latest Opal [release bundle](https://github.com/Pretty-SFOS/opal/releases/latest).
+1. Fetch the latest Opal [release bundle](https://github.com/Pretty-SFOS/opal/archive/refs/heads/main.zip).
 2. Extract [opal-merge-translations.sh](snippets/opal-merge-translations.sh) to `<project>/libs`.
 3. Fetch the module bundles you want to use and extract the `libs` and `qml` folders
    in your project root. (For example, ready-made translations should end up in
@@ -53,7 +77,8 @@ Follow these steps to include Opal modules in your project:
 
         import "../modules/Opal/About"
 
-5. Configure your `spec` file to be Harbour-compatible (cf. [https://harbour.jolla.com/faq#2.6.0]):
+5. Configure your `spec` file to be Harbour-compatible (cf. [https://harbour.jolla.com/faq#2.6.0]).
+   Note that you may have to re-add this line after changing the YAML file due to a bug in the Sailfish SDK.
 
         # >> macros
         %define __provides_exclude_from ^%{_datadir}/.*$
@@ -110,19 +135,7 @@ search path.
     QML_IMPORT_PATH += qml/modules
 
 
-## Modules
-
-You can find [a list of modules](https://github.com/Pretty-SFOS/opal-gallery/blob/main/qml/harbour-opal.qml)
-in the Wiki.
-
-You can also browse the [snippets directory](snippets/) or install the
-[gallery application](https://github.com/Pretty-SFOS/opal-gallery).
-
-
 ## Development
-
-The wiki can be changed online. To clone its contents, append `.wiki.git` to this
-repository's URL.
 
 All modules live in their own repositories.
 
@@ -133,14 +146,14 @@ Useful tools for developing Opal can be found in the
 
 1. Add a new snippet file in the [snippets] diretory
 2. Add a Markdown file for documentation with the same name
-3. Add an entry in the [list of snippets](TBD)
+3. Add an entry in the list of snippets above
 
 ### Adding new modules
 
 1. Create a new repository named `opal-<...>`
 2. Create the same structure as in [`opal-about`](https://github.com/Pretty-SFOS/opal-about) (changing the relevant parts)
 3. Update module metadata in `doc/module.opal`
-4. Write an entry in the wiki: [list of modules](TBD)
+4. Add an entry in the list of modules above
 5. Create one or more example pages for the new module. The main page must be
    `doc/gallery.qml`. Extra pages can be added as `doc/gallery/*.qml`. See
    the [module metadata file](https://github.com/Pretty-SFOS/opal-about/blob/main/doc/module.opal)
@@ -171,10 +184,10 @@ TBD.
 
 ## Licenses
 
-All Opal [modules](TBD: wiki link) have their own licensing.
+All Opal modules have their own licensing.
 *Please refer to the respective repositories.*
 
-All [snippets](TBD: wiki link) are released in the public domain, *unless*
+All snippets are released in the public domain, *unless*
 otherwise specified. *Please refer to the respective snippet files.*
 
 All documentation is released under the terms of the
