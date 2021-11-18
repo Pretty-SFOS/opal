@@ -35,12 +35,12 @@ Notably still missing:
 - code documentation should be hosted online
 
 
-## Contents
+## Contents <a id='opal-list'/>
 
 You can also browse the [snippets directory](snippets/) or install the
 [gallery application](https://github.com/Pretty-SFOS/opal-gallery).
 
-### Snippets
+### Snippets <a id='snippets'/>
 
 - [cached-defines.pri](snippets/opal-cached-defines.md): A helper and recipe for passing build options from YAML to QML.
 - [merge-translations.sh](snippets/opal-merge-translations.md): A script for merging Opal translations into your app's `ts` files.
@@ -49,21 +49,22 @@ You can also browse the [snippets directory](snippets/) or install the
 All snippets are released in the public domain, *unless*
 otherwise specified. *Please refer to the respective snippet files.*
 
-### Modules
+### Modules <a id='modules'/>
 
-- [Opal.About](https://github.com/Pretty-SFOS/opal-about): A simple and flexible "About" page supporting license info, contributors, donations, etc.
-- [Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar): An app-wide tab bar using icons with optional texts, and improved support for landscape layouts.
+- <a id='module-about'/>[Opal.About](https://github.com/Pretty-SFOS/opal-about): A simple and flexible "About" page supporting license info, contributors, donations, etc.
+- <a id='module-tabbar'/>[Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar): An app-wide tab bar using icons with optional texts, and improved support for landscape layouts.
   Not yet properly integrated and still lives in [its old repository](https://github.com/ichthyosaurus/sf-docked-tab-bar).
 
 All Opal modules have their own licensing.
 *Please refer to the respective repositories.*
 
-### Development tools
+
+### Development tools <a id='devel-tools'/>
 
 TBD.
 
 
-## Using Opal
+## Using Opal <a id='using-opal'/>
 
 Follow these steps to include Opal modules in your project:
 
@@ -77,7 +78,7 @@ Follow these steps to include Opal modules in your project:
 
         import "../modules/Opal/About"
 
-5. Configure your `spec` file to be Harbour-compatible (cf. [https://harbour.jolla.com/faq#2.6.0]).
+5. Configure your `spec` file to be Harbour-compatible (cf. [Harbour FAQ #2.6.0](https://harbour.jolla.com/faq#2.6.0)).
    Note that you may have to re-add this line after changing the YAML file due to a bug in the Sailfish SDK.
 
         # >> macros
@@ -99,7 +100,7 @@ After the initial setup you can easily add additional modules by simply
 extracting QML sources, docs, and translations to the respective directories.
 
 
-### Dot-notation
+### Dot-notation (optional)
 
 Additional steps are required to be able to import modules using the
 dot-notation.
@@ -135,7 +136,7 @@ search path.
     QML_IMPORT_PATH += qml/modules
 
 
-## Development
+## Developing Opal <a id='developing-opal'/>
 
 All modules live in their own repositories.
 
@@ -193,7 +194,7 @@ otherwise specified. *Please refer to the respective snippet files.*
 All documentation is released under the terms of the
 [GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html).
 
-        Copyright (C)  2021  Mirian Margiani
+        Copyright (C) 2021  Mirian Margiani
     Permission is granted to copy, distribute and/or modify this document
     under the terms of the GNU Free Documentation License, Version 1.3
     or any later version published by the Free Software Foundation;
