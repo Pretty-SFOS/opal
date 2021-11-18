@@ -136,6 +136,23 @@ search path.
     QML_IMPORT_PATH += qml/modules
 
 
+## Apps using Opal
+
+Please contact us if your app uses Opal so we can include it in this list!
+
+| Project                                                                                                               | Modules
+|-----------------------------------------------------------------------------------------------------------------------|---------------------------------------
+| [File Browser](https://github.com/ichthyosaurus/harbour-file-browser): fully-fledged file manager for Sailfish OS     | [Opal.About](#module-about), [snippets](#snippets)
+| [To-do List](https://github.com/ichthyosaurus/harbour-todolist): focused to-do list app                               | [Opal.About](#module-about), [Opal.TabBar](#module-tabbar), [snippets](#snippets)
+| [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [snippets](#snippets)
+| [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [sf-about-page](#module-about), [snippets](#snippets)
+| [Meteo](https://github.com/ichthyosaurus/harbour-meteoswiss): weather forecasts                                       | [sf-about-page](#module-about)
+| [Jammy](https://github.com/ichthyosaurus/harbour-jammy): Jamendo client featuring advanced search                     | [sf-about-page](#module-about)
+| [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [sf-about-page](#module-about)
+| [Dictionary](https://github.com/ichthyosaurus/harbour-wunderfitz): to be merged upstream into [Wunderfitz](https://github.com/Wunderfitz/harbour-wunderfitz) | [sf-docked-tab-bar](#module-tabbar)
+| [Sailtrix](https://gitlab.com/HengYeDev/harbour-sailtrix/): Matrix client                                             | [sf-docked-tab-bar](#module-tabbar)
+
+
 ## Developing Opal <a id='developing-opal'/>
 
 All modules live in their own repositories.
