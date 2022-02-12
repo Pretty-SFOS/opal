@@ -3,7 +3,7 @@
 # This file is part of Opal and has been released under the Creative Commons
 # Attribution-ShareAlike 4.0 International License.
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# SPDX-FileCopyrightText: 2018-2021 Mirian Margiani
+# SPDX-FileCopyrightText: 2018-2022 Mirian Margiani
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-release-module.md
 # for documentation.
@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.6.2"
+c__OPAL_RELEASE_MODULE_VERSION__="0.6.3"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -28,25 +28,13 @@ _x="${cLUPDATE_BIN:="lupdate$cQT_SUFFIX"}"
 _x="${cQDOC_BIN:="qdoc$cQT_SUFFIX"}"
 _x="${cQMAKE_BIN:="qmake$cQT_SUFFIX"}"
 _x="${cQHG_BIN:="qhelpgenerator$cQT_SUFFIX"}"
+_x="${cQMLMIN_BIN:="qmlmin"}"  # from libqt5-qtdeclarative-tools without suffix
 
 _x="${cOPAL_PREFIX:="opal-"}"
 _x="${cOPAL_PREFIX_STYLED:="Opal."}"
 
-# adapted from: https://theunixshell.blogspot.com/2012/12/delete-all-comments-from-c-source-file.html
-cSTRIP_COMMENTS_PERL="$(
-cat << "EOF"
-$/ = undef;
-$_ = <>;
-# only for multi-line comments:
-# s#/\*[^*]*\*+([^/*][^*]*\*+)*/|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $2 ? $2 : ""#gse;
-# adapted for single-line comments, excluding '//@':
-s#/[ ]*\*[^*]*\*+([^/*][^*]*\*+)*/|(//@.*?\n)|[ ]*//.*?(\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $4 ? $4 : (defined $3 ? $3 : (defined $2 ? $2 : ""))#gse;
-print;
-EOF
-)"
-
 [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
-cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "perl")
+cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "$cQMLMIN_BIN")
 
 function check_dependencies() {
     [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
@@ -327,13 +315,19 @@ function build_bundle() {
     mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
 
     for i in "${files_to_strip[@]}"; do
-        perl <(cat <<<"$cSTRIP_COMMENTS_PERL") "$i" | sed 's/[ ]*$//g' > "$temp"
+        keep="$(grep -Ee '^//@' "$i")"
+        if [[ "$keep" != "" ]]; then
+            printf -- "%s\n" "$keep" > "$temp"
+        fi
+
+        "$cQMLMIN_BIN" "$i" >> "$temp"
+
         if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
             log "warning: no copyright info in '$i' after stripping comments"
-            log "         make sure to mark all required comments with '//@'"
-        else
-            mv "$temp" "$i"
+            log "         make sure to start all required lines with '//@' (instead of '//' or '/*')"
         fi
+
+        mv "$temp" "$i"
     done
 
     rm -f "$temp"
