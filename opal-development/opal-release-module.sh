@@ -320,7 +320,13 @@ function build_bundle() {
             printf -- "%s\n" "$keep" > "$temp"
         fi
 
-        "$cQMLMIN_BIN" "$i" >> "$temp"
+        if grep -qoe ';' "$i"; then
+            log "warning: file '$i' contains at least one semicolon"
+            log "         This breaks minification. Make sure there are no semicolons and try again."
+            continue
+        fi
+
+        "$cQMLMIN_BIN" "$i" | tr ';' '\n' >> "$temp"
 
         if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
             log "warning: no copyright info in '$i' after stripping comments"
