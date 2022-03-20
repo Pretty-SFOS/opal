@@ -31,7 +31,7 @@ QMakeOptions:
 # Note: version number is configured in yaml
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_RELEASE=\\\"$$RELEASE\\\"
-include(libs/cached-defines.pri)
+include(libs/opal-cached-defines.pri)
 ```
 
 3. Include `requires_defines.h` in the relevant files
