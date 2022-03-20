@@ -114,6 +114,8 @@ dot-notation.
 int main(int argc, char *argv[])
 {
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
+    app->setOrganizationName("harbour-myapp"); // needed for Sailjail
+    app->setApplicationName("harbour-myapp");
     QScopedPointer<QQuickView> view(SailfishApp::createView());
     view->engine()->addImportPath(SailfishApp::pathTo("qml/modules").toString());
     view->setSource(SailfishApp::pathToMainQml());
