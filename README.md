@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2021 Mirian Margiani
+SPDX-FileCopyrightText: 2021-2022 Mirian Margiani
 SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 
@@ -147,10 +147,10 @@ Please contact us if your app uses Opal so we can include it in this list!
 | [File Browser](https://github.com/ichthyosaurus/harbour-file-browser): fully-fledged file manager for Sailfish OS     | [Opal.About](#module-about), [snippets](#snippets)
 | [To-do List](https://github.com/ichthyosaurus/harbour-todolist): focused to-do list app                               | [Opal.About](#module-about), [Opal.TabBar](#module-tabbar), [snippets](#snippets)
 | [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [snippets](#snippets)
-| [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [sf-about-page](#module-about), [snippets](#snippets)
+| [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [Opal.About](#module-about), [snippets](#snippets)
 | [Meteo](https://github.com/ichthyosaurus/harbour-meteoswiss): weather forecasts                                       | [sf-about-page](#module-about)
 | [Jammy](https://github.com/ichthyosaurus/harbour-jammy): Jamendo client featuring advanced search                     | [sf-about-page](#module-about)
-| [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [sf-about-page](#module-about)
+| [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [Opal.About](#module-about)
 | [Dictionary](https://github.com/ichthyosaurus/harbour-wunderfitz): to be merged upstream into [Wunderfitz](https://github.com/Wunderfitz/harbour-wunderfitz) | [sf-docked-tab-bar](#module-tabbar)
 | [Sailtrix](https://gitlab.com/HengYeDev/harbour-sailtrix/): Matrix client                                             | [sf-docked-tab-bar](#module-tabbar)
 
@@ -213,7 +213,7 @@ otherwise specified. *Please refer to the respective snippet files.*
 All documentation is released under the terms of the
 [GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html).
 
-        Copyright (C) 2021  Mirian Margiani
+        Copyright (C) 2021-2022  Mirian Margiani
     Permission is granted to copy, distribute and/or modify this document
     under the terms of the GNU Free Documentation License, Version 1.3
     or any later version published by the Free Software Foundation;
