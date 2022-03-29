@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2021 Mirian Margiani
+SPDX-FileCopyrightText: 2021-2022 Mirian Margiani
 SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 
@@ -24,7 +24,14 @@ personal metadata from SVG files.
 
 ```bash
 # use the 'raw' directory for development but don't commit it to VCS
-for i in raw/*.svg; do scour "$i" > "${i#raw/}"; done
+for i in raw/*.svg; do
+    if [[ "$i" -nt "${i#raw/}" ]]; then
+        scour "$i" > "${i#raw/}"
+    fi
+done
+
+# in one line
+for i in raw/*.svg; do [[ "$i" -nt "${i#raw/}" ]] && scour "$i" > "${i#raw/}"; done
 ```
 
 ## How to use the script
