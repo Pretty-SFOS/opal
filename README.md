@@ -79,7 +79,15 @@ Follow these steps to include Opal modules in your project:
         import "../modules/Opal/About"
 
 5. Configure your `spec` file to be Harbour-compatible (cf. [Harbour FAQ #2.6.0](https://harbour.jolla.com/faq#2.6.0)).
-   Note that you may have to re-add this line after changing the YAML file due to a bug in the Sailfish SDK.
+   Add the following section to your `yaml` file (from which the `spec` file is generated). If there already
+   is a `Macros:` section, simply add the contents below.
+
+        Macros:
+        - __provides_exclude_from;^%{_datadir}/.*$
+
+   *Alternative*: the [Harbour FAQ #2.6.0](https://harbour.jolla.com/faq#2.6.0) recommends adding a line
+   directly to the `spec` file. You would have to re-add this line every time after changing the YAML
+   file, though. This is due to a bug in the Sailfish SDK.
 
         # >> macros
         %define __provides_exclude_from ^%{_datadir}/.*$
