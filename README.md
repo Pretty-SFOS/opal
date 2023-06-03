@@ -229,7 +229,8 @@ otherwise specified. *Please refer to the respective snippet files.*
 All documentation is released under the terms of the
 [GFDL-1.3-or-later](https://spdx.org/licenses/GFDL-1.3-or-later.html).
 
-        Copyright (C) 2021-2022  Mirian Margiani
+        Copyright (C)  Mirian Margiani
+
     Permission is granted to copy, distribute and/or modify this document
     under the terms of the GNU Free Documentation License, Version 1.3
     or any later version published by the Free Software Foundation;
