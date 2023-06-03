@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2021-2022 Mirian Margiani
+SPDX-FileCopyrightText: 2021-2023 Mirian Margiani
 SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 
@@ -46,7 +46,7 @@ You can also browse the [snippets directory](snippets/) or install the
 - [merge-translations.sh](snippets/opal-merge-translations.md): A script for merging Opal translations into your app's `ts` files.
 - [render-icons.sh](snippets/opal-render-icons.md): A script for rendering and optimizing SVG icons during iterative development.
 
-All snippets are released in the public domain, *unless*
+All snippets are released into the public domain, *unless*
 otherwise specified. *Please refer to the respective snippet files.*
 
 ### Modules <a id='modules'/>
@@ -104,6 +104,9 @@ Follow these steps to include Opal modules in your project:
         libs/opal-translations
         libs/opal-docs
 
+8. Add proper attribution where required, e.g. to your About page. Opal modules
+   provide QML elements that can be used directly in [Opal.About](#module-about).
+
 After the initial setup you can easily add additional modules by simply
 extracting QML sources, docs, and translations to the respective directories.
 
@@ -125,14 +128,17 @@ int main(int argc, char *argv[])
     app->setOrganizationName("harbour-myapp"); // needed for Sailjail
     app->setApplicationName("harbour-myapp");
     QScopedPointer<QQuickView> view(SailfishApp::createView());
+
+    // add module search path so Opal modules can be found
     view->engine()->addImportPath(SailfishApp::pathTo("qml/modules").toString());
+
     view->setSource(SailfishApp::pathToMainQml());
     view->show();
     return app->exec();
 }
 ```
 
-8. If everything is setup correctly, you can now use Opal by importing the
+8. If everything is set up correctly, you can now use Opal by importing the
     modules. For the About page component you would have to write in QML:
 
         import Opal.About 1.0
@@ -141,7 +147,7 @@ int main(int argc, char *argv[])
 ### Qt Creator
 
 If auto-completion does not work, try adding `qml/modules` to the IDE's module
-search path.
+search path. Add this line to your project's `.pro` file:
 
     QML_IMPORT_PATH += qml/modules
 
@@ -156,11 +162,13 @@ Please contact us if your app uses Opal so we can include it in this list!
 | [To-do List](https://github.com/ichthyosaurus/harbour-todolist): focused to-do list app                               | [Opal.About](#module-about), [Opal.TabBar](#module-tabbar), [snippets](#snippets)
 | [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [snippets](#snippets)
 | [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [Opal.About](#module-about), [snippets](#snippets)
+| [Laundry List](https://github.com/ichthyosaurus/harbour-laundry): laundry management helper                           | [Opal.About](#module-about), [snippets](#snippets)
 | [Meteo](https://github.com/ichthyosaurus/harbour-meteoswiss): weather forecasts                                       | [sf-about-page](#module-about)
 | [Jammy](https://github.com/ichthyosaurus/harbour-jammy): Jamendo client featuring advanced search                     | [sf-about-page](#module-about)
 | [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [Opal.About](#module-about)
 | [Dictionary](https://github.com/ichthyosaurus/harbour-wunderfitz): to be merged upstream into [Wunderfitz](https://github.com/Wunderfitz/harbour-wunderfitz) | [sf-docked-tab-bar](#module-tabbar)
 | [Sailtrix](https://gitlab.com/HengYeDev/harbour-sailtrix/): Matrix client                                             | [sf-docked-tab-bar](#module-tabbar)
+| [Olive goes shopping](https://github.com/PawelSpoon/olive-goes-shopping): shopping list app                         | [sf-docked-tab-bar](#module-tabbar)
 
 
 ## Developing Opal <a id='developing-opal'/>
