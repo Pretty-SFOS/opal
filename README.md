@@ -168,7 +168,7 @@ Please contact us if your app uses Opal so we can include it in this list!
 | [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [Opal.About](#module-about)
 | [Dictionary](https://github.com/ichthyosaurus/harbour-wunderfitz): to be merged upstream into [Wunderfitz](https://github.com/Wunderfitz/harbour-wunderfitz) | [sf-docked-tab-bar](#module-tabbar)
 | [Sailtrix](https://gitlab.com/HengYeDev/harbour-sailtrix/): Matrix client                                             | [sf-docked-tab-bar](#module-tabbar)
-| [Olive goes shopping](https://github.com/PawelSpoon/olive-goes-shopping): shopping list app                         | [sf-docked-tab-bar](#module-tabbar)
+| [Olive goes shopping](https://github.com/PawelSpoon/harbour-olive-goes-shopping): shopping list app                 | [sf-docked-tab-bar](#module-tabbar)
 
 
 ## Developing Opal <a id='developing-opal'/>
