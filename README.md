@@ -93,10 +93,11 @@ Follow these steps to include Opal modules in your project:
         %define __provides_exclude_from ^%{_datadir}/.*$
         # << macros
 
-6. Merge shipped translations with your local translations by running
+6. Merge shipped translations with your local translations. This should be done inside an `sfdk` target, so you'll need to run something like the following (replacing `SailfishOS-4.5.0.16EA-aarch64` with one of your targets).
 
         cd libs
-        ./opal-merge-translations ../translations
+        sfdk engine exec sb2 -t SailfishOS-4.5.0.16EA-aarch64 \
+            ./opal-merge-translations.sh ../translations/
 
 7. Add docs and translations to `.gitignore`. They have been merged with your
    main translations.
