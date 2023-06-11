@@ -65,7 +65,7 @@ for tr in "${app_tr[@]}"; do
     have_extra=false
 
     set -o pipefail
-    lang="$(sed -Ee 's/.*?[-_]([a-z]{2}([-_][A-Z]{2})?)\.[Tt][Ss]/\1/g; T fail; t ok; :ok; q 0; :fail; q 100' <<<"$tr" | tr '_' '-')" || {
+    lang="$(sed -re 's/.*?[-_]([a-z]{2}([-_][A-Z]{2})?)\.[Tt][Ss]/\1/g; T fail; t ok; :ok; q 0; :fail; q 100' <<<"$tr" | tr '_' '-')" || {
         log "skipping '$tr': no language"
         continue
     }
