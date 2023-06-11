@@ -3,7 +3,7 @@
 # This file is part of Opal and has been released under the Creative Commons
 # Attribution-ShareAlike 4.0 International License.
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# SPDX-FileCopyrightText: 2018-2022 Mirian Margiani
+# SPDX-FileCopyrightText: 2018-2023 Mirian Margiani
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-release-module.md
 # for documentation.
@@ -153,7 +153,7 @@ Arguments:
     }
 
     function _version() {
-        printf "opal-release-module.sh\nCopyright (c) 2018-2021 Mirian Margiani -- CC-BY-SA-4.0\n"
+        printf "opal-release-module.sh\nCopyright (c) 2018-2023 Mirian Margiani -- CC-BY-SA-4.0\n"
         printf "version %s\n" "$c__OPAL_RELEASE_MODULE_VERSION__"
         read_metadata quiet
         printf "\nFOR MODULE: %s (%s), version %s\n" \
