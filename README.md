@@ -52,6 +52,7 @@ otherwise specified. *Please refer to the respective snippet files.*
 ### Modules <a id='modules'/>
 
 - <a id='module-about'/>[Opal.About](https://github.com/Pretty-SFOS/opal-about): A simple and flexible "About" page supporting license info, contributors, donations, etc.
+- <a id='module-infocombo'/>[Opal.InfoCombo](https://github.com/Pretty-SFOS/opal-infocombo): A combo box that can show detailed descriptions of all menu items.
 - <a id='module-tabbar'/>[Opal.TabBar](https://github.com/Pretty-SFOS/opal-tabbar): An app-wide tab bar using icons with optional texts, and improved support for landscape layouts.
   Not yet properly integrated and still lives in [its old repository](https://github.com/ichthyosaurus/sf-docked-tab-bar).
 
