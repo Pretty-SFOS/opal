@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
         import Opal.About 1.0
 
 
-### Qt Creator
+### Sailfish SDK (Qt Creator)
 
 If auto-completion does not work, try adding `qml/modules` to the IDE's module
 search path. Add this line to your project's `.pro` file:
