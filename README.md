@@ -40,7 +40,7 @@ Notably still missing:
 You can also browse the [snippets directory](snippets/) or install the
 [gallery application](https://github.com/Pretty-SFOS/opal-gallery).
 
-### Snippets <a id='snippets'/>
+### Snippets / development tools <a id='snippets'/>
 
 - [cached-defines.pri](snippets/opal-cached-defines.md): A helper and recipe for passing build options from YAML to QML.
 - [merge-translations.sh](snippets/opal-merge-translations.md): A script for merging Opal translations into your app's `ts` files.
@@ -59,11 +59,6 @@ otherwise specified. *Please refer to the respective snippet files.*
 
 All Opal modules have their own licensing.
 *Please refer to the respective repositories.*
-
-
-### Development tools <a id='devel-tools'/>
-
-TBD.
 
 
 ## Using Opal <a id='using-opal'/>
