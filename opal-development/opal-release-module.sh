@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.6.3"
+c__OPAL_RELEASE_MODULE_VERSION__="0.6.4"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -369,7 +369,7 @@ function build_bundle() {
     cd "$cBUILD_DIR"
     local package="${cMETADATA[fullName]}-$version${commit:+"-$commit"}"
     local bundle_name="${cCUSTOM_BUNDLE_NAME:-"$package"}.tar.gz"
-    tar --numeric-owner --owner=0 --group=0 -czvf "$bundle_name" "$build_root_name" || {
+    tar --mode="u+rwX,a+rX" --numeric-owner --owner=0 --group=0 -czvf "$bundle_name" "$build_root_name" || {
         log "error: failed to create package"
         exit 2
     }
