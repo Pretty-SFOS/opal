@@ -185,6 +185,19 @@ All modules live in their own repositories.
 Useful tools for developing Opal can be found in the
 [opal-development](opal-development/) directory.
 
+### Translating modules
+
+Some modules provide their own translations that can be used by other apps.
+
+To **use** packaged translations in your project, follow the main documentation for
+using Opal modules [here](https://github.com/Pretty-SFOS/opal#using-opal).
+
+You can also **contribute** translations, so that all apps using Opal can
+benefit from it. Translations are managed using
+[Weblate](https://hosted.weblate.org/projects/opal).
+
+Please prefer Weblate over pull requests (which are still welcome, of course).
+
 ### Adding snippets
 
 1. Add a new snippet file in the [snippets] diretory
