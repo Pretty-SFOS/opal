@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2021-2022 Mirian Margiani
+SPDX-FileCopyrightText: 2021-2023 Mirian Margiani
 SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 
@@ -112,3 +112,16 @@ cPREFIX=main-prefix-
 # finally: render the batch
 render_batch
 ```
+
+## Limitations
+
+The library does not support changing the output file name. In other words, all
+output files will have the same name as their source files (plus any
+prefix/suffix).
+
+Output files will be named like this:
+
+    <target location/<main prefix><prefix><basename><suffix><main suffix>.png
+
+Each part of this path can be changed, except for `<basename>`. This is
+an intentional limitation to make file relations more transparent.
