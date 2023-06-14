@@ -148,9 +148,9 @@ function render_batch() { # 1: keep or unset config after rendering?
             local res_x="${res_split[0]}"
             local res_y="${res_split[0]}"
 
-            if [[ "$res" == *x* ]]; then
-                res_x="${res%%x*}"
-                res_y="${res##*x}"
+            if [[ "${res_split[0]}" == *x* ]]; then
+                res_x="${res_split[0]%%x*}"
+                res_y="${res_split[0]##*x}"
             fi
 
             if [[ ! "$res_x" =~ $cRESOLUTION_CHECK ]]; then
