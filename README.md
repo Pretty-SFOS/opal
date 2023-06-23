@@ -186,6 +186,17 @@ All modules live in their own repositories.
 Useful tools for developing Opal can be found in the
 [opal-development](opal-development/) directory.
 
+### Licensing
+
+All contributions to Opal must be licensed under Free Software licenses compatible
+with the GNU GPL v3. Apart from that, you are free to choose a license of your
+liking from the [SPDX license list](https://spdx.org/licenses/) for your new
+contents.
+
+**Important:** make sure your contributions are [REUSE](https://reuse.software/)
+compliant. This makes it much easier to reuse them in other projects, to write
+proper attributions, and to find incompatibilities.
+
 ### Translating modules
 
 Some modules provide their own translations that can be used by other apps.
@@ -205,6 +216,11 @@ Please prefer Weblate over pull requests (which are still welcome, of course).
 2. Add a Markdown file for documentation with the same name
 3. Add an entry in the list of snippets above
 
+**Coding conventions:** please use [Shellcheck](https://www.shellcheck.net/) when
+writing Bash scripts. Read the documentation on common [Bash pitfalls](https://mywiki.wooledge.org/BashPitfalls)
+and avoid them at all costs. Opal snippets are intended to be run on recent versions
+of GNU Bash (> 5.0) unless explicitly documented otherwise.
+
 ### Adding new modules
 
 1. Create a new repository named `opal-<...>`
@@ -220,6 +236,11 @@ Make sure to use `qsTranslate("Opal.<Module>", "string")` instead of
 `qsTr("string")` for all translations. Otherwise merged translations would
 clutter a user's app translation files.
 
+**Coding conventions:** please follow the [Sailfish coding conventions](https://docs.sailfishos.org/Develop/Apps/Coding_Conventions/)
+and the [Qt coding conventions](https://doc.qt.io/qt-5/qml-codingconventions.html) where possible.
+Read the documentation on common [pitfalls in Sailfish app development](https://sailfishos.org/develop/docs/silica/sailfish-application-pitfalls.html)
+and avoid them unless you have a very good reason.
+
 ### Adding plugins
 
 TBD.
@@ -229,6 +250,9 @@ They have to be built using the Sailfish IDE, pre-packaged, and then included
 in target apps.
 
 Handling should be identical to QML-only modules.
+
+**Coding conventions:** please follow the [Sailfish coding conventions](https://docs.sailfishos.org/Develop/Apps/Coding_Conventions/)
+where possible.
 
 ### Adding resources
 
