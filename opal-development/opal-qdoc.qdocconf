@@ -7,7 +7,7 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-qdoc.md
 # for documentation.
 #
-# @@@ FILE VERSION 0.2.0
+# @@@ FILE VERSION 0.3.0
 #
 
 # project definition
@@ -77,6 +77,10 @@ outputdir   = ../$OPAL_DOC_OUTDIR
 # The sourcedirs variable specifies the directories containing the .cpp or .qdoc
 # files used in the documentation. Additional dirs can be specified.
 sourcedirs  += ../$OPAL_PROJECT_DOCDIR
+
+# This enabled parsing of JavaScript files by default.
+# Cf. https://lists.qt-project.org/pipermail/development/2014-April/016658.html
+sources.fileextensions += "*.js"
 
 # The exampledirs variable specifies the directories containing
 # the source code of the example files. Additional dirs can be specified.
