@@ -7,7 +7,7 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-qdoc.md
 # for documentation.
 #
-# @@@ FILE VERSION 0.1.0
+# @@@ FILE VERSION 0.2.0
 #
 
 # project definition
@@ -67,7 +67,7 @@ qhp.Opal.subprojects.qmltypes.sortPages = true
 
 # The outputdir variable specifies the directory where QDoc will put the
 # generated documentation.
-outputdir   = $OPAL_DOC_OUTDIR
+outputdir   = ../$OPAL_DOC_OUTDIR
 
 # The headerdirs variable specifies the directories containing the header files
 # associated with the .cpp source files used in the documentation.
@@ -76,12 +76,12 @@ outputdir   = $OPAL_DOC_OUTDIR
 
 # The sourcedirs variable specifies the directories containing the .cpp or .qdoc
 # files used in the documentation. Additional dirs can be specified.
-sourcedirs  += $OPAL_PROJECT_DOCDIR
+sourcedirs  += ../$OPAL_PROJECT_DOCDIR
 
 # The exampledirs variable specifies the directories containing
 # the source code of the example files. Additional dirs can be specified.
-exampledirs += $OPAL_PROJECT_EXAMPLESDIR
+exampledirs += ../$OPAL_PROJECT_EXAMPLESDIR
 
 # The imagedirs variable specifies the directories containing the images used in
 # the documentation. Additional dirs can be specified.
-imagedirs   += $OPAL_PROJECT_DOCDIR/images
+imagedirs   += ../$OPAL_PROJECT_DOCDIR/images
