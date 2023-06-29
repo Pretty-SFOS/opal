@@ -393,10 +393,9 @@ function build_bundle() {
         > "$metadata_file"
     # REUSE-IgnoreEnd
     printf "%s\n" "# Attribution using Opal.About:" \
-                  "#    1. Add \"include(libs/opal-enable-attributions.pri)\" to your main .pro file." \
-                  "#    2. Import \"Opal.Attributions 1.0\" in your About page." \
-                  "#    3. Attribute this module by adding \"${cMETADATA[fullNameStyled]//./}Attribution {}\"" \
-                  "#       to the \"attributions\" list property." \
+                  "#    1. Import \"../modules/Opal/Attributions\" in your “About” page." \
+                  "#    2. Attribute this module by adding \"${cMETADATA[fullNameStyled]//./}Attribution {}\"" \
+                  "#       to the \"attributions\" list property of the “About” page." \
                   "" \
         >> "$metadata_file"
     printf "%s: %s\n" \
@@ -429,6 +428,11 @@ EOF
 # SPDX-FileCopyrightText: 2023 Mirian Margiani
 # SPDX-License-Identifier: CC-BY-SA-4.0
 #
+# This file is only needed if you want to import ready-made
+# attributions using the dot-notation. Without this, you can always
+# simply import the Opal.Attribution module using its relative
+# path (see below).
+#
 # Include this file in your main .pro file to generate
 # a qmldir file that allows importing Opal.Attributions
 # to access attributions for Opal modules.
@@ -440,8 +444,8 @@ EOF
 #       In the Sailfish IDE (QtCreator): menu “Build” -> “Run qmake”
 #
 # In your AboutPage.qml file:
-#       import Opal.Attributions 1.0  // requires configuration, cf. docs
-#       import "../modules/Opal/Attributions"  // works always
+#       import Opal.Attributions 1.0           // dot-notation with this file
+#       import "../modules/Opal/Attributions"  // relative import without this file
 #
 #       AboutPageBase {
 #           attributions: Opal<MyModule>Attribution {}  // adapt this
