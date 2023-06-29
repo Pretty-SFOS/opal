@@ -71,11 +71,21 @@ Follow these steps to include Opal modules in your project:
 2. Extract [opal-merge-translations.sh](snippets/opal-merge-translations.sh) to `<project>/libs`.
 3. Fetch the module bundles you want to use and extract the `libs` and `qml` folders
    in your project root. (For example, ready-made translations should end up in
-   `harbour-my-app/libs/opal-translations/`.)
+   `harbour-my-app/libs/opal-translations/`, while QML files should be in
+   `harbour-my-app/qml/modules/Opal/MyModule`.)
 4. You can now use the modules. For the About page component you would have to write
    in QML (e.g. at `qml/pages/AboutPage.qml`):
 
         import "../modules/Opal/About"
+
+   To use default attributions, you would have to import them on the “About” page
+   like this:
+
+        import "../modules/Opal/Attributions"
+
+   Note: this is a path relative to the QML file you are working with. The "../"
+   in this example assumes that you are, for example, editing the page
+   `harbour-my-app/qml/pages/AboutPage.qml`.
 
 5. Configure your `spec` file to be Harbour-compatible (cf. [Harbour FAQ #2.6.0](https://harbour.jolla.com/faq#2.6.0)).
    Add the following section to your `yaml` file (from which the `spec` file is generated). If there already
@@ -95,14 +105,14 @@ Follow these steps to include Opal modules in your project:
 6. Merge shipped translations with your local translations.
    If you have Qt's `lconvert` installed, you can simply run this code:
 
-        cd libs
-        ./opal-merge-translations ../translations
+        $ cd libs
+        $ ./opal-merge-translations ../translations
 
     Otherwise, run it inside an [`sfdk`](https://docs.sailfishos.org/Develop/Apps/#sfdk-command-line-tool)
     target, so you'll need to run something like the following (replacing `SailfishOS-4.5.0.16EA-aarch64` with one of your targets).
 
-        cd libs
-        sfdk engine exec sb2 -t SailfishOS-4.5.0.16EA-aarch64 \
+        $ cd libs
+        $ sfdk engine exec sb2 -t SailfishOS-4.5.0.16EA-aarch64 \
             ./opal-merge-translations.sh ../translations
 
     Note: run `sfdk --help` to get more information about the tool.
@@ -113,8 +123,11 @@ Follow these steps to include Opal modules in your project:
         libs/opal-translations
         libs/opal-docs
 
-8. Add proper attribution where required, e.g. to your About page. Opal modules
+8. Add proper attribution where required, e.g. to your “About” page. Opal modules
    provide QML elements that can be used directly in [Opal.About](#module-about).
+   Import `../modules/Opal/Attributions` (or `Opal.Attributions 1.0` if you
+   configured the dot-notation), then add `Opal[MyModule]Attribution {}` to
+   the `attributions` list property of the “About” page.
 
 After the initial setup you can easily add additional modules by simply
 extracting QML sources, docs, and translations to the respective directories.
@@ -147,10 +160,20 @@ int main(int argc, char *argv[])
 }
 ```
 
-8. If everything is set up correctly, you can now use Opal by importing the
-    modules. For the About page component you would have to write in QML:
+8. Enable the dot-notation for ready-made attribution components by adding this
+   line to your main `.pro` file:
+
+        include(libs/opal-enable-attributions.pri)
+
+9. If everything is set up correctly, you can now use Opal by importing the
+   modules via the dot-notation. For the “About” page component you would have
+   to write in QML:
 
         import Opal.About 1.0
+
+   For attributions, you would use this:
+
+        import Opal.Attributions 1.0
 
 
 ### Sailfish SDK (Qt Creator)
