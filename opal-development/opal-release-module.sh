@@ -10,6 +10,16 @@
 #
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
+# Changelog:
+#
+# * 0.7.0 (2023-06-29):
+#   - remove the setup_translations() function and automatically setup
+#     translations if they are missing instead
+#   - automatically remove private/ExtraTranslations.qml from the release
+#     bundle if it exists
+#   - automatically generate an attribution component that can be used
+#     by importing Opal.Attributions or "qml/modules/Opal/Attributions"
+#
 
 c__OPAL_RELEASE_MODULE_VERSION__="0.7.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
