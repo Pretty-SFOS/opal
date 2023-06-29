@@ -167,11 +167,13 @@ Please contact us if your app uses Opal so we can include it in this list!
 
 | Project                                                                                                               | Modules
 |-----------------------------------------------------------------------------------------------------------------------|---------------------------------------
+| [Opal Gallery](https://github.com/Pretty-SFOS/opal-gallery): gallery app showcasing all modules                       | all modules (with examples) and [snippets](#snippets)
 | [File Browser](https://github.com/ichthyosaurus/harbour-file-browser): fully-fledged file manager for Sailfish OS     | [Opal.About](#module-about), [snippets](#snippets)
 | [To-do List](https://github.com/ichthyosaurus/harbour-todolist): focused to-do list app                               | [Opal.About](#module-about), <!--[Opal.TabBar](#module-tabbar),--> [snippets](#snippets)
-| [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [snippets](#snippets)
+| [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [Opal.LinkHandler](#module-linkhandler), [snippets](#snippets)
 | [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [Opal.About](#module-about), [snippets](#snippets)
 | [Laundry List](https://github.com/ichthyosaurus/harbour-laundry): laundry management helper                           | [Opal.About](#module-about), [snippets](#snippets)
+| [Minidoro](https://github.com/ichthyosaurus/harbour-minidoro): Pomodoro technique timer for productivity              | [Opal.About](#module-about), [Opal.LinkHandler](#module-linkhandler), [snippets](#snippets)
 | [Meteo](https://github.com/ichthyosaurus/harbour-meteoswiss): weather forecasts                                       | [sf-about-page](#module-about)
 | [Jammy](https://github.com/ichthyosaurus/harbour-jammy): Jamendo client featuring advanced search                     | [sf-about-page](#module-about)
 | [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [Opal.About](#module-about)
