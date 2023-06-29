@@ -24,9 +24,6 @@ parse_arguments "$@"
 # files marked for distribution in copy_files.
 cTRANSLATE=(Opal)
 
-# un-comment the following line to initially setup translations
-# setup_translations
-
 # Edit the copy_files() function if any additional copy steps are necessary.
 # By default, the main Opal directory will be copied with all contents. It might
 # be necessary to exclude certain files that are not meant for distribution.

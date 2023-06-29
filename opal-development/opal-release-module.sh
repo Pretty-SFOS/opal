@@ -11,7 +11,7 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.6.4"
+c__OPAL_RELEASE_MODULE_VERSION__="0.7.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -185,24 +185,6 @@ Arguments:
     done
 }
 
-function setup_translations() {
-    local back_dir="$(pwd)"
-    read_metadata
-
-    local do_translate=true
-    if (( "${#cTRANSLATE[@]}" == 0 )); then
-        log "error: no translations defined"
-        exit 4
-    fi
-
-    mkdir -p "$cTR_DIR" || { log "error: failed to prepare translations directory"; exit 1; }
-    "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/$cNAME.ts"
-    success="$?"
-
-    cd "$back_dir"
-    exit "$success"
-}
-
 function build_qdoc() { # 1: to=/path/to/output/dir
     # If $1 is to=/path/to/output/dir, the generated help file will be copied
     # to the given directory.
@@ -290,9 +272,25 @@ function build_bundle() {
     # Translations must be built from the *original* sources and not from the
     # files prepared in copy_files!
     if [[ "$do_translate" == true ]]; then
+        if [[ ! -d "$cTR_DIR" ]]; then
+            mkdir -p "$cTR_DIR" || {
+                log "error: failed to setup translations directory in $cTR_DIR"
+                exit 1
+            }
+        fi
+
+        if [[ ! -f "$cTR_DIR/${cMETADATA[fullName]}.ts" ]]; then
+            # Setup initial translation catalog
+            "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -locations absolute -ts "$cTR_DIR/${cMETADATA[fullName]}.ts" || {
+                log "error: failed to create initial translations"
+                exit 3
+            }
+        fi
+
         # Update translation catalogs
         "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/"*.ts || {
-            log "error: failed to update translations"; exit 3
+            log "error: failed to update translations"
+            exit 3
         }
     fi
 
