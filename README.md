@@ -125,9 +125,8 @@ Follow these steps to include Opal modules in your project:
 
 8. Add proper attribution where required, e.g. to your “About” page. Opal modules
    provide QML elements that can be used directly in [Opal.About](#module-about).
-   Import `../modules/Opal/Attributions` (or `Opal.Attributions 1.0` if you
-   configured the dot-notation), then add `Opal[MyModule]Attribution {}` to
-   the `attributions` list property of the “About” page.
+   Import `../modules/Opal/Attributions`, then add `Opal[MyModule]Attribution {}`
+   to the `attributions` list property of the “About” page.
 
 After the initial setup you can easily add additional modules by simply
 extracting QML sources, docs, and translations to the respective directories.
@@ -171,9 +170,10 @@ int main(int argc, char *argv[])
 
         import Opal.About 1.0
 
-   For attributions, you would use this:
+   *Note:* ready-made attributions in `qml/modules/Opal/Attributions` must be
+   imported by path due to technical limitations of Qt's module system. Like this:
 
-        import Opal.Attributions 1.0
+        import "../modules/Opal/Attributions"
 
 
 ### Sailfish SDK (Qt Creator)

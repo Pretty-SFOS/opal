@@ -18,7 +18,7 @@
 #   - automatically remove private/ExtraTranslations.qml from the release
 #     bundle if it exists
 #   - automatically generate an attribution component that can be used
-#     by importing Opal.Attributions or "qml/modules/Opal/Attributions"
+#     by importing "qml/modules/Opal/Attributions"
 #
 
 c__OPAL_RELEASE_MODULE_VERSION__="0.7.0"
@@ -413,81 +413,6 @@ function build_bundle() {
            "license" "$cLICENSE" \
            "sources" "https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
         >> "$metadata_file"
-
-    # Write attribution tools
-    local attributions_qmldir="$qml_base/Opal/Attributions/qmldir.in"
-    local attributions_pri="$meta_base/opal-enable-attributions.pri"
-
-    # REUSE-IgnoreStart
-    cat <<"EOF" > "$attributions_qmldir"
-module Opal.Attributions
-# This file is part of Opal.
-# SPDX-FileCopyrightText: 2023 Mirian Margiani
-# SPDX-License-Identifier: CC0-1.0
-#
-# Generated entries:
-$$OPAL_ATTRIBUTIONS_QMLDIR
-EOF
-
-    cat <<"EOF" > "$attributions_pri"
-# This file is part of Opal.
-# SPDX-FileCopyrightText: 2023 Mirian Margiani
-# SPDX-License-Identifier: CC-BY-SA-4.0
-#
-# This file is only needed if you want to import ready-made
-# attributions using the dot-notation. Without this, you can always
-# simply import the Opal.Attribution module using its relative
-# path (see below).
-#
-# Include this file in your main .pro file to generate
-# a qmldir file that allows importing Opal.Attributions
-# to access attributions for Opal modules.
-#
-# In your main .pro file:
-#       include(libs/opal-enable-attributions.pri)
-#
-# Important: run qmake after adding a new module
-#       In the Sailfish IDE (QtCreator): menu “Build” -> “Run qmake”
-#
-# In your AboutPage.qml file:
-#       import Opal.Attributions 1.0           // dot-notation with this file
-#       import "../modules/Opal/Attributions"  // relative import without this file
-#
-#       AboutPageBase {
-#           attributions: Opal<MyModule>Attribution {}  // adapt this
-#       }
-#
-# @@@ FILE VERSION: 1.0.0
-#
-
-EOF
-    cat <<EOF >> "$attributions_pri"
-OPAL_ATTRIBUTIONS_MODULE = $(realpath --relative-to="$build_root" "$qml_base")/Opal/Attributions
-
-EOF
-    cat <<"EOF" >> "$attributions_pri"
-OPAL_ATTRIBUTIONS = $$files($$join($$list("..", $$OPAL_ATTRIBUTIONS_MODULE, "*.qml"), "/"), recursive=false)
-OPAL_ATTRIBUTIONS_QMLDIR =
-OPAL_ATTRIBUTIONS_MESSAGE =
-
-for (attribution, OPAL_ATTRIBUTIONS) {
-    opal_attribution_name = $$basename(attribution)
-    opal_attribution_comp = $$split(opal_attribution_name, ".")
-    $$take_last(opal_attribution_comp)
-    opal_attribution_comp = $$join(opal_attribution_comp, ".")
-
-    OPAL_ATTRIBUTIONS_QMLDIR += $$join($$list($$opal_attribution_comp, "1.0", $$basename(attribution)), " ")
-    OPAL_ATTRIBUTIONS_MESSAGE += $$opal_attribution_comp
-}
-
-OPAL_ATTRIBUTIONS_QMLDIR = $$join(OPAL_ATTRIBUTIONS_QMLDIR, "\n")
-
-# generate files based on build configuration
-QMAKE_SUBSTITUTES += $$join($$list($$OPAL_ATTRIBUTIONS_MODULE, "qmldir.in"), "/")
-
-message(Enabled Opal module attributions: $$join(OPAL_ATTRIBUTIONS_MESSAGE, ", "))
-EOF
-    # REUSE-IgnoreEnd
 
     # Create final package
     cd "$cBUILD_DIR"
