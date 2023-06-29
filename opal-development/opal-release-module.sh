@@ -157,6 +157,7 @@ Arguments:
     -b, --bundle OUTNAME - write bundle to \"$cBUILD_DIR/\$OUTNAME.tar.gz\" instead of
                            using an automatically generated name
     -c, --config KEY     - get value of metadata field KEY
+    -n, --no-minify      - disable QML minification, i.e. keep all QML files as they are
     -h, --help           - show this help and exit
     -V, --version        - show version and license information
 "
@@ -187,6 +188,9 @@ Arguments:
                     done
                 fi
                 exit 0
+            ;;
+            --no-minify|-n)
+                declare -g cENABLE_MINIFY=false
             ;;
             -*) printf "unknown option: %s\n" "$1";;
             *) shift; continue;;
@@ -352,36 +356,38 @@ function build_bundle() {
     unset BUILD_ROOT QML_BASE DOC_BASE
 
     # Strip comments from dist files
-    shopt -s nullglob extglob
-    local temp="$(mktemp)"
-    mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
+    if [[ -z "$cENABLE_MINIFY" || "$cENABLE_MINIFY" == true ]]; then
+        shopt -s nullglob extglob
+        local temp="$(mktemp)"
+        mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
 
-    for i in "${files_to_strip[@]}"; do
-        keep="$(grep -Ee '^//@' "$i")"
-        if [[ "$keep" != "" ]]; then
-            printf -- "%s\n" "$keep" > "$temp"
-        fi
+        for i in "${files_to_strip[@]}"; do
+            keep="$(grep -Ee '^//@' "$i")"
+            if [[ "$keep" != "" ]]; then
+                printf -- "%s\n" "$keep" > "$temp"
+            fi
 
-        if grep -qoe ';' "$i"; then
-            log "warning: file '$i' contains at least one semicolon"
-            log "         This breaks minification. Make sure there are no semicolons and try again."
-            continue
-        fi
+            if grep -qoe ';' "$i"; then
+                log "warning: file '$i' contains at least one semicolon"
+                log "         This breaks minification. Make sure there are no semicolons and try again."
+                continue
+            fi
 
-        "$cQMLMIN_BIN" "$i" | tr ';' '\n' >> "$temp"
+            "$cQMLMIN_BIN" "$i" | tr ';' '\n' >> "$temp"
 
-        # REUSE-IgnoreStart
-        if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
-            log "warning: no copyright info in '$i' after stripping comments"
-            log "         make sure to start all required lines with '//@' (instead of '//' or '/*')"
-        fi
-        # REUSE-IgnoreEnd
+            # REUSE-IgnoreStart
+            if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
+                log "warning: no copyright info in '$i' after stripping comments"
+                log "         make sure to start all required lines with '//@' (instead of '//' or '/*')"
+            fi
+            # REUSE-IgnoreEnd
 
-        mv "$temp" "$i"
-    done
+            mv "$temp" "$i"
+        done
 
-    rm -f "$temp"
-    shopt -u nullglob extglob
+        rm -f "$temp"
+        shopt -u nullglob extglob
+    fi
 
     # Write metadata file
     # REUSE-IgnoreStart
