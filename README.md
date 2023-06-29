@@ -244,6 +244,9 @@ and the [Qt coding conventions](https://doc.qt.io/qt-5/qml-codingconventions.htm
 Read the documentation on common [pitfalls in Sailfish app development](https://sailfishos.org/develop/docs/silica/sailfish-application-pitfalls.html)
 and avoid them unless you have a very good reason.
 
+**Hint:** use the [Silica cheatsheet](https://web.archive.org/web/20230628211624/https://jollacommunity.it/wp-content/uploads/2016/06/component_cheatsheet.png)
+and the [Theme cheatsheet](https://web.archive.org/web/20230628212523/https://jollacommunity.it/wp-content/uploads/2016/06/theme_cheatsheet.png).
+
 ### Adding plugins
 
 TBD.
