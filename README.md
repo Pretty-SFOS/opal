@@ -249,16 +249,54 @@ of GNU Bash (> 5.0) unless explicitly documented otherwise.
 
 ### Adding new modules
 
-1. Create a new repository named `opal-<...>`
-2. Create the same structure as in [`opal-about`](https://github.com/Pretty-SFOS/opal-about) (changing the relevant parts)
-3. Update module metadata in `doc/module.opal`
-4. Add an entry in the list of modules above
+0. Clone the Opal repository to a folder named `opal`:
+
+        $ cd /path/to/my/dev/stuff/
+        $ git clone https://github.com/Pretty-SFOS/opal opal
+
+1. Create a new repository named `opal-<...>` next to the `opal` directory:
+
+        $ cd /path/to/my/dev/stuff/
+        $ mkdir opal-mymodule
+        $ cd opal-mymodule
+        $ git init
+
+2. Create the same structure as in [`opal-infocombo`](https://github.com/Pretty-SFOS/opal-infocombo)
+   but remove the `translations` directory. (Translations will be setup for you when you first run `release-module.sh`.)
+   Use `grep` to find all files you have to modify:
+
+        $ cd /path/to/my/dev/stuff/opal-mymodule
+        $ grep -Ri infocombo
+
+3. Update module metadata in `doc/module.opal`.
+
+Once these basics are setup, you can use the [Opal Gallery](https://github.com/Pretty-SFOS/opal-gallery)
+app to test and develop your module.
+
+1. Clone the gallery app next to the `opal` directory:
+
+        $ cd /path/to/my/dev/stuff/
+        $ git clone https://github.com/Pretty-SFOS/opal-gallery opal-gallery
+
+2. Register your module in the gallery by adding it to the `cQML_MODULES` array
+   in [`fetch-modules.sh`](https://github.com/Pretty-SFOS/opal-gallery/blob/main/fetch-modules.sh#L11).
+   Note: remove all other modules from the array, unless you have cloned their repositories.
+
+        # name of your module's directory without the "opal-" prefix
+        cQML_MODULES=(mymodule)
+
+3. Run `fetch-modules.sh` to include all registered modules in the gallery app.
+4. Open the gallery app project in the Sailfish IDE (QtCreator) and edit your module
+   in `qml/modules/Opal/MyModule`.
 5. Create one or more example pages for the new module. The main page must be
    `doc/gallery.qml`. Extra pages can be added as `doc/gallery/*.qml`. See
    the [module metadata file](https://github.com/Pretty-SFOS/opal-about/blob/main/doc/module.opal)
-   for details.
+   for details. Edit this example page in the gallery app in
+   `qml/module-pages/opal-<mymodule>/<MyModule>.qml`.
+6. Last but not least, add an entry in the list of modules in Opal's
+   [README.md](https://github.com/Pretty-SFOS/opal/blob/main/README.md#modules) file.
 
-Make sure to use `qsTranslate("Opal.<Module>", "string")` instead of
+**Translations:** Make sure to use `qsTranslate("Opal.<Module>", "string")` instead of
 `qsTr("string")` for all translations. Otherwise merged translations would
 clutter a user's app translation files.
 
