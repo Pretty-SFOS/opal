@@ -28,6 +28,10 @@ cTRANSLATE=(Opal)
 # By default, the main Opal directory will be copied with all contents. It might
 # be necessary to exclude certain files that are not meant for distribution.
 # Use BUILD_ROOT, QML_BASE, and DOC_BASE (below BUILD_ROOT) to define target paths.
+#
+# Note: put additional strings to be translated in the special file
+# "Opal/<YourModule>/private/ExtraTranslations.qml". This is a dummy file that
+# will not be included in the tarball but will be used as source for translations.
 function copy_files() {
     build_qdoc to="$DOC_BASE"
     cp -r Opal "$QML_BASE/Opal" || return 1

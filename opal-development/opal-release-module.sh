@@ -303,7 +303,16 @@ function build_bundle() {
     if [[ "$do_translate" == true ]]; then
         cp "$cTR_DIR/"*.ts "$tr_base" || { log "error: failed to prepare translations"; exit 1; }
     fi
+
     copy_files || { log "error: failed to prepare sources"; exit 1; }
+
+    # Remove the extra translations dummy file from the release bundle, as translations
+    # are built separately and are merged if needed.
+    rm -f "$qml_base/Opal/${cMETADATA[nameStyled]}/private/ExtraTranslations.qml" || true
+
+    # Remove the private directory if it remains empty after the extra translations
+    # file has been removed.
+    rmdir --ignore-fail-on-non-empty "$qml_base/Opal/${cMETADATA[nameStyled]}/private"
 
     unset BUILD_ROOT QML_BASE DOC_BASE
 
