@@ -34,7 +34,7 @@ cTRANSLATE=(Opal)
 # will not be included in the tarball but will be used as source for translations.
 function copy_files() {
     build_qdoc to="$DOC_BASE"
-    cp -r Opal "$QML_BASE/Opal" || return 1
+    cp -r Opal -t "$QML_BASE" || return 1
 }
 
 # build the bundle
