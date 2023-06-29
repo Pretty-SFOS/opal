@@ -294,6 +294,31 @@ function build_bundle() {
         }
     fi
 
+    # Generate attribution component
+    # This is done *before* copy_files is called so that Opal.About can copy the
+    # generated attribution to its own directory. If someone only uses Opal.About,
+    # they shouldn't have to import the attributions module on their “About” page.
+    mkdir -p "$qml_base/Opal/Attributions" || {
+        log "error: failed to prepare attributions directory at $qml_base/Opal/Attributions"
+    }
+
+    # REUSE-IgnoreStart
+    printf "%s\n" \
+        "//@ This file is part of ${cMETADATA[fullName]}." \
+        "//@ https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
+        "//@ SPDX-FileCopyrightText: $cATTRIBUTION" \
+        "//@ SPDX-License-Identifier: $cLICENSE" \
+        "" \
+        "import \"../../Opal/About\" as A" \
+        "A.Attribution {" \
+        "    name: \"${cMETADATA[fullNameStyled]} (v${cMETADATA[version]})\"" \
+        "    entries: \"$cATTRIBUTION\"" \
+        "    licenses: A.License { spdxId: \"$cLICENSE\"}" \
+        "    sources: \"https://github.com/Pretty-SFOS/${cMETADATA[fullName]}\"" \
+        "    homepage: \"https://github.com/Pretty-SFOS/opal\"" \
+        "}" "" > "$qml_base/Opal/Attributions/${cMETADATA[fullNameStyled]//./}Attribution.qml"
+    # REUSE-IgnoreEnd
+
     # Make build paths available for copy_files()
     local BUILD_ROOT="$build_root"
     local QML_BASE="$qml_base"
@@ -335,10 +360,12 @@ function build_bundle() {
 
         "$cQMLMIN_BIN" "$i" | tr ';' '\n' >> "$temp"
 
+        # REUSE-IgnoreStart
         if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
             log "warning: no copyright info in '$i' after stripping comments"
             log "         make sure to start all required lines with '//@' (instead of '//' or '/*')"
         fi
+        # REUSE-IgnoreEnd
 
         mv "$temp" "$i"
     done
@@ -347,20 +374,20 @@ function build_bundle() {
     shopt -u nullglob extglob
 
     # Write metadata file
+    # REUSE-IgnoreStart
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
     printf "%s\n" "# Store this file to keep track of packaged module versions." \
                   "# It is not necessary to ship this in your app's final RPM package." \
                   "# SPDX-FileCopyrightText: $cATTRIBUTION" \
                   "# SPDX-License-Identifier: $cLICENSE" "" \
         > "$metadata_file"
+    # REUSE-IgnoreEnd
     printf "%s\n" "# Attribution using Opal.About:" \
-                  "#    Attribution {" \
-                  "#        name: \"${cMETADATA[fullNameStyled]}\"" \
-                  "#        entries: \"$cATTRIBUTION\"" \
-                  "#        licenses: License { spdxId: \"$cLICENSE\"}" \
-                  "#        sources: \"https://github.com/Pretty-SFOS/${cMETADATA[fullName]}\"" \
-                  "#        homepage: \"https://github.com/Pretty-SFOS/opal\"" \
-                  "#    }" "" \
+                  "#    1. Add \"include(libs/opal-enable-attributions.pri)\" to your main .pro file." \
+                  "#    2. Import \"Opal.Attributions 1.0\" in your About page." \
+                  "#    3. Attribute this module by adding \"${cMETADATA[fullNameStyled]//./}Attribution {}\"" \
+                  "#       to the \"attributions\" list property." \
+                  "" \
         >> "$metadata_file"
     printf "%s: %s\n" \
            "module" "${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})" \
@@ -371,6 +398,76 @@ function build_bundle() {
            "license" "$cLICENSE" \
            "sources" "https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
         >> "$metadata_file"
+
+    # Write attribution tools
+    local attributions_qmldir="$qml_base/Opal/Attributions/qmldir.in"
+    local attributions_pri="$meta_base/opal-enable-attributions.pri"
+
+    # REUSE-IgnoreStart
+    cat <<"EOF" > "$attributions_qmldir"
+module Opal.Attributions
+# This file is part of Opal.
+# SPDX-FileCopyrightText: 2023 Mirian Margiani
+# SPDX-License-Identifier: CC0-1.0
+#
+# Generated entries:
+$$OPAL_ATTRIBUTIONS_QMLDIR
+EOF
+
+    cat <<"EOF" > "$attributions_pri"
+# This file is part of Opal.
+# SPDX-FileCopyrightText: 2023 Mirian Margiani
+# SPDX-License-Identifier: CC-BY-SA-4.0
+#
+# Include this file in your main .pro file to generate
+# a qmldir file that allows importing Opal.Attributions
+# to access attributions for Opal modules.
+#
+# In your main .pro file:
+#       include(libs/opal-enable-attributions.pri)
+#
+# Important: run qmake after adding a new module
+#       In the Sailfish IDE (QtCreator): menu “Build” -> “Run qmake”
+#
+# In your AboutPage.qml file:
+#       import Opal.Attributions 1.0  // requires configuration, cf. docs
+#       import "../modules/Opal/Attributions"  // works always
+#
+#       AboutPageBase {
+#           attributions: Opal<MyModule>Attribution {}  // adapt this
+#       }
+#
+# @@@ FILE VERSION: 1.0.0
+#
+
+EOF
+    cat <<EOF >> "$attributions_pri"
+OPAL_ATTRIBUTIONS_MODULE = $(realpath --relative-to="$build_root" "$qml_base")/Opal/Attributions
+
+EOF
+    cat <<"EOF" >> "$attributions_pri"
+OPAL_ATTRIBUTIONS = $$files($$join($$list("..", $$OPAL_ATTRIBUTIONS_MODULE, "*.qml"), "/"), recursive=false)
+OPAL_ATTRIBUTIONS_QMLDIR =
+OPAL_ATTRIBUTIONS_MESSAGE =
+
+for (attribution, OPAL_ATTRIBUTIONS) {
+    opal_attribution_name = $$basename(attribution)
+    opal_attribution_comp = $$split(opal_attribution_name, ".")
+    $$take_last(opal_attribution_comp)
+    opal_attribution_comp = $$join(opal_attribution_comp, ".")
+
+    OPAL_ATTRIBUTIONS_QMLDIR += $$join($$list($$opal_attribution_comp, "1.0", $$basename(attribution)), " ")
+    OPAL_ATTRIBUTIONS_MESSAGE += $$opal_attribution_comp
+}
+
+OPAL_ATTRIBUTIONS_QMLDIR = $$join(OPAL_ATTRIBUTIONS_QMLDIR, "\n")
+
+# generate files based on build configuration
+QMAKE_SUBSTITUTES += $$join($$list($$OPAL_ATTRIBUTIONS_MODULE, "qmldir.in"), "/")
+
+message(Enabled Opal module attributions: $$join(OPAL_ATTRIBUTIONS_MESSAGE, ", "))
+EOF
+    # REUSE-IgnoreEnd
 
     # Create final package
     cd "$cBUILD_DIR"
