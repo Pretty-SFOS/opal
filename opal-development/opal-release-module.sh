@@ -3,7 +3,7 @@
 # This file is part of Opal and has been released under the Creative Commons
 # Attribution-ShareAlike 4.0 International License.
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# SPDX-FileCopyrightText: 2018-2023 Mirian Margiani
+# SPDX-FileCopyrightText: 2018-2024 Mirian Margiani
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-release-module.md
 # for documentation.
@@ -11,6 +11,9 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+#
+# * 0.8.0 (2024-06-23):
+#   - add preliminary support for C++ modules (no changes needed for QML-only modules)
 #
 # * 0.7.0 (2023-06-29):
 #   - remove the setup_translations() function and automatically setup
@@ -21,7 +24,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.7.0"
+c__OPAL_RELEASE_MODULE_VERSION__="0.8.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -272,18 +275,20 @@ function build_bundle() {
     local build_root_name="${cMETADATA[fullName]}"
     local build_root="$cBUILD_DIR/$build_root_name"
     local qml_base="$build_root/qml/modules"
+    local meta_base="$build_root/libs"
+    local src_base="$build_root/libs/opal/${cMETADATA[name]}"
     local tr_base="$build_root/libs/opal-translations/${cMETADATA[fullName]}"
     local doc_base="$build_root/libs/opal-docs"
-    local meta_base="$build_root/libs"
-    # local plugin_base="$build_root/TODO"
 
     mkdir -p "$cBUILD_DIR" || { log "error: failed to create base build directory"; exit 1; }
     rm -rf "$build_root" || { log "error: failed to clear build root"; exit 1; }
     mkdir -p "$build_root" || { log "error: failed to create build root"; exit 1; }
-    mkdir -p "$meta_base" "$qml_base" "$tr_base" "$doc_base" || { log "error: failed to prepare build root"; exit 1; }
-    # mkdir -p "$plugin_base" || { log "error: failed to prepare plugin base directory"; exit 1; }
+    mkdir -p "$meta_base" "$qml_base" "$tr_base" "$doc_base" "$src_base" || {
+        log "error: failed to prepare build root"
+        exit 1
+    }
 
-    # Translations must be built from the *original* sources and not from the
+    # NOTE: translations are built from the *original* sources and not from the
     # files prepared in copy_files!
     if [[ "$do_translate" == true ]]; then
         if [[ ! -d "$cTR_DIR" ]]; then
@@ -337,6 +342,7 @@ function build_bundle() {
     local BUILD_ROOT="$build_root"
     local QML_BASE="$qml_base"
     local DOC_BASE="$doc_base"
+    local SRC_BASE="$src_base"
 
     # Import distribution files
     if [[ "$do_translate" == true ]]; then
@@ -387,6 +393,50 @@ function build_bundle() {
 
         rm -f "$temp"
         shopt -u nullglob extglob
+    fi
+
+    # Write qmake include file if there are C++ sources
+    rmdir --parents --ignore-fail-on-empty "$src_base"
+    mkdir -p "$meta_base"
+
+    if [[ -d "$src_base" ]]; then
+        local qmake_include_file="$meta_base/opal-include.pri"
+
+        cat <<"EOF" > "$qmake_include_file"
+# This file is part of Opal.
+# SPDX-FileCopyrightText: 2023-2024 Mirian Margiani
+# SPDX-License-Identifier: CC-BY-SA-4.0
+#
+# Include this file in your main .pro file to enable
+# Opal modules that use or provide C++ sources and/or headers.
+#
+# Add this line to your main .pro file:
+#       include(libs/opal-include.pri)
+#
+# You can then use Opal headers by including them in your
+# C++ files like this:
+#       #include <libs/opal/mymodule/myheader.h>
+#
+# NOTE: this is a generic helper file used by all Opal source
+# modules. You can safely overwrite it when updating a module.
+#
+
+# Make headers available for inclusion
+INCLUDEPATH += $$relative_path($$PWD/opal)
+
+# Search for any project include files and include them now
+message(Searching for Opal source modules...)
+
+OPAL_SOURCE_MODULES = $$files($$PWD/opal/*)
+for (module, OPAL_SOURCE_MODULES) {
+    module_includes = $$files($$module/*.pri)
+
+    for (to_include, module_includes) {
+        message(Enabling Opal source module <libs/$$relative_path($$dirname(to_include))>)
+        include($$to_include)
+    }
+}
+EOF
     fi
 
     # Write metadata file
