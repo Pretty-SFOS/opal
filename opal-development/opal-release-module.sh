@@ -396,7 +396,7 @@ function build_bundle() {
     fi
 
     # Write qmake include file if there are C++ sources
-    rmdir --parents --ignore-fail-on-empty "$src_base"
+    rmdir --parents --ignore-fail-on-non-empty "$src_base"
     mkdir -p "$meta_base"
 
     if [[ -d "$src_base" ]]; then
