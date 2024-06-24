@@ -52,6 +52,7 @@ All Opal modules have their own licensing. *Please refer to the respective repos
 #### Stable
 
 - <a id='module-about'/>[Opal.About](https://github.com/Pretty-SFOS/opal-about): A simple and flexible "About" page supporting license info, contributors, donations, etc.
+- <a id='module-supportme'/>[Opal.SupportMe](https://github.com/Pretty-SFOS/opal-supportme):  A dialog asking for support that is shown when a user has used your Sailfish app for some time.
 - <a id='module-infocombo'/>[Opal.InfoCombo](https://github.com/Pretty-SFOS/opal-infocombo): A combo box that can show detailed descriptions of all menu items.
 - <a id='module-combodata'/>[Opal.ComboData](https://github.com/Pretty-SFOS/opal-combodata): An extension for combo boxes to access the current value instead of the label.
 - <a id='module-linkhandler'/>[Opal.LinkHandler](https://github.com/Pretty-SFOS/opal-linkhandler): A link handler to open or copy external links.
@@ -191,7 +192,7 @@ Please contact us if your app uses Opal so we can include it in this list!
 | Project                                                                                                               | Modules
 |-----------------------------------------------------------------------------------------------------------------------|---------------------------------------
 | [Opal Gallery](https://github.com/Pretty-SFOS/opal-gallery): gallery app showcasing all modules                       | all modules (with examples) and [snippets](#snippets)
-| [File Browser](https://github.com/ichthyosaurus/harbour-file-browser): fully-fledged file manager for Sailfish OS     | [Opal.About](#module-about), [snippets](#snippets)
+| [File Browser](https://github.com/ichthyosaurus/harbour-file-browser): fully-fledged file manager for Sailfish OS     | [Opal.About](#module-about), [Opal.SupportMe](#module-supportme), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [snippets](#snippets)
 | [To-do List](https://github.com/ichthyosaurus/harbour-todolist): focused to-do list app                               | [Opal.About](#module-about), <!--[Opal.TabBar](#module-tabbar),--> [snippets](#snippets)
 | [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [Opal.LinkHandler](#module-linkhandler), [snippets](#snippets)
 | [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [Opal.About](#module-about), [snippets](#snippets)
