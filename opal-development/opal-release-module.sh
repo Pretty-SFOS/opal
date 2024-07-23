@@ -283,10 +283,17 @@ function build_bundle() {
     mkdir -p "$cBUILD_DIR" || { log "error: failed to create base build directory"; exit 1; }
     rm -rf "$build_root" || { log "error: failed to clear build root"; exit 1; }
     mkdir -p "$build_root" || { log "error: failed to create build root"; exit 1; }
-    mkdir -p "$meta_base" "$qml_base" "$tr_base" "$doc_base" "$src_base" || {
+    mkdir -p "$meta_base" "$qml_base" "$doc_base" "$src_base" || {
         log "error: failed to prepare build root"
         exit 1
     }
+
+    if [[ "$do_translate" == true ]]; then
+        mkdir -p "$tr_base" || {
+            log "error: failed to prepare translations directory in build root"
+            exit 1
+        }
+    fi
 
     # NOTE: translations are built from the *original* sources and not from the
     # files prepared in copy_files!
