@@ -12,6 +12,15 @@
 #
 # Changelog:
 #
+# * 0.9.0 (2024-07-26):
+#   - add "briefDescription" metadata field (requires update to module.opal)
+#   - the following files are now being generated and can be removed from modules:
+#       - doc/module.qdoc
+#       - doc/opal-mymodule.qdocconf
+#       - doc/opal-qdoc.qdocconf
+#   - do not include C++ and translations directories in bundles if they
+#     are empty
+#
 # * 0.8.0 (2024-06-23):
 #   - add preliminary support for C++ modules (no changes needed for QML-only modules)
 #
@@ -136,6 +145,7 @@ function read_metadata() {
     _read_value "name" "cNAME"
     _read_value "nameStyled" "cNAME_STYLED"
     _read_value "version" "cVERSION"
+    _read_value "briefDescription" "cBRIEF_DESCRIPTION"
     _read_value "description" "cDESCRIPTION"
     _read_value "authors" "cAUTHORS"
     _read_value "maintainers" "cMAINTAINERS"
@@ -220,17 +230,182 @@ function build_qdoc() { # 1: to=/path/to/output/dir
     export OPAL_PROJECT_DOCDIR="${OPAL_PROJECT_DOCDIR:=$cDOC_DIR}"
     export OPAL_DOC_OUTDIR="${OPAL_DOC_OUTDIR:=$cBUILD_DOC_DIR}"
 
-    "$cQDOC_BIN" --highlighting -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$cDOC_DIR/$OPAL_PROJECT.qdocconf" || { log "error: failed to generate docs"; exit 1; }
-    cd "$cBUILD_DOC_DIR" || { log "error: failed to enter doc directory"; exit 1; }
-    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || { log "error: failed to generate Qt help pages"; exit 1; }
+    local cTEMP_DOC_DIR
+    cTEMP_DOC_DIR="$(mktemp -d -p . -t build-doc-tmp.XXXX)" || {
+        log "error: failed to prepare temporary documentation directory"
+        exit 1
+    }
 
-    cd "$back_dir"
+    mkdir -p "$cBUILD_DOC_DIR" || {
+        log "error: failed to prepare documentation output directory"
+        exit 1
+    }
+
+    if [[ ! -f "$cDOC_DIR/module.qdoc" ]]; then
+        cat <<EOF > "$cTEMP_DOC_DIR/module.qdoc"
+// This file is generated from settings defined in doc/module.opal.
+
+/*!
+    \\qmlmodule $OPAL_PROJECT_STYLED
+    \\title $OPAL_PROJECT_STYLED
+    \\brief ${cMETADATA["briefDescription"]}
+
+    ${cMETADATA["description"]}
+*/
+EOF
+    fi
+
+    local general_qdocconf="$cDOC_DIR/opal-qdoc.qdocconf"
+
+    if [[ ! -f "$general_qdocconf" ]]; then
+        general_qdocconf="$cTEMP_DOC_DIR/opal-qdoc.qdocconf"
+
+        # REUSE-IgnoreStart
+        cat <<"EOF" > "$general_qdocconf"
+#
+# This file is part of Opal and has been released under the Creative Commons
+# Attribution-ShareAlike 4.0 International License.
+# SPDX-License-Identifier: CC-BY-SA-4.0
+# SPDX-FileCopyrightText: 2021 Mirian Margiani
+#
+# See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-qdoc.md
+# for documentation.
+#
+# @@@ FILE VERSION 0.3.0
+#
+
+# project definition
+# description has to be set by the module
+project = $OPAL_PROJECT_STYLED
+version = $OPAL_PROJECT_VERSION
+
+# TODO: document custom macros
+macro.opalrootlink = "https://github.com/Pretty-SFOS/opal/blob/main/\1"
+macro.opsnip = "\\l {\\opalrootlink {snippets/opal-\1.md}} {opal-\1}"
+macro.opdev = "\\l {\\opalrootlink {opal-development/opal-\1.md}} {opal-\1}"
+macro.opmod = "\\l {https://github.com/Pretty-SFOS/opal-\1} {Opal.\1}"
+
+macro.todo = "\n\n\\b {Todo:} \1"
+macro.required = "\n\n\\b {Important:} this property is required and must be " \
+                 "specified when using this component."
+
+# include some Qt defaults
+# -- macros for QDoc commands
+include($QT_INSTALL_DOCS/global/macros.qdocconf)
+# -- needed by C++ projects
+include($QT_INSTALL_DOCS/global/qt-cpp-defines.qdocconf)
+# -- compatibility macros
+include($QT_INSTALL_DOCS/global/compat.qdocconf)
+# -- configuration common among QDoc projects
+include($QT_INSTALL_DOCS/global/fileextensions.qdocconf)
+# -- offline HTML template for documentation shipped to Qt Creator
+include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
+
+# assign custom HTML footer to replace Qt's default copyright notice
+HTML.footer = "<div align='center'><hr/>" \
+              "<p><small>$OPAL_PROJECT_STYLED $OPAL_PROJECT_VERSION<br>\n" \
+              "This document may be used under the terms of the " \
+              "<a href='https://spdx.org/licenses/GFDL-1.3-or-later.html'>" \
+              "GNU Free Documentation License version 1.3</a> " \
+              "as published by the Free Software Foundation.</small></p>" \
+              "<p/></div>"
+
+# Qt help system configuration
+qhp.projects = Opal
+
+# output file name below $OPAL_DOC_OUTDIR
+qhp.Opal.file                = $OPAL_PROJECT.qhp
+qhp.Opal.namespace           = $OPAL_PROJECT_STYLED.100
+qhp.Opal.virtualFolder       = $OPAL_PROJECT
+qhp.Opal.indexTitle          = $OPAL_PROJECT_STYLED
+qhp.Opal.indexRoot           =
+
+# additional subprojects can be defined by using the '+=' operator
+# the default subproject is a listing of all QML types the module offers
+qhp.Opal.subprojects         = qmltypes
+
+qhp.Opal.subprojects.qmltypes.title = QML Types
+qhp.Opal.subprojects.qmltypes.indexTitle = $OPAL_PROJECT_STYLED QML Types
+qhp.Opal.subprojects.qmltypes.selectors = qmltype
+qhp.Opal.subprojects.qmltypes.sortPages = true
+
+# The outputdir variable specifies the directory where QDoc will put the
+# generated documentation.
+outputdir   = ../$OPAL_DOC_OUTDIR
+
+# The headerdirs variable specifies the directories containing the header files
+# associated with the .cpp source files used in the documentation.
+# Header directories must be specified by the module.
+# headerdirs  = Opal
+
+# The sourcedirs variable specifies the directories containing the .cpp or .qdoc
+# files used in the documentation. Additional dirs can be specified.
+sourcedirs  += ../$OPAL_PROJECT_DOCDIR
+
+# This enabled parsing of JavaScript files by default.
+# Cf. https://lists.qt-project.org/pipermail/development/2014-April/016658.html
+sources.fileextensions += "*.js"
+
+# The exampledirs variable specifies the directories containing
+# the source code of the example files. Additional dirs can be specified.
+exampledirs += ../$OPAL_PROJECT_EXAMPLESDIR
+
+# The imagedirs variable specifies the directories containing the images used in
+# the documentation. Additional dirs can be specified.
+imagedirs   += ../$OPAL_PROJECT_DOCDIR/images
+EOF
+        # REUSE-IgnoreEnd
+    fi
+
+    local project_qdocconf="$cDOC_DIR/$OPAL_PROJECT.qdocconf"
+
+    if [[ ! -f "$project_qdocconf" ]]; then
+        project_qdocconf="$cTEMP_DOC_DIR/$OPAL_PROJECT.qdocconf"
+
+        cat <<EOF > "$project_qdocconf"
+# This file is generated from settings defined in doc/module.opal.
+include(opal-qdoc.qdocconf)
+description = ${cMETADATA["description"]}
+headerdirs  += . ../Opal ../src
+sourcedirs  += . ../Opal ../src
+EOF
+    fi
+
+    "$cQDOC_BIN" --highlighting -I "$cTEMP_DOC_DIR" -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$project_qdocconf" || {
+        log "error: failed to generate docs"
+        exit 1
+    }
+
+    cd "$cBUILD_DOC_DIR" || {
+        log "error: failed to enter doc directory"
+        exit 1
+    }
+
+    "$cQHG_BIN" "$OPAL_PROJECT.qhp" -c -o "$OPAL_PROJECT.qch" || {
+        log "error: failed to generate Qt help pages"
+        exit 1
+    }
+
+    cd "$back_dir" || {
+        log "error: failed to return to $back_dir"
+        exit 1
+    }
 
     if [[ "$1" == "to="* ]]; then
         local copy_to="${1#to=}"
-        mkdir -p "$copy_to" || { log "error: failed to prepare output directory"; exit 1; }
-        cp "$cBUILD_DOC_DIR/$OPAL_PROJECT.qch" "$copy_to" || { log "error: failed to copy generated docs"; exit 1; }
+
+        mkdir -p "$copy_to" || {
+            log "error: failed to prepare documentation output directory"
+            exit 1
+        }
+
+        cp "$cBUILD_DOC_DIR/$OPAL_PROJECT.qch" "$copy_to" || {
+            log "error: failed to copy generated docs"
+            exit 1
+        }
     fi
+
+    rm -r "$cTEMP_DOC_DIR"
 }
 
 function build_bundle() {
