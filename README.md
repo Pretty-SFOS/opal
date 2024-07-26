@@ -20,21 +20,13 @@ Opal is a library for developers. As an end-user you should not have to do anyth
 *Opal is ready for production.* That being said, Opal is not yet very mature and
 the ecosystem still has to grow.
 
-- the [gallery app](https://github.com/Pretty-SFOS/opal-gallery) is ready and stable
-- [Opal.About](https://github.com/Pretty-SFOS/opal-about) is usable and fully documented
-- all snippets needed for including modules in an app are ready (see below)
-- [render-icons.sh](snippets/opal-render-icons.md) is ready and stable
-
 Notably still missing:
 
 - resources modules (i.e. extra icons etc.) are not yet properly supported
 - plugins (i.e. modules with parts written in C++) are not yet supported
-- code documentation should be hosted online
+- code documentation is only available in QtCreator but should be hosted online
 
 ## Contents <a id='opal-list'/>
-
-You can also browse the [snippets directory](snippets/) or install the
-[gallery application](https://github.com/Pretty-SFOS/opal-gallery).
 
 ### Snippets / development tools <a id='snippets'/>
 
@@ -47,7 +39,13 @@ otherwise specified. *Please refer to the respective snippet files.*
 
 ### Modules <a id='modules'/>
 
-All Opal modules have their own licensing. *Please refer to the respective repositories.*
+Note that modules generally are licensed under the GNU GPL. However, all Opal
+modules have their own licensing. Please refer to the respective repositories for details.
+
+To get an overview of the currently available modules, install the
+[gallery app](https://github.com/Pretty-SFOS/opal-gallery) from Jolla's Harbour
+store or from [OpenRepos](https://openrepos.net/content/ichthyosaurus/opal-gallery).
+You can also browse the repositories here.
 
 #### Stable
 
@@ -110,7 +108,8 @@ Follow these steps to include Opal modules in your project:
         $ ./opal-merge-translations ../translations
 
     Otherwise, run it inside an [`sfdk`](https://docs.sailfishos.org/Develop/Apps/#sfdk-command-line-tool)
-    target, so you'll need to run something like the following (replacing `SailfishOS-4.5.0.16EA-aarch64` with one of your targets).
+    target, so you will need to run something like the following
+    (replacing `SailfishOS-4.5.0.16EA-aarch64` with one of your targets).
 
         $ cd libs
         $ sfdk engine exec sb2 -t SailfishOS-4.5.0.16EA-aarch64 \
@@ -124,10 +123,11 @@ Follow these steps to include Opal modules in your project:
         libs/opal-translations
         libs/opal-docs
 
-8. Add proper attribution where required, e.g. to your “About” page. Opal modules
-   provide QML elements that can be used directly in [Opal.About](#module-about).
-   Import `../modules/Opal/Attributions`, then add `Opal[MyModule]Attribution {}`
+8. Add proper attribution, e.g. to your “About” page. Opal modules
+   provide QML elements that can be used directly in [Opal.About](#module-about):
+   import `../modules/Opal/Attributions`, then add `Opal[MyModule]Attribution {}`
    to the `attributions` list property of the “About” page.
+
 
 After the initial setup you can easily add additional modules by simply
 extracting QML sources, docs, and translations to the respective directories.
@@ -160,26 +160,22 @@ int main(int argc, char *argv[])
 }
 ```
 
-8. Enable the dot-notation for ready-made attribution components by adding this
-   line to your main `.pro` file:
-
-        include(libs/opal-enable-attributions.pri)
-
-9. If everything is set up correctly, you can now use Opal by importing the
+8. If everything is set up correctly, you can now use Opal by importing the
    modules via the dot-notation. For the “About” page component you would have
    to write in QML:
 
         import Opal.About 1.0
 
    *Note:* ready-made attributions in `qml/modules/Opal/Attributions` must be
-   imported by path due to technical limitations of Qt's module system. Like this:
+   imported by path due to technical limitations of Qt's module system. Import
+   them like this:
 
         import "../modules/Opal/Attributions"
 
 
 ### Sailfish SDK (Qt Creator)
 
-If auto-completion does not work, try adding `qml/modules` to the IDE's module
+If auto-completion does not work, add `qml/modules` to the IDE's module
 search path. Add this line to your project's `.pro` file:
 
     QML_IMPORT_PATH += qml/modules
@@ -253,26 +249,20 @@ of GNU Bash (> 5.0) unless explicitly documented otherwise.
 
 ### Adding new modules
 
-0. Clone the Opal repository to a folder named `opal`:
+1. Copy the [Opal module template](https://github.com/Pretty-SFOS/opal-module-template)
+   repository, and initialize a new repository for your module:
 
-        $ cd /path/to/my/dev/stuff/
-        $ git clone https://github.com/Pretty-SFOS/opal opal
-
-1. Create a new repository named `opal-<...>` next to the `opal` directory:
-
-        $ cd /path/to/my/dev/stuff/
-        $ mkdir opal-mymodule
-        $ cd opal-mymodule
+        $ git clone https://github.com/Pretty-SFOS/opal-module-template mymodule
+        $ cd mymodule
+        $ rm -rf .git
         $ git init
 
-2. Create the same structure as in [`opal-infocombo`](https://github.com/Pretty-SFOS/opal-infocombo)
-   but remove the `translations` directory. (Translations will be setup for you when you first run `release-module.sh`.)
-   Use `grep` to find all files you have to modify:
+2. Run the setup script to configure the new module:
 
-        $ cd /path/to/my/dev/stuff/opal-mymodule
-        $ grep -Ri infocombo
+        $ ./setup.sh --help
+        $ ./setup.sh mymodule MyModule "Jane Doe" "QML module for SOMETHING in Sailfish apps" "This module provides SOMETHING to DO SOMETHING."
 
-3. Update module metadata in `doc/module.opal`.
+3. Follow the instructions in the `README.md` file.
 
 Once these basics are setup, you can use the [Opal Gallery](https://github.com/Pretty-SFOS/opal-gallery)
 app to test and develop your module.
@@ -292,12 +282,14 @@ app to test and develop your module.
 3. Run `fetch-modules.sh` to include all registered modules in the gallery app.
 4. Open the gallery app project in the Sailfish IDE (QtCreator) and edit your module
    in `qml/modules/Opal/MyModule`.
-5. Create one or more example pages for the new module. The main page must be
+5. Open `qml/harbour-opal-gallery.qml` and set the `develJumpToModule` property
+   to your module's name.
+6. Create one or more example pages for the new module. The main page must be
    `doc/gallery.qml`. Extra pages can be added as `doc/gallery/*.qml`. See
    the [module metadata file](https://github.com/Pretty-SFOS/opal-about/blob/main/doc/module.opal)
    for details. Edit this example page in the gallery app in
-   `qml/module-pages/opal-<mymodule>/<MyModule>.qml`.
-6. Last but not least, add an entry in the list of modules in Opal's
+   `qml/module-pages/opal-<mymodule>/gallery.qml`.
+7. Last but not least, add an entry in the list of modules in Opal's
    [README.md](https://github.com/Pretty-SFOS/opal/blob/main/README.md#modules) file.
 
 **Translations:** Make sure to use `qsTranslate("Opal.<Module>", "string")` instead of
