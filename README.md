@@ -194,7 +194,7 @@ Please contact us if your app uses Opal so we can include it in this list!
 | [Opal Gallery](https://github.com/Pretty-SFOS/opal-gallery): gallery app showcasing all modules                       | all modules (with examples) and [snippets](#snippets)
 | [File Browser](https://github.com/ichthyosaurus/harbour-file-browser): fully-fledged file manager for Sailfish OS     | [Opal.About](#module-about), [Opal.SupportMe](#module-supportme), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [snippets](#snippets)
 | [To-do List](https://github.com/ichthyosaurus/harbour-todolist): focused to-do list app                               | [Opal.About](#module-about), <!--[Opal.TabBar](#module-tabbar),--> [snippets](#snippets)
-| [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [Opal.LinkHandler](#module-linkhandler), [snippets](#snippets)
+| [Captain's Log](https://github.com/ichthyosaurus/harbour-captains-log): simple diary app                              | [Opal.About](#module-about), [Opal.SupportMe](#module-supportme), [Opal.InfoCombo](#module-infocombo), [Opal.ComboData](#module-combodata), [Opal.LinkHandler](#module-linkhandler), [snippets](#snippets)
 | [Parking Chaos](https://github.com/ichthyosaurus/harbour-parkingchaos): "Traffic Jam" game                            | [Opal.About](#module-about), [snippets](#snippets)
 | [Laundry List](https://github.com/ichthyosaurus/harbour-laundry): laundry management helper                           | [Opal.About](#module-about), [snippets](#snippets)
 | [Minidoro](https://github.com/ichthyosaurus/harbour-minidoro): Pomodoro technique timer for productivity              | [Opal.About](#module-about), [Opal.LinkHandler](#module-linkhandler), [snippets](#snippets)
@@ -206,6 +206,7 @@ Please contact us if your app uses Opal so we can include it in this list!
 | [Olive goes shopping](https://github.com/PawelSpoon/harbour-olive-goes-shopping): shopping list app                 | [sf-docked-tab-bar](#module-tabbar)
 | [Skruuvi](https://github.com/miikasda/harbour-skruuvi): native reader for Ruuvi sensors                               | [Opal.About](#module-about)
 | [Screen Time](https://github.com/miikasda/harbour-screentime): track your screen time usage on Sailfish OS            | [Opal.About](#module-about)
+| [Outpost](https://openrepos.net/content/mistermagister/outpost): an unofficial app for InPost                         | [Opal.About](#module-about)
 
 
 ## Developing Opal <a id='developing-opal'/>
