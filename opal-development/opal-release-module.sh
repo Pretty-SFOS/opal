@@ -12,7 +12,7 @@
 #
 # Changelog:
 #
-# * 0.9.0 (2024-07-26):
+# * 1.0.0 (2024-07-26):
 #   - add "briefDescription" metadata field (requires update to module.opal)
 #   - the following files are now being generated and can be removed from modules:
 #       - doc/module.qdoc
@@ -33,7 +33,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="0.8.0"
+c__OPAL_RELEASE_MODULE_VERSION__="1.0.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
