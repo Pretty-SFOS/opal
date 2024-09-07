@@ -14,6 +14,8 @@
 #
 #   - add "defaultValue" qdoc macro to document the default value of QML
 #     properties in module docs
+#   - fix support for multiple attribution lines in generated Attribution files
+#
 # * 1.0.0 (2024-07-26):
 #   - add "briefDescription" metadata field (requires update to module.opal)
 #   - the following files are now being generated and can be removed from modules:
@@ -154,6 +156,10 @@ function read_metadata() {
     _read_value "attribution" "cATTRIBUTION"
     _read_value "mainLicenseSpdx" "cLICENSE"
     _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES"
+
+    mapfile -t cMAINTAINERS_ARRAY <<<"$(tr ':' '\n' <<<"$cMAINTAINERS")"
+    mapfile -t cAUTHORS_ARRAY <<<"$(tr ':' '\n' <<<"$cAUTHORS")"
+    mapfile -t cATTRIBUTIONS_ARRAY <<<"$(tr ':' '\n' <<<"$cATTRIBUTION")"
 
     cMETADATA["fullName"]="$cOPAL_PREFIX$cNAME"
     cMETADATA["fullNameStyled"]="$cOPAL_PREFIX_STYLED$cNAME_STYLED"
@@ -516,7 +522,7 @@ function build_bundle() {
         "import \"../../Opal/About\" as A" \
         "A.Attribution {" \
         "    name: \"${cMETADATA[fullNameStyled]} (v${cMETADATA[version]})\"" \
-        "    entries: \"$cATTRIBUTION\"" \
+        "    entries: [$(printf -- "\"%s\", " "${cATTRIBUTIONS_ARRAY[@]}" | sed "s/, $//")]" \
         "    licenses: A.License { spdxId: \"$cLICENSE\"}" \
         "    sources: \"https://github.com/Pretty-SFOS/${cMETADATA[fullName]}\"" \
         "    homepage: \"https://github.com/Pretty-SFOS/opal\"" \
