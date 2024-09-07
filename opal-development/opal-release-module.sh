@@ -12,6 +12,7 @@
 #
 # Changelog:
 #
+# * 1.1.0 (2024-09-07):
 #   - add "defaultValue" qdoc macro to document the default value of QML
 #     properties in module docs
 #   - fix support for multiple attribution lines in generated Attribution files
@@ -37,7 +38,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.0.0"
+c__OPAL_RELEASE_MODULE_VERSION__="1.1.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
