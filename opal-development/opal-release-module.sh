@@ -12,6 +12,8 @@
 #
 # Changelog:
 #
+#   - add "defaultValue" qdoc macro to document the default value of QML
+#     properties in module docs
 # * 1.0.0 (2024-07-26):
 #   - add "briefDescription" metadata field (requires update to module.opal)
 #   - the following files are now being generated and can be removed from modules:
@@ -288,6 +290,7 @@ macro.opmod = "\\l {https://github.com/Pretty-SFOS/opal-\1} {Opal.\1}"
 macro.todo = "\n\n\\b {Todo:} \1"
 macro.required = "\n\n\\b {Important:} this property is required and must be " \
                  "specified when using this component."
+macro.defaultValue = "\n\nThe default value of this property is “\\c {\1}”."
 
 # include some Qt defaults
 # -- macros for QDoc commands
