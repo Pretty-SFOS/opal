@@ -333,7 +333,7 @@ include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
 
 # assign custom HTML footer to replace Qt's default copyright notice
 HTML.footer = "<div align='center'><hr/>" \
-              "<p><small>$OPAL_PROJECT_STYLED $OPAL_PROJECT_VERSION<br>\n" \
+              "<p><small><a href='https://github.com/Pretty-SFOS/$OPAL_PROJECT'>$OPAL_PROJECT_STYLED</a> $OPAL_PROJECT_VERSION<br>\n" \
               "This document may be used under the terms of the " \
               "<a href='https://spdx.org/licenses/GFDL-1.3-or-later.html'>" \
               "GNU Free Documentation License version 1.3</a> " \
