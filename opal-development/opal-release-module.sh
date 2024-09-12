@@ -265,6 +265,21 @@ function build_qdoc() { # 1: to=/path/to/output/dir
     \\brief ${cMETADATA["briefDescription"]}
 
     ${cMETADATA["description"]}
+
+    \\section1 QML Types
+
+    The $OPAL_PROJECT_STYLED module provides the following QML types:
+*/
+
+/*!
+    \\qmlmodule $OPAL_PROJECT_STYLED.private
+    \\title $OPAL_PROJECT_STYLED.private
+    \\brief This module provides private types of $OPAL_PROJECT_STYLED.
+    \\relates $OPAL_PROJECT_STYLED
+
+    These types belong to the private API of $OPAL_PROJECT_STYLED and should
+    not be used directly. They can change even in minor versions. You have
+    been warned.
 */
 EOF
     fi
