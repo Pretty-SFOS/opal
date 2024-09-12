@@ -178,6 +178,7 @@ Usage: $0 [-b OUTNAME] [-h] [-V]
 Arguments:
     -b, --bundle OUTNAME - write bundle to \"$cBUILD_DIR/\$OUTNAME.tar.gz\" instead of
                            using an automatically generated name
+    -d, --docs           - only generate docs
     -c, --config KEY     - get value of metadata field KEY
     -n, --no-minify      - disable QML minification, i.e. keep all QML files as they are
     -h, --help           - show this help and exit
@@ -199,6 +200,10 @@ Arguments:
             --version|-V) _version; exit 0;;
             --bundle|-b) shift && [[ -z "$1" ]] && log "error: OUTNAME is missing" && exit 9
                 declare -g -x cCUSTOM_BUNDLE_NAME="$1"
+            ;;
+            --docs|-d)
+                build_qdoc ""
+                exit $?
             ;;
             --config|-c)
                 shift && read_metadata quiet
