@@ -11,6 +11,10 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.2.0 (2024-09-12):
+#   - add --docs option to only generate documentation
+#   - include module source url in documentation footer
+#   - fix rendering documentation for private types
 #
 # * 1.1.0 (2024-09-07):
 #   - add "defaultValue" qdoc macro to document the default value of QML
