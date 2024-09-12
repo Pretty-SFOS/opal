@@ -372,8 +372,11 @@ outputdir   = ../$OPAL_DOC_OUTDIR
 # files used in the documentation. Additional dirs can be specified.
 sourcedirs  += ../$OPAL_PROJECT_DOCDIR
 
-# This enabled parsing of JavaScript files by default.
+# This enables parsing of JavaScript files by default.
 # Cf. https://lists.qt-project.org/pipermail/development/2014-April/016658.html
+#
+# Note that each JS file needs a \qmlmodule topic command, and each function
+# must be documented using the \qmlmethod command.
 sources.fileextensions += "*.js"
 
 # The exampledirs variable specifies the directories containing
