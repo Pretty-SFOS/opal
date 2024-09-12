@@ -52,6 +52,8 @@ You can also browse the repositories here.
 - <a id='module-about'/>[Opal.About](https://github.com/Pretty-SFOS/opal-about): A simple and flexible "About" page supporting license info, contributors, donations, etc.
 - <a id='module-supportme'/>[Opal.SupportMe](https://github.com/Pretty-SFOS/opal-supportme):  A dialog asking for support that is shown when a user has used your Sailfish app for some time.
 - <a id='module-delegates'/>[Opal.Delegates](https://github.com/Pretty-SFOS/opal-delegates): List items that can show multiple lines of text and icons by default.
+- <a id='module-smartscrollbar'/>[Opal.SmartScrollbar](https://github.com/Pretty-SFOS/opal-smartscrollbar): A Harbour-compatible smart scrollbar for easier access in long lists.
+- <a id='module-menuswitch'/>[Opal.MenuSwitch](https://github.com/Pretty-SFOS/opal-menuswitch): A toggle switch for Sailfish menus.
 - <a id='module-infocombo'/>[Opal.InfoCombo](https://github.com/Pretty-SFOS/opal-infocombo): A combo box that can show detailed descriptions of all menu items.
 - <a id='module-combodata'/>[Opal.ComboData](https://github.com/Pretty-SFOS/opal-combodata): An extension for combo boxes to access the current value instead of the label.
 - <a id='module-linkhandler'/>[Opal.LinkHandler](https://github.com/Pretty-SFOS/opal-linkhandler): A link handler to open or copy external links.
