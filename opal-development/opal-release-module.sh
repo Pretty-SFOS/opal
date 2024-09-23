@@ -68,10 +68,11 @@ _x="${cOPAL_PREFIX_STYLED:="Opal."}"
 cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "$cQMLMIN_BIN")
 
 function check_dependencies() {
+    # shellcheck disable=SC2128
     [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
     for dep in "${cDEPENDENCIES[@]}"; do
         if ! which "$dep" 2> /dev/null >&2; then
-            printf "error: %s is required\n" "$dep" >&2
+            printf -- "error: %s is required\n" "$dep" >&2
             exit 1
         fi
     done
@@ -100,10 +101,12 @@ function verify_version() {
 
     local major="${!user_version_var%%.*}"
     local minor="${!user_version_var#*.}"; minor="${minor%.*}"
+    # shellcheck disable=SC2034
     local patch="${!user_version_var##*.}"
 
     local opal_major="${!opal_version_var%%.*}"
     local opal_minor="${!opal_version_var#*.}"; opal_minor="${opal_minor%.*}"
+    # shellcheck disable=SC2034
     local opal_patch="${!opal_version_var##*.}"
 
     if [[ "$opal_major" == 0 && "$major" == "$opal_major" && "$minor" != "$opal_minor" ]]; then
@@ -143,7 +146,10 @@ function read_metadata() {
         exit 8
     fi
 
-    function _read_value() {
+    function _read_value() { # 1: field key, 2: variable name
+        # Read the metadata field defined in $1 and save it as a variable
+        # with the name defined in $2. The value is also saved to the cMETADATA
+        # map with key $1.
         grep -qoe "^$1: " "$cMETADATA_FILE" || { log "error: metadata field '$1' not defined"; exit 8; }
         declare -g -x "$2"="$(grep -e "^$1: " "$cMETADATA_FILE" | sed "s/^$1: //")"
         [[ -z "${!2}" ]] && { log "error: metadata field '$1' is empty"; exit 8; }
@@ -151,6 +157,8 @@ function read_metadata() {
         cMETADATA["$1"]="${!2}"
     }
 
+    # _read_value assigns the variable defined in $2 so any "variable is not defined"
+    # checks (SC2154) regarding metadata fields are false positives.
     _read_value "name" "cNAME"
     _read_value "nameStyled" "cNAME_STYLED"
     _read_value "version" "cVERSION"
@@ -162,11 +170,16 @@ function read_metadata() {
     _read_value "mainLicenseSpdx" "cLICENSE"
     _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES"
 
+    # shellcheck disable=SC2034,SC2154
     mapfile -t cMAINTAINERS_ARRAY <<<"$(tr ':' '\n' <<<"$cMAINTAINERS")"
+    # shellcheck disable=SC2034,SC2154
     mapfile -t cAUTHORS_ARRAY <<<"$(tr ':' '\n' <<<"$cAUTHORS")"
+    # shellcheck disable=SC2034,SC2154
     mapfile -t cATTRIBUTIONS_ARRAY <<<"$(tr ':' '\n' <<<"$cATTRIBUTION")"
 
+    # shellcheck disable=SC2154
     cMETADATA["fullName"]="$cOPAL_PREFIX$cNAME"
+    # shellcheck disable=SC2154
     cMETADATA["fullNameStyled"]="$cOPAL_PREFIX_STYLED$cNAME_STYLED"
 }
 
@@ -191,11 +204,12 @@ Arguments:
     }
 
     function _version() {
-        printf "opal-release-module.sh\nCopyright (c) 2018-2023 Mirian Margiani -- CC-BY-SA-4.0\n"
-        printf "version %s\n" "$c__OPAL_RELEASE_MODULE_VERSION__"
+        printf -- "opal-release-module.sh\nCopyright (c) 2018-2023 Mirian Margiani -- CC-BY-SA-4.0\n"
+        printf -- "version %s\n" "$c__OPAL_RELEASE_MODULE_VERSION__"
         read_metadata quiet
-        printf "\nFOR MODULE: %s (%s), version %s\n" \
-            "${cMETADATA[fullName]}" "${cMETADATA[fullNameStyled]}" "$cVERSION"
+
+        # shellcheck disable=SC2154
+        printf -- "\nFOR MODULE: %s (%s), version %s\n" "${cMETADATA[fullName]}" "${cMETADATA[fullNameStyled]}" "$cVERSION"
     }
 
     while (( $# > 0 )); do
@@ -212,10 +226,10 @@ Arguments:
             --config|-c)
                 shift && read_metadata quiet
                 if [[ -n "$1" ]]; then
-                    [[ -n "${cMETADATA["$1"]}" ]] && printf "%s\n" "${cMETADATA["$1"]}" || exit 1
+                    [[ -n "${cMETADATA["$1"]}" ]] && printf -- "%s\n" "${cMETADATA["$1"]}" || exit 1
                 else
                     for i in "${!cMETADATA[@]}"; do
-                        printf "%s\n" "$i: ${cMETADATA["$i"]}"
+                        printf -- "%s\n" "$i: ${cMETADATA["$i"]}"
                     done
                 fi
                 exit 0
@@ -223,7 +237,7 @@ Arguments:
             --no-minify|-n)
                 declare -g cENABLE_MINIFY=false
             ;;
-            -*) printf "unknown option: %s\n" "$1";;
+            -*) printf -- "unknown option: %s\n" "$1";;
             *) shift; continue;;
         esac
         shift
@@ -234,6 +248,7 @@ function build_qdoc() { # 1: to=/path/to/output/dir
     # If $1 is to=/path/to/output/dir, the generated help file will be copied
     # to the given directory.
 
+    # shellcheck disable=SC2155
     local back_dir="$(pwd)"
     read_metadata
 
@@ -399,13 +414,13 @@ EOF
     if [[ ! -f "$project_qdocconf" ]]; then
         project_qdocconf="$cTEMP_DOC_DIR/$OPAL_PROJECT.qdocconf"
 
-        cat <<EOF > "$project_qdocconf"
-# This file is generated from settings defined in doc/module.opal.
-include(opal-qdoc.qdocconf)
-description = ${cMETADATA["description"]}
-headerdirs  += . ../Opal ../src
-sourcedirs  += . ../Opal ../src
-EOF
+        cat <<-EOF > "$project_qdocconf"
+			# This file is generated from settings defined in doc/module.opal.
+			include(opal-qdoc.qdocconf)
+			description = ${cMETADATA["description"]}
+			headerdirs  += . ../Opal ../src
+			sourcedirs  += . ../Opal ../src
+		EOF
     fi
 
     "$cQDOC_BIN" --highlighting -I "$cTEMP_DOC_DIR" -I "$cDOC_DIR" -I "$OPAL_PROJECT_DOCDIR" "$project_qdocconf" || {
@@ -446,6 +461,7 @@ EOF
 }
 
 function build_bundle() {
+    # shellcheck disable=SC2155
     local back_dir="$(pwd)"
     read_metadata
 
@@ -455,6 +471,7 @@ function build_bundle() {
     fi
 
     local do_translate=true
+    # shellcheck disable=SC2154
     if (( "${#cTRANSLATE[@]}" == 0 )); then
         log "note: no translations defined"
         do_translate=false
@@ -541,31 +558,38 @@ function build_bundle() {
     }
 
     # REUSE-IgnoreStart
-    printf "%s\n" \
-        "//@ This file is part of ${cMETADATA[fullName]}." \
-        "//@ https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
-        "//@ SPDX-FileCopyrightText: $cATTRIBUTION" \
-        "//@ SPDX-License-Identifier: $cLICENSE" \
-        "" \
-        "import \"../../Opal/About\" as A" \
-        "A.Attribution {" \
-        "    name: \"${cMETADATA[fullNameStyled]} (v${cMETADATA[version]})\"" \
-        "    entries: [$(printf -- "\"%s\", " "${cATTRIBUTIONS_ARRAY[@]}" | sed "s/, $//")]" \
-        "    licenses: A.License { spdxId: \"$cLICENSE\"}" \
-        "    sources: \"https://github.com/Pretty-SFOS/${cMETADATA[fullName]}\"" \
-        "    homepage: \"https://github.com/Pretty-SFOS/opal\"" \
-        "}" "" > "$qml_base/Opal/Attributions/${cMETADATA[fullNameStyled]//./}Attribution.qml"
+    # shellcheck disable=2154
+    cat <<-EOF > "$qml_base/Opal/Attributions/${cMETADATA[fullNameStyled]//./}Attribution.qml"
+		//@ This file is part of ${cMETADATA[fullName]}.
+		//@ https://github.com/Pretty-SFOS/${cMETADATA[fullName]}
+		//@ SPDX-FileCopyrightText: $cATTRIBUTION
+		//@ SPDX-License-Identifier: $cLICENSE
+
+		import "../../Opal/About" as A
+		A.Attribution {
+		    name: "${cMETADATA[fullNameStyled]} (v${cMETADATA[version]})"
+		    entries: [$(printf -- '"%s", ' "${cATTRIBUTIONS_ARRAY[@]}" | sed 's/, $//')]
+		    licenses: A.License { spdxId: "$cLICENSE" }
+		    sources: "https://github.com/Pretty-SFOS/${cMETADATA[fullName]}"
+		    homepage: "https://github.com/Pretty-SFOS/opal"
+		}
+	EOF
     # REUSE-IgnoreEnd
 
     # Make build paths available for copy_files()
+    # shellcheck disable=SC2034
     local BUILD_ROOT="$build_root"
+    # shellcheck disable=SC2034
     local QML_BASE="$qml_base"
+    # shellcheck disable=SC2034
     local DOC_BASE="$doc_base"
+    # shellcheck disable=SC2034
     local SRC_BASE="$src_base"
 
     # Import distribution files
     if [[ "$do_translate" == true ]]; then
         cp "$cTR_DIR/"*.ts "$tr_base" || { log "error: failed to prepare translations"; exit 1; }
+        rm "$tr_base/${cMETADATA["fullName"]}.ts" 2>/dev/null || true
     fi
 
     copy_files || { log "error: failed to prepare sources"; exit 1; }
@@ -578,11 +602,12 @@ function build_bundle() {
     # file has been removed.
     rmdir --ignore-fail-on-non-empty "$qml_base/Opal/${cMETADATA[nameStyled]}/private"
 
-    unset BUILD_ROOT QML_BASE DOC_BASE
+    unset BUILD_ROOT QML_BASE DOC_BASE SRC_BASE
 
     # Strip comments from dist files
     if [[ -z "$cENABLE_MINIFY" || "$cENABLE_MINIFY" == true ]]; then
         shopt -s nullglob extglob
+        # shellcheck disable=SC2155
         local temp="$(mktemp)"
         mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
 
@@ -661,30 +686,33 @@ EOF
     # Write metadata file
     # REUSE-IgnoreStart
     local metadata_file="$meta_base/module_${cMETADATA[fullName]}.txt"
-    printf "%s\n" "# Store this file to keep track of packaged module versions." \
-                  "# It is not necessary to ship this in your app's final RPM package." \
-                  "# SPDX-FileCopyrightText: $cATTRIBUTION" \
-                  "# SPDX-License-Identifier: $cLICENSE" "" \
-        > "$metadata_file"
+    # shellcheck disable=SC2154
+    cat <<-EOF > "$metadata_file"
+		# Store this file to keep track of packaged module versions.
+		# It is not necessary to ship this in your app's final RPM package.
+		# SPDX-FileCopyrightText: $cATTRIBUTION
+		# SPDX-License-Identifier: $cLICENSE
+
+		# Attribution using Opal.About:
+		#    1. Import "../modules/Opal/Attributions" in your “About” page.
+		#    2. Attribute this module by adding "${cMETADATA[fullNameStyled]//./}Attribution {}"
+		#       to the "attributions" list property of the “About” page.
+
+		module: ${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})
+		version: $cVERSION${commit:+" (git:$commit)"}
+		description: $cDESCRIPTION
+		maintainers: $cMAINTAINERS
+		attribution: $cATTRIBUTION
+		license: $cLICENSE
+		sources: https://github.com/Pretty-SFOS/${cMETADATA[fullName]}
+	EOF
     # REUSE-IgnoreEnd
-    printf "%s\n" "# Attribution using Opal.About:" \
-                  "#    1. Import \"../modules/Opal/Attributions\" in your “About” page." \
-                  "#    2. Attribute this module by adding \"${cMETADATA[fullNameStyled]//./}Attribution {}\"" \
-                  "#       to the \"attributions\" list property of the “About” page." \
-                  "" \
-        >> "$metadata_file"
-    printf "%s: %s\n" \
-           "module" "${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})" \
-           "version" "$cVERSION${commit:+" (git:$commit)"}" \
-           "description" "$cDESCRIPTION" \
-           "maintainers" "$cMAINTAINERS" \
-           "attribution" "$cATTRIBUTION" \
-           "license" "$cLICENSE" \
-           "sources" "https://github.com/Pretty-SFOS/${cMETADATA[fullName]}" \
-        >> "$metadata_file"
 
     # Create final package
-    cd "$cBUILD_DIR"
+    cd "$cBUILD_DIR" || {
+        log "error: failed to enter build directory '$cBUILD_DIR'"
+        exit 2
+    }
     local package="${cMETADATA[fullName]}-$version${commit:+"-$commit"}"
     local bundle_name="${cCUSTOM_BUNDLE_NAME:-"$package"}.tar.gz"
     tar --mode="u+rwX,a+rX" --numeric-owner --owner=0 --group=0 -czvf "$bundle_name" "$build_root_name" || {
@@ -693,5 +721,8 @@ EOF
     }
     rm -rf "$build_root_name"  # clear build root
 
-    cd "$back_dir"
+    cd "$back_dir" || {
+        log "error: failed to return to base directory '$back_dir'"
+        exit 2
+    }
 }
