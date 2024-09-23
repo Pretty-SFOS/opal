@@ -87,7 +87,7 @@ function log() {
 }
 
 function verify_version() {
-    # @@@ shared function version: 1.1.0
+    # @@@ shared function version: 1.1.1
     local user_version_var="c__FOR_RELEASE_LIB__"
     local opal_version_var="c__OPAL_RELEASE_MODULE_VERSION__"
 

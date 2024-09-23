@@ -16,7 +16,7 @@ function log() {
 }
 
 function verify_version() {
-    # @@@ shared function version: 1.1.0
+    # @@@ shared function version: 1.1.1
     local user_version_var="c__FOR_XXXXX_LIB__"
     local opal_version_var="c__OPAL_XXXXX_VERSION__"
 
@@ -34,10 +34,12 @@ function verify_version() {
 
     local major="${!user_version_var%%.*}"
     local minor="${!user_version_var#*.}"; minor="${minor%.*}"
+    # shellcheck disable=SC2034
     local patch="${!user_version_var##*.}"
 
     local opal_major="${!opal_version_var%%.*}"
     local opal_minor="${!opal_version_var#*.}"; opal_minor="${opal_minor%.*}"
+    # shellcheck disable=SC2034
     local opal_patch="${!opal_version_var##*.}"
 
     if [[ "$opal_major" == 0 && "$major" == "$opal_major" && "$minor" != "$opal_minor" ]]; then
