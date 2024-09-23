@@ -11,6 +11,10 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.2.1 (2024-09-23):
+#   - fix shellcheck warnings
+#   - fix version number in the script
+#
 # * 1.2.0 (2024-09-12):
 #   - add --docs option to only generate documentation
 #   - include module source url in documentation footer
