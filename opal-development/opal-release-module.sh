@@ -46,7 +46,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.1.0"
+c__OPAL_RELEASE_MODULE_VERSION__="1.2.1"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
