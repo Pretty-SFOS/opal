@@ -221,7 +221,7 @@ Arguments:
             --help|-h) _show_help; exit 0;;
             --version|-V) _version; exit 0;;
             --bundle|-b) shift && [[ -z "$1" ]] && log "error: OUTNAME is missing" && exit 9
-                declare -g -x cCUSTOM_BUNDLE_NAME="$1"
+                declare -g -x cCUSTOM_BUNDLE_NAME="${1%.tar.gz}"
             ;;
             --docs|-d)
                 build_qdoc ""
