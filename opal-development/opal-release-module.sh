@@ -241,11 +241,211 @@ Arguments:
             --no-minify|-n)
                 declare -g cENABLE_MINIFY=false
             ;;
+            --publish-wizard|-p)
+                run_publish_wizard
+                exit $?
+            ;;
             -*) printf -- "unknown option: %s\n" "$1";;
             *) shift; continue;;
         esac
         shift
     done
+}
+
+function run_publish_wizard() {
+    # shellcheck disable=SC2155
+    local back_dir="$(pwd)"
+    read_metadata
+
+    # Setup basics
+    function white() {
+        white_n "$@" && echo
+    }
+
+    function white_n() {
+        echo -ne "\e[1m"
+        printf -- "%s " "$@" | sed 's/ $//g'
+        echo -ne "\e[0m"
+    }
+
+    function checklist_task() { # 1: message
+        read -r -n 1 -s -p "$1 --> "
+        white ok
+    }
+
+    function yesno_task() { # 1: question
+        while true; do
+            read -r -n 1 -s -p "$1 (y/n)> "
+
+            if [[ "$REPLY" =~ ^n|N$ ]]; then
+                white "aborted"
+                return 3
+            elif [[ "$REPLY" =~ ^y|Y$ ]]; then
+                white "ok"
+                return 0
+            else
+                echo
+            fi
+        done
+    }
+
+    function have_cmd() {  # 1: command name
+        command -v "$1" > /dev/null 2>&1
+    }
+
+    # Find tools
+    local have_gh=      && have_cmd gh        && have_gh=true
+    local have_reuse    && have_cmd reuse     && have_reuse=true
+    local have_gitk=    && have_cmd gitk      && have_gitk=true
+    local have_kate=    && have_cmd kate      && have_kate=true
+    local have_xclip=   && have_cmd xclip     && have_xclip=true
+    local have_wl_copy= && have_cmd wl-copy   && have_wl_copy=true
+
+    # Commit all changes
+    if [[ -n "$(git status --porcelain=v1)" ]]; then
+        git gui &
+        checklist_task "There are uncommitted changes. Ensure they are safe."
+    fi
+
+    # Merge weblate PRs and check open PRs
+    if [[ -n "$have_gh" ]]; then
+        if yesno_task "[AUTO] Merge open Weblate pull requests and pull?"; then
+            gh pr merge -m "$(gh pr list --author "weblate" --json number -q ".[].number" | cat)" && git pull
+        else
+            echo "Merging weblate PRs skipped"
+        fi
+
+        if yesno_task "[AUTO] Check for open/pending pull requests?"; then
+            gh pr list
+        else
+            echo "Running 'gh pr list' skipped."
+        fi
+
+        if yesno_task "[AUTO] Run 'git fetch --all'"; then
+            git fetch --all
+        else
+            echo "Running 'git fetch --all' skipped."
+        fi
+    fi
+
+    # Update translations
+    checklist_task "Ensure translations are ready to be updated."
+    "$0" -b _wizard_temp || {
+        echo "warning: build script returned with a non-zero exit status ($?)"
+    }
+
+    # Commit translations
+    if [[ -n "$(git status --porcelain=v1 -- translations)" ]]; then
+        if yesno_task "[AUTO] Commit updated translations?"; then
+            git add translations && git commit -m "Update translations"
+        else
+            echo "Committing updated translations skipped."
+        fi
+    fi
+
+    # Run reuse lint
+    if [[ -n "$have_reuse" ]]; then
+        if ! reuse lint; then
+            checklist_task "Fix 'reuse' compliance."
+        fi
+    fi
+
+    # Update version number
+    printf -- "%s\n" "Current version: $cVERSION"
+    white_n "New version: " && local new_version=
+
+    if read -r -e -i "$cVERSION" && [[ -n "$REPLY" ]]; then
+        new_version="$REPLY"
+        sed -Ei "s/^version: $cVERSION$/version: $new_version/" doc/module.opal
+    else
+        echo "Failed to read new version number."
+        exit 1
+    fi
+
+    # Update changelog
+    if [[ -n "$have_gitk" ]]; then
+        gitk 2>/dev/null >/dev/null &
+    fi
+
+    # shellcheck disable=SC2155
+    local changelog_template="## $new_version ($(date +%F))"
+
+    if [[ -n "$have_wl_copy" ]]; then
+        printf -- "%s\n" "$changelog_template" | wl-copy
+    elif [[ -n "$have_xclip" ]]; then
+        printf -- "%s\n" "$changelog_template" | xclip -selection c
+    else
+        echo "Change log template:"
+        printf -- "%s\n" "$changelog_template"
+    fi
+
+    if [[ -n "$have_kate" ]]; then
+        kate CHANGELOG.md 2>/dev/null >/dev/null &
+    else
+        echo "Change log file: CHANGELOG.md"
+    fi
+
+    if [[ -n "$have_wl_copy" || -n "$have_xclip" ]]; then
+        checklist_task "Update the change log (template copied)."
+    else
+        checklist_task "Update the change log (template above)."
+    fi
+
+    # Load latest changelog
+    local latest_changes=
+    # shellcheck disable=2002
+    latest_changes="$(cat CHANGELOG.md | awk -v pattern="^## $new_version \\\\(" '$0 ~ pattern {flag=1;print;next}/^## [0-9]+\./{flag=0}flag')"
+
+    echo
+    printf -- "%s\n" "$latest_changes"
+
+    if ! yesno_task "Is this the correct change log for the new version $new_version?"; then
+        echo "Could not extract the new change log. Creating a release automatically is not possible."
+        echo "Please check the logs and the change log for issues."
+        exit 1
+    fi
+
+    # Commit release
+    if yesno_task "[AUTO] Create release commit with changelog and version change?"; then
+        git add doc/module.opal && \
+            git add CHANGELOG.md && \
+                git commit -m "Release version v$new_version"
+    else
+        echo "Release commit skipped."
+    fi
+
+    # Tag release
+    if yesno_task "[AUTO] Tag the new release v$new_version?"; then
+        git tag "v$new_version"
+    else
+        echo "Tagging skipped."
+    fi
+
+    # Push changes
+    if yesno_task "[AUTO] Push new commits?"; then
+        git push && git push --tags
+    else
+        echo "Pushing skipped. Automatically creating a release may not work until the new tag is pushed."
+    fi
+
+    # Build release bundle and publish to Github
+    checklist_task "Ensure the working directory is ready for building the release bundle."
+
+    local bundle="build/${cMETADATA[fullName]}-v$new_version.tar.gz"
+
+    if "$0" -b "$(basename "$bundle")"; then
+        if [[ "$have_gh" ]]; then
+            gh release create "v$new_version" "$bundle" --notes "$latest_changes" || {
+                echo "Failed to create a new release on Github."
+            }
+        else
+            checklist_task "Publish the release online."
+        fi
+    else
+        echo "warning: build script returned with a non-zero exit status ($?)"
+    fi
+
+    echo "Done."
 }
 
 function build_qdoc() { # 1: to=/path/to/output/dir
