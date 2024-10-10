@@ -11,6 +11,12 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.3.0 (2024-10-10):
+#   - check for git as required dependency
+#   - avoid duplicating .tar.gz suffix for custom release bundles
+#   - add --publish-wizard option to (semi-)automate publishing releases
+#   - improve help text
+#
 # * 1.2.1 (2024-09-23):
 #   - fix shellcheck warnings
 #   - fix version number in the script
@@ -46,7 +52,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.2.1"
+c__OPAL_RELEASE_MODULE_VERSION__="1.3.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
