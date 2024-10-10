@@ -190,20 +190,35 @@ function read_metadata() {
 function parse_arguments() { # @: all shell arguments given to release-module.sh
     function _show_help() {
         echo "\
-** $0 **
+** Opal Release Script **
 
-Create Opal module release bundles.
+Manage Opal module release bundles.
 
-Usage: $0 [-b OUTNAME] [-h] [-V]
+This script can build release bundles, provide machine readable access to module
+configuration, and aid with publishing a new release.
+
+Usage:
+    $0 -h -V                        - print help or version info
+    $0 [-b OUTNAME] [-n] [-d]       - build release bundles and documentation
+    $0 -c KEY                       - access module configuration
+    $0 -p                           - publish a new release
 
 Arguments:
-    -b, --bundle OUTNAME - write bundle to \"$cBUILD_DIR/\$OUTNAME.tar.gz\" instead of
-                           using an automatically generated name
-    -d, --docs           - only generate docs
-    -c, --config KEY     - get value of metadata field KEY
-    -n, --no-minify      - disable QML minification, i.e. keep all QML files as they are
-    -h, --help           - show this help and exit
-    -V, --version        - show version and license information
+    Build release bundles and documentation:
+        -b, --bundle OUTNAME - write bundle to \"$cBUILD_DIR/\$OUTNAME.tar.gz\" instead of
+                               using an automatically generated name
+        -n, --no-minify      - disable QML minification, i.e. keep all QML files as they are
+        -d, --docs           - only generate docs
+
+    Manage configuration:
+        -c, --config KEY     - get value of metadata field KEY
+
+    Publish new releases:
+        -p, --publish-wizard - run the publication wizard for publishing a new release
+
+    General options:
+        -h, --help           - show this help and exit
+        -V, --version        - show version and license information
 "
     }
 
