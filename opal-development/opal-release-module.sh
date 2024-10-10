@@ -69,7 +69,7 @@ _x="${cOPAL_PREFIX:="opal-"}"
 _x="${cOPAL_PREFIX_STYLED:="Opal."}"
 
 [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
-cDEPENDENCIES+=("$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "$cQMLMIN_BIN")
+cDEPENDENCIES+=(git "$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "$cQMLMIN_BIN")
 
 function check_dependencies() {
     # shellcheck disable=SC2128
