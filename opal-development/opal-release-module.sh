@@ -402,14 +402,34 @@ function run_publish_wizard() {
 
     # shellcheck disable=SC2155
     local changelog_template="## $new_version ($(date +%F))"
+    local last_tag=
+    local log_range=
+    local updated_translations=
+
+    if [[ -n "$do_translate" ]]; then
+        if last_tag="$(git describe --tags --abbrev=0 --match="v*")"; then
+            log_range="$last_tag..HEAD"
+        else
+            log_range="HEAD"
+        fi
+
+        updated_translations="$(
+            git log --show-notes-by-default "$log_range" -- translations |\
+                grep 'Translated using Weblate' |\
+                sort -u |\
+                grep -oe '(.*)' |\
+                sed 's/^(//; s/)$//' |\
+                perl -p0e 's/\n/, /g; s/, $//; s/^/- Updated translations: /g'
+        )"
+    fi
 
     if [[ -n "$have_wl_copy" ]]; then
-        printf -- "%s\n" "$changelog_template" | wl-copy
+        printf -- "%s\n" "$changelog_template" "" "$updated_translations" | wl-copy
     elif [[ -n "$have_xclip" ]]; then
-        printf -- "%s\n" "$changelog_template" | xclip -selection c
+        printf -- "%s\n" "$changelog_template" "" "$updated_translations" | xclip -selection c
     else
         echo "Change log template:"
-        printf -- "%s\n" "$changelog_template"
+        printf -- "%s\n" "$changelog_template" "" "$updated_translations"
     fi
 
     if [[ -n "$have_kate" ]]; then
