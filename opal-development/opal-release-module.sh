@@ -780,7 +780,7 @@ function build_bundle() {
         fi
 
         # Update translation catalogs
-        "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -ts "$cTR_DIR/"*.ts || {
+        "$cLUPDATE_BIN" "${cTRANSLATE[@]}" -noobsolete -locations absolute -ts "$cTR_DIR/"*.ts || {
             log "error: failed to update translations"
             exit 3
         }
