@@ -462,7 +462,12 @@ function run_publish_wizard() {
     fi
 
     # Build release bundle and publish to Github
-    checklist_task "Ensure the working directory is ready for building the release bundle."
+    white "Ensure the working directory is ready for building the release bundle."
+    if [[ -n "$have_gh" ]]; then
+        checklist_task "The release will now be published to Github automatically."
+    else
+        checklist_task "The release must be published manually."
+    fi
 
     local bundle="build/${cMETADATA[fullName]}-v$new_version.tar.gz"
 
