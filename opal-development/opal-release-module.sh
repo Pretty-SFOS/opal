@@ -467,7 +467,7 @@ function run_publish_wizard() {
     local bundle="build/${cMETADATA[fullName]}-v$new_version.tar.gz"
 
     if "$0" -b "$(basename "$bundle")"; then
-        if [[ "$have_gh" ]]; then
+        if [[ -n "$have_gh" ]]; then
             gh release create "v$new_version" "$bundle" --notes "$latest_changes" || {
                 echo "Failed to create a new release on Github."
             }
