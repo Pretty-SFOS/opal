@@ -314,6 +314,14 @@ function run_publish_wizard() {
         command -v "$1" > /dev/null 2>&1
     }
 
+    # Configuration
+    local do_translate=
+    if [[ -d translations ]]; then
+        # we cannot check the contents of cTRANSLATE because it is set after
+        # arguments have been parsed, i.e. after this function has been called
+        do_translate=true
+    fi
+
     # Find tools
     local have_gh=      && have_cmd gh        && have_gh=true
     local have_reuse    && have_cmd reuse     && have_reuse=true
@@ -330,10 +338,12 @@ function run_publish_wizard() {
 
     # Merge weblate PRs and check open PRs
     if [[ -n "$have_gh" ]]; then
-        if yesno_task "[AUTO] Merge open Weblate pull requests and pull?"; then
-            gh pr merge -m "$(gh pr list --author "weblate" --json number -q ".[].number" | cat)" && git pull
-        else
-            echo "Merging weblate PRs skipped"
+        if [[ -n "$do_translate" ]]; then
+            if yesno_task "[AUTO] Merge open Weblate pull requests and pull?"; then
+                gh pr merge -m "$(gh pr list --author "weblate" --json number -q ".[].number" | cat)" && git pull
+            else
+                echo "Merging weblate PRs skipped"
+            fi
         fi
 
         if yesno_task "[AUTO] Check for open/pending pull requests?"; then
@@ -349,18 +359,20 @@ function run_publish_wizard() {
         fi
     fi
 
-    # Update translations
-    checklist_task "Ensure translations are ready to be updated."
-    "$0" -b _wizard_temp || {
-        echo "warning: build script returned with a non-zero exit status ($?)"
-    }
+    if [[ -n "$do_translate" ]]; then
+        # Update translations
+        checklist_task "Ensure translations are ready to be updated."
+        "$0" -b _wizard_temp || {
+            echo "warning: build script returned with a non-zero exit status ($?)"
+        }
 
-    # Commit translations
-    if [[ -n "$(git status --porcelain=v1 -- translations)" ]]; then
-        if yesno_task "[AUTO] Commit updated translations?"; then
-            git add translations && git commit -m "Update translations"
-        else
-            echo "Committing updated translations skipped."
+        # Commit translations
+        if [[ -n "$(git status --porcelain=v1 -- translations)" ]]; then
+            if yesno_task "[AUTO] Commit updated translations?"; then
+                git add translations && git commit -m "Update translations"
+            else
+                echo "Committing updated translations skipped."
+            fi
         fi
     fi
 
