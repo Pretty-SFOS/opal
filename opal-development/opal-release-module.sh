@@ -871,6 +871,7 @@ function build_bundle() {
     unset BUILD_ROOT QML_BASE DOC_BASE SRC_BASE
 
     # Strip comments from dist files
+    local minify_failed=()
     if [[ -z "$cENABLE_MINIFY" || "$cENABLE_MINIFY" == true ]]; then
         shopt -s nullglob extglob
         # shellcheck disable=SC2155
@@ -886,6 +887,7 @@ function build_bundle() {
             if grep -qoe ';' "$i"; then
                 log "warning: file '$i' contains at least one semicolon"
                 log "         This breaks minification. Make sure there are no semicolons and try again."
+                minify_failed+=("$i")
                 continue
             fi
 
@@ -991,4 +993,16 @@ EOF
         log "error: failed to return to base directory '$back_dir'"
         exit 2
     }
+
+    # Log warnings
+    if (( ${#minify_failed[@]} > 0 )); then
+        log
+        log "warning: minification failed for the following files:"
+        log
+        printf -- "- %s\n" "${minify_failed[@]}"
+        log
+        log "Make sure those files do not contain any semicolons outside of"
+        log "for-loops and sticky comments (\"//@\"), then try again."
+        log "Minification is important to keep the bundle size as small as possible."
+    fi
 }
