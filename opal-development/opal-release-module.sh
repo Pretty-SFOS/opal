@@ -11,6 +11,10 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.4.0 (2024-10-29):
+#   - improve QML minification with better logging and support for for-loops
+#     and semicolons in sticky comments
+#
 # * 1.3.1 (2024-10-13):
 #   - improve publication wizard flow: reduce unnecessary prompts, help with changelog, etc.
 #   - always drop obsolete translations when building release bundles
@@ -56,7 +60,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.3.1"
+c__OPAL_RELEASE_MODULE_VERSION__="1.4.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
