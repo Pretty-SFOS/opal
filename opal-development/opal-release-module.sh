@@ -11,6 +11,9 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.4.1 (2024-10-30):
+#   - show gitk before asking for the new version number when publishing
+#
 # * 1.4.0 (2024-10-29):
 #   - improve QML minification with better logging and support for for-loops
 #     and semicolons in sticky comments
@@ -392,6 +395,10 @@ function run_publish_wizard() {
     fi
 
     # Update version number
+    if [[ -n "$have_gitk" ]]; then
+        gitk 2>/dev/null >/dev/null &
+    fi
+
     printf -- "%s\n" "Current version: $cVERSION"
     white_n "New version: " && local new_version=
 
@@ -404,10 +411,6 @@ function run_publish_wizard() {
     fi
 
     # Update changelog
-    if [[ -n "$have_gitk" ]]; then
-        gitk 2>/dev/null >/dev/null &
-    fi
-
     # shellcheck disable=SC2155
     local changelog_template="## $new_version ($(date +%F))"
     local last_tag=
