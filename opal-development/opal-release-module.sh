@@ -879,19 +879,27 @@ function build_bundle() {
         mapfile -d $'\0' -t files_to_strip < <(find "$qml_base" -iregex ".*\.\(qml\|js\)" -type "f" -print0)
 
         for i in "${files_to_strip[@]}"; do
-            keep="$(grep -Ee '^//@' "$i")"
+            keep="$(grep -Ee '^\s*//@' "$i")"
             if [[ "$keep" != "" ]]; then
                 printf -- "%s\n" "$keep" > "$temp"
             fi
 
-            if grep -qoe ';' "$i"; then
-                log "warning: file '$i' contains at least one semicolon"
+            if sed '/^\s*\/\/@/d' "$i" |\
+                perl -p0e 's/for\s*\(\s*([^;)]*?)\s*;\s*([^;)]*?)\s*;\s*([^;)]*?)\)/#FORLOOP#/g' |\
+                    grep -qoe ';';
+            then
+                log "warning: file '$i' contains at least one stray semicolon"
                 log "         This breaks minification. Make sure there are no semicolons and try again."
+                log "         Semicolons are only allowed in for-loops, and in comment lines starting with '//@'."
                 minify_failed+=("$i")
                 continue
             fi
 
-            "$cQMLMIN_BIN" "$i" | tr ';' '\n' >> "$temp"
+            "$cQMLMIN_BIN" "$i" |\
+                perl -p0e 's/for\s*\(\s*([^;)]*?)\s*;\s*([^;)]*?)\s*;\s*([^;)]*?)\)/for(\1#OPAL#SEMICOLON#\2#OPAL#SEMICOLON#\3)/g' |\
+                    tr ';' '\n' |\
+                    sed 's/#OPAL#SEMICOLON#/;/g' \
+                >> "$temp"
 
             # REUSE-IgnoreStart
             if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
