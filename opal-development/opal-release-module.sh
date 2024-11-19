@@ -426,12 +426,21 @@ function run_publish_wizard() {
 
         updated_translations="$(
             git log --show-notes-by-default "$log_range" -- translations |\
+                grep 'Added translation using Weblate' |\
+                sort -u |\
+                grep -oe '(.*)' |\
+                sed 's/^(//; s/)$//' |\
+                perl -p0e 's/\n/, /g; s/, $//; s/^/- Added translations: /g';
+            echo;
+            git log --show-notes-by-default "$log_range" -- translations |\
                 grep 'Translated using Weblate' |\
                 sort -u |\
                 grep -oe '(.*)' |\
                 sed 's/^(//; s/)$//' |\
-                perl -p0e 's/\n/, /g; s/, $//; s/^/- Updated translations: /g'
-        )"
+                perl -p0e 's/\n/, /g; s/, $//; s/^/- Updated translations: /g';
+        )" || {
+            updated_translations=
+        }
     fi
 
     if [[ -n "$have_wl_copy" ]]; then
