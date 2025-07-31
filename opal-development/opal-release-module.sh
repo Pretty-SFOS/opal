@@ -11,6 +11,9 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.4.2 (2025-07-31):
+#   - update generated docs on how to attribute Opal modules using Opal.About
+#
 # * 1.4.1 (2024-10-30):
 #   - show gitk before asking for the new version number when publishing
 #
@@ -63,7 +66,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.4.0"
+c__OPAL_RELEASE_MODULE_VERSION__="1.4.2"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
