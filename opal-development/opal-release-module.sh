@@ -903,22 +903,29 @@ function build_bundle() {
                 printf -- "%s\n" "$keep" > "$temp"
             fi
 
-            if sed '/^\s*\/\/@/d' "$i" |\
-                perl -p0e 's/for\s*\(\s*([^;)]*?)\s*;\s*([^;)]*?)\s*;\s*([^;)]*?)\)/#FORLOOP#/g' |\
-                    grep -qoe ';';
-            then
-                log "warning: file '$i' contains at least one stray semicolon"
-                log "         This breaks minification. Make sure there are no semicolons and try again."
-                log "         Semicolons are only allowed in for-loops, and in comment lines starting with '//@'."
-                minify_failed+=("$i")
-                continue
-            fi
+            if [[ "$i" == *.qml ]]; then
+                if sed '/^\s*\/\/@/d' "$i" |\
+                    perl -p0e 's/for\s*\(\s*([^;)]*?)\s*;\s*([^;)]*?)\s*;\s*([^;)]*?)\)/#FORLOOP#/g' |\
+                        grep -qoe ';';
+                then
+                    log "warning: file '$i' contains at least one stray semicolon"
+                    log "         This breaks minification. Make sure there are no semicolons and try again."
+                    log "         Semicolons are only allowed in for-loops, and in comment lines starting with '//@'."
+                    minify_failed+=("$i")
+                    continue
+                fi
 
-            "$cQMLMIN_BIN" "$i" |\
-                perl -p0e 's/for\s*\(\s*([^;)]*?)\s*;\s*([^;)]*?)\s*;\s*([^;)]*?)\)/for(\1#OPAL#SEMICOLON#\2#OPAL#SEMICOLON#\3)/g' |\
-                    tr ';' '\n' |\
-                    sed 's/#OPAL#SEMICOLON#/;/g' \
-                >> "$temp"
+                "$cQMLMIN_BIN" "$i" |\
+                    perl -p0e 's/for\s*\(\s*([^;)]*?)\s*;\s*([^;)]*?)\s*;\s*([^;)]*?)\)/for(\1#OPAL#SEMICOLON#\2#OPAL#SEMICOLON#\3)/g' |\
+                        tr ';' '\n' |\
+                        sed 's/#OPAL#SEMICOLON#/;/g' \
+                    >> "$temp"
+            elif [[ "$i" == *.js ]]; then
+                "$cQMLMIN_BIN" "$i" >> "$temp"
+            else
+                log "warning: only QML and JS files can be minified"
+                cp "$i" "$temp"
+            fi
 
             # REUSE-IgnoreStart
             if ! grep -qPoe '(SPDX-License-Identifier:|SPDX-FileCopyrightText:)' "$temp"; then
