@@ -564,7 +564,7 @@ function build_qdoc() { # 1: to=/path/to/output/dir
 // This file is generated from settings defined in doc/module.opal.
 
 /*!
-    \\qmlmodule $OPAL_PROJECT_STYLED
+    \\qmlmodule $OPAL_PROJECT_STYLED 1.0
     \\title $OPAL_PROJECT_STYLED
     \\brief ${cMETADATA["briefDescription"]}
 
@@ -576,7 +576,7 @@ function build_qdoc() { # 1: to=/path/to/output/dir
 */
 
 /*!
-    \\qmlmodule $OPAL_PROJECT_STYLED.private
+    \\qmlmodule $OPAL_PROJECT_STYLED.private 1.0
     \\title $OPAL_PROJECT_STYLED.private
     \\brief This module provides private types of $OPAL_PROJECT_STYLED.
     \\relates $OPAL_PROJECT_STYLED
