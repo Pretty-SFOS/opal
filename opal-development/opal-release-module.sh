@@ -537,6 +537,17 @@ function build_qdoc() { # 1: to=/path/to/output/dir
     local back_dir="$(pwd)"
     read_metadata
 
+    local source_dirs=(.)
+    for i in Opal src; do
+        [[ ! -d "$i" ]] && continue
+        source_dirs+=("$(realpath "$i" --relative-to="$cBUILD_DOC_DIR")")
+    done
+
+    local have_cpp=false
+    if [[ -d src ]]; then
+        have_cpp=true
+    fi
+
     export QT_INSTALL_DOCS="${QT_INSTALL_DOCS:="$("$cQMAKE_BIN" -query QT_INSTALL_DOCS)"}"
     export QT_VERSION="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
     export QT_VER="${QT_VERSION:="$("$cQMAKE_BIN" -query QT_VERSION)"}"
@@ -599,7 +610,7 @@ EOF
 # This file is part of Opal and has been released under the Creative Commons
 # Attribution-ShareAlike 4.0 International License.
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# SPDX-FileCopyrightText: 2021 Mirian Margiani
+# SPDX-FileCopyrightText: 2021-2025 Mirian Margiani
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-qdoc.md
 # for documentation.
@@ -703,8 +714,10 @@ EOF
 			# This file is generated from settings defined in doc/module.opal.
 			include(opal-qdoc.qdocconf)
 			description = ${cMETADATA["description"]}
-			headerdirs  += . ../Opal ../src
-			sourcedirs  += . ../Opal ../src
+			headerdirs += ${source_dirs[*]}
+			sourcedirs += ${source_dirs[*]}
+
+			$([[ "$have_cpp" == false ]] && echo 'moduleheader = ')
 		EOF
     fi
 
