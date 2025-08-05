@@ -78,34 +78,34 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 
 /*!
-    \qmltype MyItem                 the name of your QML item as stated in the qmldir file
-                                    (this is usually the file name)
-    \inqmlmodule Opal.MyModule      the full name of your Opal module including the "Opal." prefix
-    \since version 1.0.0            optional: in which version of your module this was introduced
-    \inherits MyParentItem          optional: which item in your Opal module this item inherits
-                                    (linking to Silica or Qt components is not possible yet)
+  \qmltype MyItem                 the name of your QML item as stated in the qmldir file
+                                  (this is usually the file name)
+  \inqmlmodule Opal.MyModule      the full name of your Opal module including the "Opal." prefix
+  \since version 1.0.0            optional: in which version of your module this was introduced
+  \inherits MyParentItem          optional: which item in your Opal module this item inherits
+                                  (linking to Silica or Qt components is not possible yet)
 
-    \brief Short one-line description of this component.
+  \brief Short one-line description of this component.
 
-    Detailed description of the component, its architecture, considerations, etc.
+  Detailed description of the component, its architecture, considerations, etc.
 
-    \section2 Title
+  \section2 Title
 
-    Text...
+  Text...
 
-    \section2 Example
+  \section2 Example
 
-    \note be kind to others...
+  \note be kind to others...
 
-    \qml
-    import Opal.MyModule 1.0
+  \qml
+  import Opal.MyModule 1.0
 
-    MyItem {
-        // ...
-    }
-    \endqml
+  MyItem {
+      // ...
+  }
+  \endqml
 
-    \sa MyParentItem, MyOtherItem
+  \sa MyParentItem, MyOtherItem
 */
 MyParentItem {
     id: root
@@ -152,21 +152,21 @@ MyParentItem {
 .pragma library
 
 /*!
-    \qmltype MyScript               the name of your script as stated in the qmldir file
-    \inqmlmodule Opal.MyModule      the full name of your Opal module including the "Opal." prefix
-    \since version 1.0.0            optional: in which version of your module this was introduced
+  \qmltype MyScript               the name of your script as stated in the qmldir file
+  \inqmlmodule Opal.MyModule      the full name of your Opal module including the "Opal." prefix
+  \since version 1.0.0            optional: in which version of your module this was introduced
 
-    \brief Short one-line description of this component.
+  \brief Short one-line description of this component.
 
-    \section2 Example
+  \section2 Example
 
-    \qml
-    import Opal.MyModule 1.0
+  \qml
+  import Opal.MyModule 1.0
 
-    // ...
-    \endqml
+  // ...
+  \endqml
 
-    \sa MyItem
+  \sa MyItem
 */
 
 /*!
@@ -213,15 +213,15 @@ in the main description:
 .pragma library
 
 /*!
-    \qmltype MyEnum                 the name of your script as stated in the qmldir file
-    \inqmlmodule Opal.MyModule      the full name of your Opal module including the "Opal." prefix
-    \since version 1.0.0            optional: in which version of your module this was introduced
+  \qmltype MyEnum                 the name of your script as stated in the qmldir file
+  \inqmlmodule Opal.MyModule      the full name of your Opal module including the "Opal." prefix
+  \since version 1.0.0            optional: in which version of your module this was introduced
 
-    \brief Short one-line description of this component.
+  \brief Short one-line description of this component.
 
-    \value SUNSHINE  Let the sun shine.
-    \value RAIN      Unleash a thunderstorm.
-    \value SNOW      Let it snow to build an igloo.
+  \value SUNSHINE  Let the sun shine.
+  \value RAIN      Unleash a thunderstorm.
+  \value SNOW      Let it snow to build an igloo.
 */
 
 var SUNSHINE = 1
