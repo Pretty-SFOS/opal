@@ -20,8 +20,8 @@ SPDX-License-Identifier: GFDL-1.3-or-later
     - [x] Semantic Versioning for all modules...
     - [x] ...snippets
     - [ ] ...resources etc.
-- [ ] documentation
-    - [ ] properly document the documentation process
+- [x] documentation
+    - [x] properly document the documentation process
     - [x] use `qdoc` or `doxygen`
         Problem: QtCreator auto-completes documentation comments only in C++
         files. It is tedious to write doc comments manually in QML files.
