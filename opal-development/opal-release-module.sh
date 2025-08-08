@@ -11,6 +11,17 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.5.0 (2025-08-08):
+#   - include added translations in generated changelog when releasing a module
+#   - updated docs on how to attribute Opal modules using Opal.About in shipped
+#     module info files
+#   - fixed minification to work without special treatment for semicolons in JS
+#     files; this is only needed in QML files
+#   - updated docs on how to write docs
+#   - fixed QML import statement in generated docs to now correctly include the
+#     version number
+#   - fixed warnings when building docs for QML-only modules
+#
 # * 1.4.2 (2025-07-31):
 #   - update generated docs on how to attribute Opal modules using Opal.About
 #
@@ -66,7 +77,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.4.2"
+c__OPAL_RELEASE_MODULE_VERSION__="1.5.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
