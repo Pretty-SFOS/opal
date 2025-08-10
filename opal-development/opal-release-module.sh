@@ -512,7 +512,7 @@ function run_publish_wizard() {
     # shellcheck disable=2002
     latest_changes="$(cat CHANGELOG.md | awk -v pattern="^## $new_version \\\\(" '$0 ~ pattern {flag=1;print;next}/^## [0-9]+\./{flag=0}flag')"
 
-    if (( ${#cDEPENDENCIES[@]} > 0 )); then
+    if (( ${#cDEPENDENCIES_ARRAY[@]} > 0 )); then
         latest_changes+="$(cat <<-EOF
 
 
@@ -521,7 +521,7 @@ function run_publish_wizard() {
 			This module depends on the following other Opal modules. Please
 			download and install them as well to use this module:
 
-			$(for i in "${cDEPENDENCIES[@]}"; do
+			$(for i in "${cDEPENDENCIES_ARRAY[@]}"; do
                 i="${i#opal-}"
                 printf -- "- [opal-%s](https://github.com/Pretty-SFOS/opal-%s/releases/latest)\n" "$i" "$i"
             done)
@@ -1100,14 +1100,14 @@ EOF
         cp "$back_dir/doc/gallery.qml" "$readme_base/example.qml"
     fi
 
-    if (( ${#cDEPENDENCIES[@]} > 0 )); then
+    if (( ${#cDEPENDENCIES_ARRAY[@]} > 0 )); then
         cat <<-EOF > "$readme_base/DEPENDENCIES.md"
 			# Module dependencies
 
 			This module depends on the following other Opal modules. Please
 			download and install them as well to use this module:
 
-			$(for i in "${cDEPENDENCIES[@]}"; do
+			$(for i in "${cDEPENDENCIES_ARRAY[@]}"; do
                 i="${i#opal-}"
                 printf -- "- [opal-%s](https://github.com/Pretty-SFOS/opal-%s/releases/latest)\n" "$i" "$i"
             done)
