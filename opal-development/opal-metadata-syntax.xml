@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "language.dtd"
+[
+<!-- Entities -->
+<!-- use the "Entity" snippet to add an entity -->
+]>
+
+<!--
+kate: syntax XML; space-indent off; indent-width 4; replace-tabs on;
+SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-FileCopyrightText: 2025  Mirian Margiani <mixosaurus+kate@pm.me>
+-->
+
+<language name="Opal Module Metadata" section="Configuration" extensions="*.opal" mimetype="text/x-opal-module"
+          version="1" kateversion="5.53"
+          author="Mirian Margiani (mixosaurus+opal-syntax@pm.me)" license="GPL-3.0-or-later">
+    <highlighting>
+        <!-- Keyword lists -->
+        <!-- use the "List" snippet on a selection to turn the selected lines into a keyword list -->
+        <list name="keys">
+            <item>version:</item>
+            <item>name:</item>
+            <item>nameStyled:</item>
+            <item>briefDescription:</item>
+            <item>description:</item>
+            <item>maintainers:</item>
+            <item>authors:</item>
+            <item>extraGalleryPages:</item>
+            <item>dependencies:</item>
+        </list>
+
+        <list name="spdx">
+            <item>mainLicenseSpdx:</item>
+            <item>attribution:</item>
+        </list>
+
+        <!-- Contexts -->
+        <contexts>
+            <!-- the first context is used as entry point for parsing -->
+            <context name="Default" attribute="Normal" lineEndContext="#pop">
+                <!-- use the "Detect*" snippets to add rules -->
+                <keyword attribute="Key" context="ValueLineSpdx" String="spdx" lookAhead="false" column="0" />
+                <keyword attribute="Key" context="ValueLine" String="keys" lookAhead="false" column="0" />
+            </context>
+
+            <!-- use the "Context" snippet to insert contexts here -->
+            <context name="ValueLineSpdx" attribute="Value" lineEndContext="#pop" lineEmptyContext="#pop">
+                <IncludeRules context="Normal##SPDX-Comments" includeAttrib="true" />
+            </context>
+
+            <context name="ValueLine" attribute="Value" lineEndContext="#pop" lineEmptyContext="#pop">
+            </context>
+        </contexts>
+
+        <itemDatas>
+            <!-- the first style is used as default -->
+            <itemData name="Normal" defStyleNum="dsComment" />
+
+            <!-- use the "ItemData" snippet to add more style definitions -->
+            <itemData name="Key" defStyleNum="dsKeyword" spellChecking="false" />
+            <itemData name="Value" defStyleNum="dsNormal" />
+        </itemDatas>
+    </highlighting>
+
+    <general>
+        <comments>
+            <comment name="singleLine" start="#" />
+        </comments>
+
+        <keywords casesensitive="true" weakDeliminator=":" />
+    </general>
+</language>
