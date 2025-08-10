@@ -863,11 +863,12 @@ function build_bundle() {
     local src_base="$build_root/libs/opal/${cMETADATA[name]}"
     local tr_base="$build_root/libs/opal-translations/${cMETADATA[fullName]}"
     local doc_base="$build_root/libs/opal-docs"
+    local readme_base="$build_root/readme"
 
     mkdir -p "$cBUILD_DIR" || { log "error: failed to create base build directory"; exit 1; }
     rm -rf "$build_root" || { log "error: failed to clear build root"; exit 1; }
     mkdir -p "$build_root" || { log "error: failed to create build root"; exit 1; }
-    mkdir -p "$meta_base" "$qml_base" "$doc_base" "$src_base" || {
+    mkdir -p "$meta_base" "$qml_base" "$doc_base" "$src_base" "$readme_base" || {
         log "error: failed to prepare build root"
         exit 1
     }
@@ -1084,6 +1085,35 @@ EOF
 		sources: https://github.com/Pretty-SFOS/${cMETADATA[fullName]}
 	EOF
     # REUSE-IgnoreEnd
+
+    # Write README files
+    cp "$back_dir/README.md" "$back_dir/CHANGELOG.md" -t "$readme_base"
+    cp "$back_dir/LICENSES/$cLICENSE.txt" "$readme_base/LICENSE.txt"
+
+    if (( ${#cEXTRA_GALLERY_PAGES_ARRAY[@]} > 0 )); then
+        mkdir -p "$readme_base/example"
+        cp "$back_dir/doc/gallery.qml" "$readme_base/example/main.qml"
+
+        for i in "${cEXTRA_GALLERY_PAGES_ARRAY[@]}"; do
+            cp "$back_dir/doc/gallery/$i" -t "$readme_base/example"
+        done
+    elif [[ -f "$back_dir/doc/gallery.qml" ]]; then
+        cp "$back_dir/doc/gallery.qml" "$readme_base/example.qml"
+    fi
+
+    if (( ${#cDEPENDENCIES[@]} > 0 )); then
+        cat <<-EOF > "$readme_base/DEPENDENCIES.md"
+			# Module dependencies
+
+			This module depends on the following other Opal modules. Please
+			download and install them as well to use this module:
+
+			$(for i in "${cDEPENDENCIES[@]}"; do
+                i="${i#opal-}"
+                printf -- "- [opal-%s](https://github.com/Pretty-SFOS/opal-%s/releases/latest)\n" "$i" "$i"
+            done)
+		EOF
+    fi
 
     # Create final package
     cd "$cBUILD_DIR" || {
