@@ -99,13 +99,13 @@ _x="${cQMLMIN_BIN:="qmlmin"}"  # from libqt5-qtdeclarative-tools without suffix
 _x="${cOPAL_PREFIX:="opal-"}"
 _x="${cOPAL_PREFIX_STYLED:="Opal."}"
 
-[[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
-cDEPENDENCIES+=(git "$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "$cQMLMIN_BIN")
+[[ ! -v "$cSCRIPT_DEPENDENCIES" ]] && cSCRIPT_DEPENDENCIES=()
+cSCRIPT_DEPENDENCIES+=(git "$cLUPDATE_BIN" "$cQDOC_BIN" "$cQMAKE_BIN" "$cQHG_BIN" "$cQMLMIN_BIN")
 
 function check_dependencies() {
     # shellcheck disable=SC2128
-    [[ ! -v "$cDEPENDENCIES" ]] && cDEPENDENCIES=()
-    for dep in "${cDEPENDENCIES[@]}"; do
+    [[ ! -v "$cSCRIPT_DEPENDENCIES" ]] && cSCRIPT_DEPENDENCIES=()
+    for dep in "${cSCRIPT_DEPENDENCIES[@]}"; do
         if ! which "$dep" 2> /dev/null >&2; then
             printf -- "error: %s is required\n" "$dep" >&2
             exit 1
@@ -169,7 +169,7 @@ function verify_version() {
 verify_version >/dev/stderr
 
 # check dependencies immediately after loading the script
-# If the user changes cDEPENDENCIES later, they can re-run this command.
+# If the user changes cSCRIPT_DEPENDENCIES later, they can re-run this command.
 check_dependencies >/dev/stderr
 
 function read_metadata() {
@@ -204,6 +204,7 @@ function read_metadata() {
     _read_value "attribution" "cATTRIBUTION"
     _read_value "mainLicenseSpdx" "cLICENSE"
     _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES"
+    _read_value "dependencies" "cDEPENDENCIES"
 
     # shellcheck disable=SC2034,SC2154
     mapfile -t cMAINTAINERS_ARRAY <<<"$(tr ':' '\n' <<<"$cMAINTAINERS")"
@@ -211,6 +212,16 @@ function read_metadata() {
     mapfile -t cAUTHORS_ARRAY <<<"$(tr ':' '\n' <<<"$cAUTHORS")"
     # shellcheck disable=SC2034,SC2154
     mapfile -t cATTRIBUTIONS_ARRAY <<<"$(tr ':' '\n' <<<"$cATTRIBUTION")"
+
+
+    # shellcheck disable=SC2154
+    if [[ "$cDEPENDENCIES" != "none" ]]; then
+        # shellcheck disable=SC2034,SC2154
+        mapfile -t cDEPENDENCIES_ARRAY <<<"$(tr ':' '\n' <<<"$cDEPENDENCIES")"
+    else
+        # shellcheck disable=SC2034
+        declare -g -a cDEPENDENCIES_ARRAY=()
+    fi
 
     # shellcheck disable=SC2154
     cMETADATA["fullName"]="$cOPAL_PREFIX$cNAME"
@@ -482,6 +493,23 @@ function run_publish_wizard() {
     local latest_changes=
     # shellcheck disable=2002
     latest_changes="$(cat CHANGELOG.md | awk -v pattern="^## $new_version \\\\(" '$0 ~ pattern {flag=1;print;next}/^## [0-9]+\./{flag=0}flag')"
+
+    if (( ${#cDEPENDENCIES[@]} > 0 )); then
+        latest_changes+="$(cat <<-EOF
+
+
+			**Module dependencies:**
+
+			This module depends on the following other Opal modules. Please
+			download and install them as well to use this module:
+
+			$(for i in "${cDEPENDENCIES[@]}"; do
+                i="${i#opal-}"
+                printf -- "- [opal-%s](https://github.com/Pretty-SFOS/opal-%s/releases/latest)\n" "$i" "$i"
+            done)
+		EOF
+        )"
+    fi
 
     echo
     printf -- "%s\n" "$latest_changes"
