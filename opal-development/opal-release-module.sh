@@ -181,12 +181,22 @@ function read_metadata() {
         exit 8
     fi
 
-    function _read_value() { # 1: field key, 2: variable name
+    function _read_value() { # 1: field key, 2: variable name, 3: fallback
         # Read the metadata field defined in $1 and save it as a variable
         # with the name defined in $2. The value is also saved to the cMETADATA
-        # map with key $1.
-        grep -qoe "^$1: " "$cMETADATA_FILE" || { log "error: metadata field '$1' not defined"; exit 8; }
-        declare -g -x "$2"="$(grep -e "^$1: " "$cMETADATA_FILE" | sed "s/^$1: //")"
+        # map with key $1. Falling back to $3 if the key is not defined.
+        if grep -qoe "^$1: " "$cMETADATA_FILE"; then
+            declare -g -x "$2"="$(grep -e "^$1: " "$cMETADATA_FILE" | sed "s/^$1: //")"
+        else
+            if [[ -n "$3" ]]; then
+                log: "note: metadata field '$1' is not defined, using '$3'"
+                declare -g -x "$2"="$3"
+            else
+                log "error: metadata field '$1' not defined"
+                exit 8
+            fi
+        fi
+
         [[ -z "${!2}" ]] && { log "error: metadata field '$1' is empty"; exit 8; }
         [[ "$quiet" != true ]] && echo "$1: ${!2}"
         cMETADATA["$1"]="${!2}"
@@ -203,8 +213,8 @@ function read_metadata() {
     _read_value "maintainers" "cMAINTAINERS"
     _read_value "attribution" "cATTRIBUTION"
     _read_value "mainLicenseSpdx" "cLICENSE"
-    _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES"
-    _read_value "dependencies" "cDEPENDENCIES"
+    _read_value "extraGalleryPages" "cEXTRA_GALLERY_PAGES" "none"
+    _read_value "dependencies" "cDEPENDENCIES" "none"
 
     # shellcheck disable=SC2034,SC2154
     mapfile -t cMAINTAINERS_ARRAY <<<"$(tr ':' '\n' <<<"$cMAINTAINERS")"
