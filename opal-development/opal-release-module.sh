@@ -189,7 +189,7 @@ function read_metadata() {
             declare -g -x "$2"="$(grep -e "^$1: " "$cMETADATA_FILE" | sed "s/^$1: //")"
         else
             if [[ -n "$3" ]]; then
-                log: "note: metadata field '$1' is not defined, using '$3'"
+                log "note: metadata field '$1' is not defined, using '$3'"
                 declare -g -x "$2"="$3"
             else
                 log "error: metadata field '$1' not defined"
