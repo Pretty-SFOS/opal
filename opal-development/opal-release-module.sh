@@ -223,6 +223,14 @@ function read_metadata() {
     # shellcheck disable=SC2034,SC2154
     mapfile -t cATTRIBUTIONS_ARRAY <<<"$(tr ':' '\n' <<<"$cATTRIBUTION")"
 
+    # shellcheck disable=SC2154
+    if [[ "$cEXTRA_GALLERY_PAGES" != "none" ]]; then
+        # shellcheck disable=SC2034,SC2154
+        mapfile -t cEXTRA_GALLERY_PAGES_ARRAY <<<"$(tr ':' '\n' <<<"$cEXTRA_GALLERY_PAGES")"
+    else
+        # shellcheck disable=SC2034
+        declare -g -a cEXTRA_GALLERY_PAGES_ARRAY=()
+    fi
 
     # shellcheck disable=SC2154
     if [[ "$cDEPENDENCIES" != "none" ]]; then
