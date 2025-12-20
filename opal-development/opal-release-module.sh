@@ -928,8 +928,8 @@ function build_bundle() {
     cat <<-EOF > "$qml_base/Opal/Attributions/${cMETADATA[fullNameStyled]//./}Attribution.qml"
 		//@ This file is part of ${cMETADATA[fullName]}.
 		//@ https://github.com/Pretty-SFOS/${cMETADATA[fullName]}
-		//@ SPDX-FileCopyrightText: $cATTRIBUTION
 		//@ SPDX-License-Identifier: $cLICENSE
+		$(printf -- '//@ SPDX-FileCopyrightText: %s\n' "${cATTRIBUTIONS_ARRAY[@]}")
 
 		import QtQuick 2.0
 		import "../../Opal/About" as A
@@ -1075,8 +1075,8 @@ EOF
     cat <<-EOF > "$metadata_file"
 		# Store this file to keep track of packaged module versions.
 		# It is not necessary to ship this in your app's final RPM package.
-		# SPDX-FileCopyrightText: $cATTRIBUTION
 		# SPDX-License-Identifier: $cLICENSE
+		$(printf -- '# SPDX-FileCopyrightText: %s\n' "${cATTRIBUTIONS_ARRAY[@]}")
 
 		# Attribution using Opal.About:
 		#   Opal attributions are automatically added to the About page.
