@@ -17,22 +17,22 @@ Opal is a library for developers. As an end-user you should not have to do anyth
 
 ## Project status
 
-*Opal is ready for production.* That being said, Opal is not yet very mature and
-the ecosystem still has to grow.
+*Opal is ready for production.* That being said, documentation is still lacking
+and the ecosystem still has to grow.
 
 Notably still missing:
 
-- resources modules (i.e. extra icons etc.) are not yet properly supported
-- plugins (i.e. modules with parts written in C++) are not yet supported
 - code documentation is only available in QtCreator but should be hosted online
+- resources modules (i.e. extra icons etc.) are not yet properly supported
+
 
 ## Contents <a id='opal-list'/>
 
 ### Snippets / development tools <a id='snippets'/>
 
 - [cached-defines.pri](snippets/opal-cached-defines.md): A helper and recipe for passing build options from YAML to QML.
-- [merge-translations.sh](snippets/opal-merge-translations.md): A script for merging Opal translations into your app's `ts` files.
 - [render-icons.sh](snippets/opal-render-icons.md): A script for rendering and optimizing SVG icons during iterative development.
+- [merge-translations.sh](snippets/opal-merge-translations.md): A script for merging Opal translations into your app's `ts` files.
 
 All snippets are released into the public domain, *unless*
 otherwise specified. *Please refer to the respective snippet files.*
@@ -311,18 +311,6 @@ and avoid them unless you have a very good reason.
 **Hint:** use the [Silica cheatsheet](https://web.archive.org/web/20230628211624/https://jollacommunity.it/wp-content/uploads/2016/06/component_cheatsheet.png)
 and the [Theme cheatsheet](https://web.archive.org/web/20230628212523/https://jollacommunity.it/wp-content/uploads/2016/06/theme_cheatsheet.png).
 
-### Adding plugins
-
-TBD.
-
-Plugins require additional build processes which are not yet properly supported.
-They have to be built using the Sailfish IDE, pre-packaged, and then included
-in target apps.
-
-Handling should be identical to QML-only modules.
-
-**Coding conventions:** please follow the [Sailfish coding conventions](https://docs.sailfishos.org/Develop/Apps/Coding_Conventions/)
-where possible.
 
 ### Adding resources
 
