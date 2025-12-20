@@ -7,7 +7,7 @@
 # See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-merge-translations.md
 # for documentation.
 #
-# @@@ FILE VERSION 0.1.3
+# @@@ FILE VERSION 1.0.0
 #
 
 shopt -s extglob
