@@ -244,7 +244,7 @@ Please prefer Weblate over pull requests (which are still welcome, of course).
 
 ### Adding snippets
 
-1. Add a new snippet file in the [snippets] diretory
+1. Add a new snippet file in the [snippets] directory
 2. Add a Markdown file for documentation with the same name
 3. Add an entry in the list of snippets above
 
