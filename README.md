@@ -215,6 +215,7 @@ All modules live in their own repositories.
 Useful tools for developing Opal can be found in the
 [opal-development](opal-development/) directory.
 
+
 ### Licensing
 
 All contributions to Opal must be licensed under Free Software licenses compatible
@@ -225,6 +226,7 @@ contents.
 **Important:** make sure your contributions are [REUSE](https://reuse.software/)
 compliant. This makes it much easier to reuse them in other projects, to write
 proper attributions, and to find incompatibilities.
+
 
 ### Translating modules
 
@@ -239,6 +241,7 @@ benefit from it. Translations are managed using
 
 Please prefer Weblate over pull requests (which are still welcome, of course).
 
+
 ### Adding snippets
 
 1. Add a new snippet file in the [snippets] diretory
@@ -249,6 +252,7 @@ Please prefer Weblate over pull requests (which are still welcome, of course).
 writing Bash scripts. Read the documentation on common [Bash pitfalls](https://mywiki.wooledge.org/BashPitfalls)
 and avoid them at all costs. Opal snippets are intended to be run on recent versions
 of GNU Bash (> 5.0) unless explicitly documented otherwise.
+
 
 ### Adding new modules
 
@@ -328,6 +332,7 @@ TBD.
 2. Create the same structure as in [`opal-res-extra-icons`](TBD) (changing the relevant parts)
 3. TBD: showcase in gallery app
 4. TBD: add to wiki
+
 
 ## Licenses
 
