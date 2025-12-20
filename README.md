@@ -202,11 +202,16 @@ Please contact us if your app uses Opal so we can include it in this list!
 | [Directory](https://github.com/ichthyosaurus/harbour-directory-ch): search the national phone book                    | [Opal.About](#module-about)
 | [Dictionary](https://github.com/ichthyosaurus/harbour-wunderfitz): to be merged upstream into [Wunderfitz](https://github.com/Wunderfitz/harbour-wunderfitz) | [sf-docked-tab-bar](#module-tabbar)
 | [Sailtrix](https://gitlab.com/HengYeDev/harbour-sailtrix/): Matrix client                                             | [sf-docked-tab-bar](#module-tabbar)
-| [Olive goes shopping](https://github.com/PawelSpoon/harbour-olive-goes-shopping): shopping list app                 | [sf-docked-tab-bar](#module-tabbar)
+| [Olive goes shopping](https://github.com/PawelSpoon/harbour-olive-goes-shopping): shopping list app                   | [sf-docked-tab-bar](#module-tabbar)
 | [Skruuvi](https://github.com/miikasda/harbour-skruuvi): native reader for Ruuvi sensors                               | [Opal.About](#module-about)
 | [Screen Time](https://github.com/miikasda/harbour-screentime): track your screen time usage on Sailfish OS            | [Opal.About](#module-about)
 | [Outpost](https://openrepos.net/content/mistermagister/outpost): an unofficial app for InPost                         | [Opal.About](#module-about)
 | [SailDiscord](https://github.com/roundedrectangle/SailDiscord): an unofficial client app for Discord                  | [Opal.About](#module-about)
+| [Tidal Player](https://github.com/PawelSpoon/harbour-tidalplayer/): Tidal music streaming client \[built with AI\]    | [Opal.Delegates](#module-delegates), [Opal.DragDrop](#module-dragdrop)
+| [Tidings](https://github.com/poetaster/tidings): a news feed and podcast aggregator                                   | [Opal.About](#module-about), [Opal.SmartScrollbar](#module-smartscrollbar)
+| [SeriesFinale](https://github.com/corecomic/seriesfinale/pull/21): TV series app to keep track of what you're watching| [Opal.About](#module-about), [Opal.Delegates](#module-delegates), [Opal.SmartScrollbar](#module-smartscrollbar), [Opal.LinkHandler](#module-linkhandler), [Opal.MenuSwitch](#module-menuswitch), [snippets](#snippets)
+| [Pipes](https://github.com/Arusekk/harbour-pipes/pull/2): a game about connecting pipes                               | [snippets](#snippets)
+
 
 ## Developing Opal <a id='developing-opal'/>
 
