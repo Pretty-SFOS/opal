@@ -873,6 +873,16 @@ function build_bundle() {
         exit 1
     }
 
+    # REUSE-IgnoreStart
+    # shellcheck disable=2154
+    cat <<-EOF > "$doc_base/.gitignore"
+		# This file is part of Opal.
+		# SPDX-FileCopyrightText: 2023-$(date +%Y) Mirian Margiani
+		# SPDX-License-Identifier: CC0-1.0
+		opal-*.qch
+	EOF
+    # REUSE-IgnoreEnd
+
     if [[ "$do_translate" == true ]]; then
         mkdir -p "$tr_base" || {
             log "error: failed to prepare translations directory in build root"
@@ -888,6 +898,16 @@ function build_bundle() {
             # always manually download the script if necessary.
             log "warning: failed to import the opal-merge-translations.sh snippet"
         }
+
+        # REUSE-IgnoreStart
+        # shellcheck disable=2154
+        cat <<-EOF > "$tr_base/.gitignore"
+			# This file is part of Opal.
+			# SPDX-FileCopyrightText: 2023-$(date +%Y) Mirian Margiani
+			# SPDX-License-Identifier: CC0-1.0
+			${cMETADATA["fullName"]}-*.ts
+		EOF
+        # REUSE-IgnoreEnd
     fi
 
     # NOTE: translations are built from the *original* sources and not from the
