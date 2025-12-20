@@ -1056,24 +1056,18 @@ function build_bundle() {
 # SPDX-FileCopyrightText: 2023-$(date +%Y) Mirian Margiani
 # SPDX-License-Identifier: CC-BY-SA-4.0
 #
-# Include this file in your main .pro file to enable
-# Opal modules that use or provide C++ sources and/or headers.
+# Include this file in your main .pro file to use Opal modules in C++.
 #
-# Add this line to your main .pro file:
-#       include(libs/opal-include.pri)
+# Read the docs at:
+# https://github.com/Pretty-SFOS/opal/blob/main/README.md#using-opal
 #
-# You can then use Opal headers by including them in your
-# C++ files like this:
-#       #include <libs/opal/mymodule/myheader.h>
-#
-# NOTE: this is a generic helper file used by all Opal source
-# modules. You can safely overwrite it when updating a module.
-#
+# NOTE: this is a generic helper file used by all Opal modules.
+# You can safely overwrite it when updating a module.
 
 # Enable autocompletion for Opal modules in QtCreator
 QML_IMPORT_PATH += qml/modules
 
-# Make headers available for inclusion
+# Make C++ headers available for inclusion
 INCLUDEPATH += \$\$relative_path(\$\$PWD/opal)
 
 # Search for any project include files and include them now
