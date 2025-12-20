@@ -1049,7 +1049,7 @@ function build_bundle() {
     mkdir -p "$meta_base"
 
     if [[ -d "$src_base" ]]; then
-        local qmake_include_file="$meta_base/opal-include.pri"
+        local qmake_include_file="$meta_base/opal.pri"
 
         cat <<EOF > "$qmake_include_file"
 # This file is part of Opal.
