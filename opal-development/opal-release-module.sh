@@ -1051,9 +1051,9 @@ function build_bundle() {
     if [[ -d "$src_base" ]]; then
         local qmake_include_file="$meta_base/opal-include.pri"
 
-        cat <<"EOF" > "$qmake_include_file"
+        cat <<EOF > "$qmake_include_file"
 # This file is part of Opal.
-# SPDX-FileCopyrightText: 2023-2024 Mirian Margiani
+# SPDX-FileCopyrightText: 2023-$(date +%Y) Mirian Margiani
 # SPDX-License-Identifier: CC-BY-SA-4.0
 #
 # Include this file in your main .pro file to enable
@@ -1071,18 +1071,18 @@ function build_bundle() {
 #
 
 # Make headers available for inclusion
-INCLUDEPATH += $$relative_path($$PWD/opal)
+INCLUDEPATH += \$\$relative_path(\$\$PWD/opal)
 
 # Search for any project include files and include them now
 message(Searching for Opal source modules...)
 
-OPAL_SOURCE_MODULES = $$files($$PWD/opal/*)
+OPAL_SOURCE_MODULES = \$\$files(\$\$PWD/opal/*)
 for (module, OPAL_SOURCE_MODULES) {
-    module_includes = $$files($$module/*.pri)
+    module_includes = \$\$files(\$\$module/*.pri)
 
     for (to_include, module_includes) {
-        message(Enabling Opal source module <libs/$$relative_path($$dirname(to_include))>)
-        include($$to_include)
+        message(Enabling Opal source module <libs/\$\$relative_path(\$\$dirname(to_include))>)
+        include(\$\$to_include)
     }
 }
 EOF
