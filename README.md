@@ -322,6 +322,22 @@ TBD.
 4. TBD: add to wiki
 
 
+## Anti-AI policy <a id='ai-policy'/>
+
+AI-generated contributions are forbidden and contributors will be banned from
+any further contributions.
+
+Please respect the Free Software community and adhere to the licenses. This is a
+welcoming place for human creativity and diversity, but AI-generated slop is
+going against these values.
+
+Apart from all the ethical, moral, legal, environmental, social, and technical
+reasons against AI, I also simply don't have any spare time to review
+AI-generated contributions.
+
+This policy applies to Opal, all modules, and all other contents.
+
+
 ## Licenses
 
 All Opal modules have their own licensing.
