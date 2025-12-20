@@ -1,0 +1,5 @@
+version = 1
+SPDX-PackageName = "Opal"
+SPDX-PackageSupplier = "Mirian Margiani <mixosaurus+ichthyo@pm.me>"
+SPDX-PackageDownloadLocation = "https://github.com/Pretty-SFOS/opal"
+annotations = []
