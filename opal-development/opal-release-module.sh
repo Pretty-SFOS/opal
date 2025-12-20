@@ -878,6 +878,16 @@ function build_bundle() {
             log "error: failed to prepare translations directory in build root"
             exit 1
         }
+
+        # copy the translations helper script:
+        # As opal-release-module.sh is sourced in the current module's
+        # release-module.sh script, we have to use a relative path here.
+        # TODO find a better way to do this without hardcoded paths
+        cp ../opal/snippets/opal-merge-translations.sh -t "$meta_base" || {
+            # It's not a big problem if this fails for some reason. Users can
+            # always manually download the script if necessary.
+            log "warning: failed to import the opal-merge-translations.sh snippet"
+        }
     fi
 
     # NOTE: translations are built from the *original* sources and not from the
