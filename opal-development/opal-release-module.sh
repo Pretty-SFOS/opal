@@ -1070,6 +1070,9 @@ function build_bundle() {
 # modules. You can safely overwrite it when updating a module.
 #
 
+# Enable autocompletion for Opal modules in QtCreator
+QML_IMPORT_PATH += qml/modules
+
 # Make headers available for inclusion
 INCLUDEPATH += \$\$relative_path(\$\$PWD/opal)
 
