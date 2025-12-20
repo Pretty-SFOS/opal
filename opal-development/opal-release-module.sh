@@ -931,7 +931,9 @@ function build_bundle() {
 		//@ SPDX-FileCopyrightText: $cATTRIBUTION
 		//@ SPDX-License-Identifier: $cLICENSE
 
+		import QtQuick 2.0
 		import "../../Opal/About" as A
+
 		A.Attribution {
 		    name: "${cMETADATA[fullNameStyled]} (v${cMETADATA[version]})"
 		    entries: [$(printf -- '"%s", ' "${cATTRIBUTIONS_ARRAY[@]}" | sed 's/, $//')]
