@@ -3,7 +3,7 @@
 # This file is part of Opal and has been released under the Creative Commons
 # Attribution-ShareAlike 4.0 International License.
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# SPDX-FileCopyrightText: 2018-2024 Mirian Margiani
+# SPDX-FileCopyrightText: 2018-2025 Mirian Margiani
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/opal-development/opal-release-module.md
 # for documentation.
@@ -11,6 +11,15 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.6.0 (2025-12-20):
+#   - included opal-merge-translations.sh in the bundle for translated modules
+#   - added default opal.pri file for all modules (replaces opal-include.pri for C++ modules)
+#   - added gitignore files for docs and translations (no need to add them manually anymore)
+#   - clarified attribution docs in generated module metadata files
+#   - fixed false positive "no imports found" qmldeps warning during RPM build
+#   - fixed copyright lines in generated files for modules with multiple attributions
+#   - fixed copyright year in generated files
+#
 # * 1.5.0 (2025-08-08):
 #   - include added translations in generated changelog when releasing a module
 #   - updated docs on how to attribute Opal modules using Opal.About in shipped
@@ -77,7 +86,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.5.0"
+c__OPAL_RELEASE_MODULE_VERSION__="1.6.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
