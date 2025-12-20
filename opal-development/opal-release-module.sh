@@ -1067,13 +1067,13 @@ EOF
 		# SPDX-License-Identifier: $cLICENSE
 
 		# Attribution using Opal.About:
-		#   Opal attributions are automatically added since version 3.0.0.
-		#   Check the "autoAddOpalAttributions" property on your About page.
+		#   Opal attributions are automatically added to the About page.
+		#   Make sure to use the latest version of Opal.About:
+		#   https://github.com/Pretty-SFOS/opal-about/releases/latest
 		#
 		# Manual attribution:
-		#   1. Import "../modules/Opal/Attributions" in your "About" page.
-		#   2. Attribute this module by adding "${cMETADATA[fullNameStyled]//./}Attribution {}"
-		#      to the "attributions" list property of the "About" page.
+		#   Mention at least name, license, and the attribution text
+		#   on the About page of your app. Use the information below.
 
 		module: ${cMETADATA[fullNameStyled]} (${cMETADATA[fullName]})
 		version: $cVERSION${commit:+" (git:$commit)"}
