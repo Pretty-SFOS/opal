@@ -454,7 +454,7 @@ function run_publish_wizard() {
         gitk 2>/dev/null >/dev/null &
     fi
 
-    printf -- "%s\n" "Current version: $cVERSION"
+    printf -- "\n%s\n" "Current version: $cVERSION"
     white_n "New version: " && local new_version=
 
     if read -r -e -i "$cVERSION" && [[ -n "$REPLY" ]]; then
@@ -463,6 +463,69 @@ function run_publish_wizard() {
     else
         echo "Failed to read new version number."
         exit 1
+    fi
+
+    # Update contributor attributions
+    mapfile -d $'\n' -t last_contribs < <(git log "$(git describe --tags --abbrev=0)..HEAD" --oneline --format="%aN" | sort -u)
+    local missing_contribs=()
+    local contribs_file=CONTRIBUTORS.md
+
+    for i in "${last_contribs[@]}"; do
+        [[ -z "$i" ]] && continue
+
+        if [[ ! -f "$contribs_file" ]] || ! grep -qF "$i" "$contribs_file"; then
+            missing_contribs+=("$i")
+        fi
+    done
+
+    if (( ${#missing_contribs[@]} > 0 )); then
+        echo
+        white "Please mention the following contributors in $contribs_file:"
+        printf -- "- %s\n" "${missing_contribs[@]}" >&2
+
+        if [[ -n "$have_wl_copy" ]]; then
+            printf -- "- %s\n" "${missing_contribs[@]}" | wl-copy
+        elif [[ -n "$have_xclip" ]]; then
+            printf -- "- %s\n" "${missing_contribs[@]}" | xclip -selection c
+        fi
+
+        if [[ -n "$have_kate" ]]; then
+            kate "$contribs_file" 2>/dev/null >/dev/null &
+        else
+            echo "Change log file: $contribs_file"
+        fi
+
+        if [[ -n "$have_wl_copy" || -n "$have_xclip" ]]; then
+            checklist_task "Update the contributors list (entries copied)."
+        else
+            checklist_task "Update the contributors list (entries above)."
+        fi
+    else
+        printf -- "\n%s\n" "All contributors are mentioned in $contribs_file." >&2
+    fi
+
+    # Update attributions
+    if ! grep -Pqoe "(^|[-:])$(date +%Y)" <<< "$cATTRIBUTION" || (( ${#missing_contribs[@]} > 0 )); then
+        local new_attribution="$cATTRIBUTION"
+
+        if (( ${#cATTRIBUTIONS_ARRAY[@]} == 1 )); then
+            if grep -Pqoe "^\d{4} \S+" <<< "$cATTRIBUTION"; then
+                new_attribution="$(sed -Ee "s/^([0-9]{4}) /\1-$(date +%Y) /g" <<< "$cATTRIBUTION")"
+            elif grep -Pqoe "^\d{4}-\d{4} \S+" <<< "$cATTRIBUTION"; then
+                new_attribution="$(sed -Ee "s/^([0-9]{4})-([0-9]{4}) /\1-$(date +%Y) /g" <<< "$cATTRIBUTION")"
+            fi
+        fi
+
+        printf -- "\n%s\n" "Current attributions: $cATTRIBUTION"
+        white_n "New attributions: "
+
+        if read -r -e -i "$new_attribution" && [[ -n "$REPLY" ]]; then
+            new_attribution="$REPLY"
+            sed -Ei "s/^attribution: $cATTRIBUTION$/attribution: $new_attribution/" doc/module.opal
+        else
+            echo "Failed to read new attribution text."
+            exit 1
+        fi
     fi
 
     # Update changelog
