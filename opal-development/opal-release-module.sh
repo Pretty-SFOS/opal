@@ -11,6 +11,9 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.6.1 (2025-12-21):
+#   - use only one gitignore file for all translations
+#
 # * 1.6.0 (2025-12-20):
 #   - included opal-merge-translations.sh in the bundle for translated modules
 #   - added default opal.pri file for all modules (replaces opal-include.pri for C++ modules)
@@ -86,7 +89,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.6.0"
+c__OPAL_RELEASE_MODULE_VERSION__="1.6.1"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -910,11 +913,11 @@ function build_bundle() {
 
         # REUSE-IgnoreStart
         # shellcheck disable=2154
-        cat <<-EOF > "$tr_base/.gitignore"
+        cat <<-EOF > "$tr_base/../.gitignore"
 			# This file is part of Opal.
 			# SPDX-FileCopyrightText: 2023-$(date +%Y) Mirian Margiani
 			# SPDX-License-Identifier: CC0-1.0
-			${cMETADATA["fullName"]}-*.ts
+			opal-*/*.ts
 		EOF
         # REUSE-IgnoreEnd
     fi
