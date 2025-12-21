@@ -500,6 +500,15 @@ function run_publish_wizard() {
         else
             checklist_task "Update the contributors list (entries above)."
         fi
+
+        # Commit changes
+        if [[ -n "$(git status --porcelain=v1 -- "$contribs_file")" ]]; then
+            if yesno_task "[AUTO] Commit updated contributors list?"; then
+                git add "$contribs_file" && git commit -m "Update contributors"
+            else
+                echo "Committing updated contributors list skipped."
+            fi
+        fi
     else
         printf -- "\n%s\n" "All contributors are mentioned in $contribs_file." >&2
     fi
