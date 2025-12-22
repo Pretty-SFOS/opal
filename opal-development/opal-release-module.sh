@@ -858,6 +858,8 @@ EOF
 			headerdirs += ${source_dirs[*]}
 			sourcedirs += ${source_dirs[*]}
 
+			macro.opalmodulelink = "https://github.com/Pretty-SFOS/${OPAL_PROJECT}"
+
 			$([[ "$have_cpp" == false ]] && echo 'moduleheader = ')
 		EOF
     fi
