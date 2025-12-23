@@ -1134,14 +1134,13 @@ function build_bundle() {
         shopt -u nullglob extglob
     fi
 
-    # Write qmake include file if there are C++ sources
+    # Write qmake include file
     rmdir --parents --ignore-fail-on-non-empty "$src_base"
     mkdir -p "$meta_base"
 
-    if [[ -d "$src_base" ]]; then
-        local qmake_include_file="$meta_base/opal.pri"
+    local qmake_include_file="$meta_base/opal.pri"
 
-        cat <<EOF > "$qmake_include_file"
+    cat <<EOF > "$qmake_include_file"
 # This file is part of Opal.
 # SPDX-FileCopyrightText: 2023-$(date +%Y) Mirian Margiani
 # SPDX-License-Identifier: CC-BY-SA-4.0
@@ -1173,7 +1172,6 @@ for (module, OPAL_SOURCE_MODULES) {
     }
 }
 EOF
-    fi
 
     # Write metadata file
     # REUSE-IgnoreStart
