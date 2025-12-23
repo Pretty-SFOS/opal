@@ -11,6 +11,14 @@
 # @@@ FILE VERSION $c__OPAL_RELEASE_MODULE_VERSION__
 #
 # Changelog:
+# * 1.7.0 (2025-12-23):
+#   - fixed inclusion of opal.pri in all generated bundles
+#   - removed unnecessary empty documentation page for private QML elements if
+#     there are none
+#   - added support for updating contributors list in publication wizard
+#   - added \opalmodulelink macro to be used in module docs to show a link to a
+#     module's source repo
+#
 # * 1.6.1 (2025-12-21):
 #   - use only one gitignore file for all translations
 #
@@ -89,7 +97,7 @@
 #     by importing "qml/modules/Opal/Attributions"
 #
 
-c__OPAL_RELEASE_MODULE_VERSION__="1.6.1"
+c__OPAL_RELEASE_MODULE_VERSION__="1.7.0"
 # c__FOR_RELEASE_LIB__=version must be set in module release scripts
 
 shopt -s extglob
