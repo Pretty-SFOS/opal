@@ -2,8 +2,9 @@
 #
 # This file is part of Opal and has been released under the Creative Commons
 # Attribution-ShareAlike 4.0 International License.
+#
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# SPDX-FileCopyrightText: 2018-2025 Mirian Margiani
+# SPDX-FileCopyrightText: 2018-2026 Mirian Margiani
 #
 # See https://github.com/Pretty-SFOS/opal/blob/main/snippets/opal-render-icons.md
 # for documentation.
@@ -21,6 +22,8 @@ cFILE_SUFFIX="svg"
 cRESOLUTION_CHECK='^[0-9]+$'
 cDEPENDENCIES=(inkscape pngcrush)
 
+cINKSCAPE_INTERFACE_VERSION=1
+
 function check_dependencies() {
     for dep in "${cDEPENDENCIES[@]}"; do
         if ! which "$dep" 2> /dev/null >&2; then
@@ -28,6 +31,17 @@ function check_dependencies() {
             exit 1
         fi
     done
+
+    local inkscape_version=
+    inkscape_version="$(inkscape --version)"
+
+    if [[ "$inkscape_version" == "Inkscape 0."* ]]; then
+        cINKSCAPE_INTERFACE_VERSION=0
+    elif [[ "$inkscape_version" == "Inkscape 1."* ]]; then
+        cINKSCAPE_INTERFACE_VERSION=1
+    else
+        printf -- "error: Inkscape version 1 or 0 is required, got '%s'\n" "$inkscape_version" >&2
+    fi
 }
 
 function log() {
@@ -91,8 +105,24 @@ check_dependencies
 
 function do_render_single() { # 1: input, 2: width, 3: height, 4: output
     printf "rendering %s to %s at %sx%s\n" "$1" "$4" "$2" "$3"
-    # replace '-o' by '-z -e' for inkscape < 1.0
-    inkscape -o "$4" -w "$2" -h "$3" "${cEXTRA_INKSCAPE_ARGS[@]}" -- "$1" && pngcrush -ow "$4"
+
+    if [[ "$cINKSCAPE_INTERFACE_VERSION" == 0 ]]; then
+        # shellcheck disable=SC2154  # cEXTRA_INKSCAPE_ARGS expands to nothing if unset
+        inkscape -z -e "$4" -w "$2" -h "$3" "${cEXTRA_INKSCAPE_ARGS[@]}" -- "$1" || {
+            printf -- "error: rendering '%s' to '%s' failed\n" "$1" "$4" >&2
+        }
+    elif [[ "$cINKSCAPE_INTERFACE_VERSION" == 1 ]]; then
+        # shellcheck disable=SC2154  # cEXTRA_INKSCAPE_ARGS expands to nothing if unset
+        inkscape -o "$4" -w "$2" -h "$3" "${cEXTRA_INKSCAPE_ARGS[@]}" -- "$1" || {
+            printf -- "error: rendering '%s' to '%s' failed\n" "$1" "$4" >&2
+        }
+    fi
+
+    if [[ -f "$4" ]]; then
+        pngcrush -ow "$4" || {
+            printf -- "error: compressing '%s' failed\n" "$4" >&2
+        }
+    fi
 }
 
 function split_at_sign() { # 1: string with values separated by @, |, +
