@@ -12,7 +12,7 @@
 # @@@ FILE VERSION $c__OPAL_RENDER_ICONS_VERSION__
 #
 
-c__OPAL_RENDER_ICONS_VERSION__="1.1.0"
+export c__OPAL_RENDER_ICONS_VERSION__="1.2.0"
 # c__FOR_RENDER_LIB__=version must be set in module release scripts
 
 shopt -s extglob
@@ -145,11 +145,28 @@ function split_at_sign() { # 1: string with values separated by @, |, +
 
 function render_batch() { # 1: keep or unset config after rendering?
     # no arguments required, all info has to be set as variables
-    keep_config="$1"  # 'keep' or empty
+    keep_config="${1:-}"  # 'keep' or empty
 
-    printf "rendering %s...\n" "$cNAME"
+    printf "rendering %s...\n" "${cNAME:?error: a render batch must have a name in cNAME}"
     local use_res use_loc source target
 
+    function _require_array() { # 1: variable name
+        local check=
+
+        if check="$(declare -p "${1:?bug: a variable name is required}")" &&
+                grep -qe '^declare -a ' <<< "$check"; then
+            return 0
+        else
+            printf -- "error: '%s' must be defined and must not be empty\n" "$1" >&2
+            return 1
+        fi
+    }
+
+    _require_array "cITEMS"
+    _require_array "cRESOLUTIONS"
+    _require_array "cTARGETS"
+
+    # shellcheck disable=SC2154  # cITEMS is verified above
     for item in "${cITEMS[@]}"; do
         split_at_sign "$item" "@"
         item_split=("${OPAL_SPLIT_RES[@]}")
@@ -160,15 +177,15 @@ function render_batch() { # 1: keep or unset config after rendering?
             continue
         fi
 
-        if [[ "$cRESOLUTIONS" == ${cFIELD_INDICATOR}* ]]; then
-            split_at_sign "${item_split[${cRESOLUTIONS#$cFIELD_INDICATOR}]}" "|"  # format: res[|res[|...]]
+        if [[ "${cRESOLUTIONS:?}" == "${cFIELD_INDICATOR}"* ]]; then
+            split_at_sign "${item_split[${cRESOLUTIONS#"$cFIELD_INDICATOR"}]}" "|"  # format: res[|res[|...]]
             use_res=("${OPAL_SPLIT_RES[@]}")
         else
             use_res=("${cRESOLUTIONS[@]}")
         fi
 
-        if [[ "$cTARGETS" == ${cFIELD_INDICATOR}* ]]; then
-            split_at_sign "${item_split[${cTARGETS#$cFIELD_INDICATOR}]}" "|"  # format: loc[|loc[|...]]
+        if [[ "${cTARGETS:?}" == "${cFIELD_INDICATOR}"* ]]; then
+            split_at_sign "${item_split[${cTARGETS#"$cFIELD_INDICATOR"}]}" "|"  # format: loc[|loc[|...]]
             use_loc=("${OPAL_SPLIT_RES[@]}")
         else
             use_loc=("${cTARGETS[@]}")
@@ -186,12 +203,12 @@ function render_batch() { # 1: keep or unset config after rendering?
             fi
 
             if [[ ! "$res_x" =~ $cRESOLUTION_CHECK ]]; then
-                printf "error: x-resolution '$res_x' is not a number\n"
+                printf -- "error: x-resolution '%s' is not a number\n" "$res_x"
                 continue
             fi
 
             if [[ ! "$res_y" =~ $cRESOLUTION_CHECK ]]; then
-                printf "error: y-resolution '$res_y' is not a number\n"
+                printf -- "error: y-resolution '%s' is not a number\n" "$res_y"
                 continue
             fi
 
@@ -206,8 +223,12 @@ function render_batch() { # 1: keep or unset config after rendering?
                 # target = <target location/<main prefix><prefix><basename><suffix><main suffix>.png
                 local prefix="${res_split[1]}"
                 local suffix="${res_split[2]}"
-                target="$(printf "%s" "$loc/$cPREFIX$prefix$(basename "$source")" | sed "s/\.$cFILE_SUFFIX$//I")$suffix$cSUFFIX.png"
-                if [[ "$source" -nt "$target" ]] || [[ "$cFORCE" == true ]]; then
+                target="$(
+                    printf -- "%s" "$loc/${cPREFIX:-}$prefix$(basename "$source")" |\
+                        sed "s/\.$cFILE_SUFFIX$//I"
+                    )$suffix${cSUFFIX:-}.png"
+
+                if [[ "$source" -nt "$target" ]] || [[ "${cFORCE:-false}" == true ]]; then
                     do_render_single "$source" "$res_x" "$res_y" "$target" || {
                         printf "error: failed to render '%s' at %sx%s\n" "$source" "$res_x" "$res_y"
                         continue
