@@ -76,8 +76,9 @@ You can also browse the repositories here.
 
 Follow these steps to include Opal modules in your project:
 
-1. Fetch the module bundles you want to use and extract the `libs` and `qml` folders
-   in your project root (next to the `rpm` and `translations` folders of your app).
+1. Fetch the module release bundles (from each module's "releases" page) you
+   want to use and extract the `libs` and `qml` folders in your project root
+   (next to the `rpm` and `translations` folders of your app).
 
 2. Include the `libs/opal.pri` file in your app's `harbour-my-app.pro` file
    by adding this line:
