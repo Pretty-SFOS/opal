@@ -3,3 +3,8 @@ SPDX-PackageName = "Opal"
 SPDX-PackageSupplier = "Mirian Margiani <mixosaurus+ichthyo@pm.me>"
 SPDX-PackageDownloadLocation = "https://github.com/Pretty-SFOS/opal"
 annotations = []
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-License-Identifier = "LicenseRef-NO-AI-1.0"

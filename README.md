@@ -3,6 +3,12 @@ SPDX-FileCopyrightText: 2021-2025 Mirian Margiani
 SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 
+> [!WARNING]
+> **Development of Opal has moved to [Codeberg](https://codeberg.org/opal-sfos).
+> Please update your bookmarks and local clones to point to the new URL.**
+
+---
+
 # Opal
 
 Opal is a collection of pretty QML components for SailfishOS, building on top
@@ -328,26 +334,40 @@ TBD.
 4. TBD: add to wiki
 
 
-## Anti-AI policy <a id='ai-policy'/>
+## Anti-AI policy <a id='ai-policy'></a>
 
-AI-generated contributions are forbidden and contributors will be banned from
-any further contributions.
+> [!IMPORTANT]
+> - LLM/“AI”-generated contributions are forbidden.
+> - Using this project in whole or in part for AI training or data mining is likewise forbidden.
 
-Please respect the Free Software community and adhere to the licenses. This is a
-welcoming place for human creativity and diversity, but AI-generated slop is
-going against these values.
+Please be transparent, respect the Free Software community, and adhere to the
+licenses. This is a welcoming place for human creativity and diversity, but
+LLM/“AI”-generated slop is going against these values.
 
-Apart from all the ethical, moral, legal, environmental, social, and technical
-reasons against AI, I also simply don't have any spare time to review
-AI-generated contributions.
+Apart from all the
+[ethical](https://www.amnesty.org/en/documents/pol40/0996/2026/en/),
+[moral](https://www.theguardian.com/technology/2026/mar/17/x-csam-child-abuse-material-grok-australian-online-safety-regulator-ntwnfb),
+[legal](https://en.wikipedia.org/wiki/Artificial_intelligence_and_copyright#Litigation),
+[environmental](https://www.theguardian.com/environment/2025/apr/09/big-tech-datacentres-water),
+[societal](https://www.theguardian.com/global-development/2026/mar/12/invasive-ai-led-mass-surveillance-in-africa-violating-freedoms-warn-experts),
+[social](https://www.theguardian.com/technology/article/2024/jul/06/mercy-anita-african-workers-ai-artificial-intelligence-exploitation-feeding-machine),
+[political](https://www.theguardian.com/technology/2025/nov/17/grokipedia-elon-musk-far-right-racist),
+[technical](https://tante.cc/2026/07/15/useful-is-not-sufficient),
+and overall [human](https://www.hrw.org/news/2024/09/10/questions-and-answers-israeli-militarys-use-digital-tools-gaza),
+reasons against LLMs/“AI”, I also simply don't have any spare time to review
+generated contributions.
 
-This policy applies to Opal, all modules, and all other contents.
+See also [this list](https://codeberg.org/ethical-foss/open-slopware/src/branch/main/why_not_llms.md)
+for more reasons against supporting “AI”.
 
 
 ## Licenses
 
 All Opal modules have their own licensing.
 *Please refer to the respective repositories.*
+
+AI processing including ingesting code for AI assisted or “agentic“ coding
+is never permitted.
 
 All snippets are released in the public domain, *unless*
 otherwise specified. *Please refer to the respective snippet files.*
@@ -364,3 +384,5 @@ All documentation is released under the terms of the
     being [none yet], and with the Back-Cover Texts being [none yet].
     You should have received a copy of the GNU Free Documentation License
     along with this document.  If not, see <http://www.gnu.org/licenses/>.
+
+This project and related materials must not be used for AI training and/or data mining.
